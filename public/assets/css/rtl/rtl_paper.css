@@ -1,0 +1,257 @@
+@font-face {
+    font-family: 'Jameel Noori Nastaleeq';
+    font-style: normal;
+    src: url('/fonts/JameelNooriNastaleeqKasheeda.ttf') format('truetype');
+    /*src: url({{ url('/fonts/JameelNooriNastaleeqKasheeda.ttf') }}) format('truetype');*/
+}
+
+
+@media print {
+    @page {
+        size: A4;
+        margin: 5px;
+        margin-bottom: 10px;
+        margin-top: 30px;
+        font-family: Jameel Noori Nastaleeq;
+        size: A4;
+        -webkit-print-color-adjust: exact;
+
+    }
+
+    [contentEditable=true]:empty:not(:focus):before {
+        display: none;
+    }
+
+    .pagebreak {
+        page-break-after: always;
+
+    }
+
+    /* page-break-after works, as well */
+    .pto {
+        text-align: center;
+        color: red;
+    }
+
+    .print_data {
+        display: none;
+    }
+
+
+
+}
+
+/*body*/
+.page {
+    background: #ffffff;
+    display: block;
+    margin: 10px auto 10px auto;
+
+
+}
+
+.page[size="A4"] {
+    width: 22cm;
+}
+
+button {
+    background-color: #4CAF50;
+    /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: inherit !important;
+    font-size: inherit !important;
+}
+
+@font-face {
+    font-family: 'Jameel Noori Nastaleeq';
+    font-style: normal;
+    src: url('/fonts/JameelNooriNastaleeqKasheeda.ttf') format('truetype');
+    /*src: url({{ url('/fonts/JameelNooriNastaleeqKasheeda.ttf') }}) format('truetype');*/
+}
+
+.row {
+    margin: 8px;
+}
+
+p {
+    font-weight: inherit !important;
+    font-size: inherit !important;
+}
+
+.QuestHead {
+    font-size: 22px !important;
+}
+
+.QuestHeadLeft {
+    font-size: 19px !important;
+}
+
+p>span {
+    font-weight: inherit !important;
+    font-size: inherit !important;
+}
+
+.urduText {
+    font-family: Jameel Noori Nastaleeq !important;
+    font-size: 16px !important;
+    direction: rtl !important;
+}
+
+
+
+* {
+    margin: 4px;
+    color: #000;
+    font-family: sans serif;
+    -webkit-print-color-adjust: exact;
+
+
+
+}
+
+body {
+    margin: 5px;
+    background: #fff;
+    zoom: 90%;
+}
+
+#tblMcqs {
+    display: none;
+}
+
+.urduText {
+    font-family: Jameel Noori Nastaleeq !important;
+    font-size: 22px !important;
+    direction: rtl !important;
+}
+
+table.TextCenter {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+table,
+th,
+td {
+    border: 1.5px solid #000;
+}
+
+td>p {
+    display: inline;
+}
+
+td.textleft {
+    text-align: left;
+}
+
+td.textright {
+    text-align: right;
+}
+
+td.halfdevider {
+    width: 50%;
+}
+
+.th1 {
+    border: none;
+}
+
+.tr1 {
+    border: none;
+}
+
+.td1 {
+    border: none;
+}
+
+.mcurdu {
+    text-align: right
+}
+
+span.circle {
+    height: 25px;
+    width: 25px;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+
+    margin-right: 5px;
+    text-align: center;
+    line-height: 3em;
+
+
+}
+
+.numberCircle {
+    display: inline-block;
+    line-height: 0px;
+    border-radius: 50%;
+    border: 2px solid;
+    height: 25px;
+    width: 25px;
+}
+
+.numberCircle span {
+    display: inline-block;
+    padding-top: 30%;
+    padding-bottom: 70%;
+}
+
+.head {
+    width: 100%;
+    /* 70% of the parent*/
+    background: #000;
+
+    text-align: center;
+
+    margin: 0px auto;
+    border-radius: 5px;
+  
+    border-bottom: 1px solid #000;
+    font-family: Jameel Noori Nastaleeq;
+
+
+
+}
+
+.head>h6 {
+    color: #fff;
+    font-size: 8px;
+    -webkit-print-color-adjust: exact;
+    font-family: "Jameel Noori Nastaleeq";
+}
+
+.pagebreak {
+    page-break-after: always;
+
+}
+
+.pto {
+    text-align: center;
+    color: red;
+
+}
+
+[contentEditable=true]:empty:not(:focus):before {
+    content: attr(data-text)
+}
