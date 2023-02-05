@@ -1,0 +1,8 @@
+call nssm.exe install laravel_queue_server "%cd%\run_server.bat"
+call nssm.exe set laravel_queue_server AppStdout "%cd%\storage\logs\laravel_queue_server_logs.log"
+call nssm.exe set laravel_queue_server AppStderr "%cd%\storage\logs\laravel_queue_server_logs.log"
+call nssm set laravel_queue_server AppRotateFiles 1
+call nssm set laravel_queue_server AppRotateOnline 1
+call nssm set laravel_queue_server AppRotateSeconds 86400
+call nssm set laravel_queue_server AppRotateBytes 1048576
+call sc start laravel_queue_server

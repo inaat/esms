@@ -1,0 +1,1 @@
+call php  artisan queue:work --sleep=90
