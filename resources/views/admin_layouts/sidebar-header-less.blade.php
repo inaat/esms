@@ -11,6 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ url('/uploads/business_logos/'.session()->get('system_details.org_favicon', ''))}}" type="image/png" />
     <link rel="stylesheet" href="{{asset('css/fontawesome-free-6.0.0-web/css/all.min.css')}}">
+    @include('common.color')
 
     <!--plugins-->
     @yield("style")

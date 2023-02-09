@@ -1,14 +1,14 @@
-$(document).ready(function () {
+$(document).ready(function() {
     if ($("#dashboard_date_filter").length == 1) {
         dateRangeSettings.startDate = moment();
         dateRangeSettings.endDate = moment();
         $("#dashboard_date_filter").daterangepicker(
             dateRangeSettings,
-            function (start, end) {
+            function(start, end) {
                 $("#dashboard_date_filter span").html(
                     start.format(moment_date_format) +
-                        " ~ " +
-                        end.format(moment_date_format)
+                    " ~ " +
+                    end.format(moment_date_format)
                 );
                 update_statistics(
                     start.format("YYYY-MM-DD"),
@@ -22,7 +22,7 @@ $(document).ready(function () {
             moment().format("YYYY-MM-DD")
         );
     }
-    $("#campus,dashboard_date_filter").change(function (e) {
+    $("#campus,dashboard_date_filter").change(function(e) {
         var start = $("#dashboard_date_filter")
             .data("daterangepicker")
             .startDate.format("YYYY-MM-DD");
@@ -36,12 +36,13 @@ $(document).ready(function () {
 });
 
 function update_statistics(start, end) {
+    $('table#assets_table tbody#account_balances').html('<tr><td colspan="2"><i class="fas fa-sync fa-spin fa-fw"></i></td></tr>');
     var campus_id = "";
     if ($("#campus").length > 0) {
         campus_id = $("#campus").val();
     }
     var data = { start: start, end: end, campus_id: campus_id };
-   
+
     var loader =
         '<i class="widgets-icons  bg-light-success text-success fas fa-sync fa-spin fa-fw margin-bottom"></i>';
     $(".loader").html(loader);
@@ -51,8 +52,23 @@ function update_statistics(start, end) {
         url: "/home/get-totals",
         dataType: "json",
         data: data,
-        success: function (data) {
-            
+        success: function(data) {
+            var account_balances = data.account_balances;
+
+            $('table#assets_table tbody#account_balances').html('');
+            for (var key in account_balances) {
+                var accnt_bal = __currency_trans_from_en(data.account_balances[key]);
+                var accnt_bal_with_sym = __currency_trans_from_en(data.account_balances[key], true);
+                var account_tr = '<tr><td class="pl-20-td">' + key + ':</td><td><input type="hidden" class="asset" value="' + accnt_bal + '">' + accnt_bal_with_sym + '</td></tr>';
+                $('table#assets_table tbody#account_balances').append(account_tr);
+            }
+            var total_assets = 0;
+
+            $('input.asset').each(function() {
+                total_assets += __read_number($(this));
+            });
+
+            $('span#total_assets').text(__currency_trans_from_en(total_assets, true));
             $(".active_students").html(
                 data.active_students
             );
@@ -81,13 +97,13 @@ function update_statistics(start, end) {
                 __currency_trans_from_en(data.total_paid_amount, true)
             );
             $(".total_fee_balance_amount").html(
-                __currency_trans_from_en(data.total_dues_this_month-data.total_paid_amount, true)
+                __currency_trans_from_en(data.total_dues_this_month - data.total_paid_amount, true)
             );
             $(".total_progress_collection_during_month").html(
                 __currency_trans_from_en(data.total_progress_collection_during_month, true)
             );
             $(".total_profit_amount").html(
-                __currency_trans_from_en(data.total_progress_collection_during_month-data.total_hrm_paid_amount, true)
+                __currency_trans_from_en(data.total_progress_collection_during_month - data.total_hrm_paid_amount, true)
             );
             $(".total_transport_dues_this_month").html(
                 __currency_trans_from_en(data.total_transport_dues_this_month, true)
@@ -99,7 +115,7 @@ function update_statistics(start, end) {
                 __currency_trans_from_en(data.total_transport_progressive_amount, true)
             );
             $(".total_transport_balance").html(
-                __currency_trans_from_en(data.total_transport_dues_this_month-data.total_transport_progressive_amount, true)
+                __currency_trans_from_en(data.total_transport_dues_this_month - data.total_transport_progressive_amount, true)
             );
             $(".total_hrm_paid_amount").html(
                 __currency_trans_from_en(data.total_hrm_paid_amount, true)
@@ -108,19 +124,19 @@ function update_statistics(start, end) {
                 __currency_trans_from_en(data.total_expense, true)
             );
             $(".total_employee_present").html(
-               data.total_employee_attendance 
+                data.total_employee_attendance
             );
             $(".total_student_present").html(
-               data.total_student_attendance 
+                data.total_student_attendance
 
             );
             var labels_fee = [];
-            stringArr=data.labels;
+            stringArr = data.labels;
             stringArr.forEach(function(element) {
                 labels_fee.push(element);
             });
             var chartData_fee = [];
-            floatArr=data.all_sell_values;
+            floatArr = data.all_sell_values;
             floatArr.forEach(function(element) {
                 //labels.push(element);
                 chartData_fee.push(element);
@@ -132,7 +148,7 @@ function update_statistics(start, end) {
             //     labels_expense.push(element);
             // });
             var chartData_expense = [];
-            expenseArr=data.all_expenses_values;
+            expenseArr = data.all_expenses_values;
             expenseArr.forEach(function(element) {
                 //labels.push(element);
                 chartData_expense.push(element);
@@ -140,13 +156,13 @@ function update_statistics(start, end) {
             });
             //hrm
             var chartData_hrm = [];
-            hrmArr=data.all_hrm_values;
+            hrmArr = data.all_hrm_values;
             hrmArr.forEach(function(element) {
                 //labels.push(element);
                 chartData_hrm.push(element);
 
             });
-            barChart(labels_fee, chartData_fee,chartData_expense,chartData_hrm);
+            barChart(labels_fee, chartData_fee, chartData_expense, chartData_hrm);
             pieChart(
                 data.students_gender.male_perc,
                 data.students_gender.female_perc,
@@ -156,8 +172,8 @@ function update_statistics(start, end) {
     });
 }
 
-function pieChart(data1, data2,data3) {
-    
+function pieChart(data1, data2, data3) {
+
     Highcharts.chart("pieChart", {
         chart: {
             plotBackgroundColor: null,
@@ -197,31 +213,29 @@ function pieChart(data1, data2,data3) {
                 },
             },
         },
-        series: [
-            {
-                name: "Students",
-                colorByPoint: true,
-                data: [
-                    {
-                        name: "Male Students",
-                        y: parseFloat(data1),
-                        sliced: true,
-                        selected: true,
-                    },
-                    {
-                        name: "Female Students",
-                        y: parseFloat(data2),
-                    },
-                    {
-                        name: "Others Students",
-                        y: parseFloat(data3),
-                    },
-                ],
-            },
-        ],
+        series: [{
+            name: "Students",
+            colorByPoint: true,
+            data: [{
+                    name: "Male Students",
+                    y: parseFloat(data1),
+                    sliced: true,
+                    selected: true,
+                },
+                {
+                    name: "Female Students",
+                    y: parseFloat(data2),
+                },
+                {
+                    name: "Others Students",
+                    y: parseFloat(data3),
+                },
+            ],
+        }, ],
     });
 }
-function barChart(labels_fee ,chartData_fee,chartData_expense,chartData_hrm) {
+
+function barChart(labels_fee, chartData_fee, chartData_expense, chartData_hrm) {
     Highcharts.chart('chart5', {
         chart: {
             type: 'line',
@@ -241,28 +255,28 @@ function barChart(labels_fee ,chartData_fee,chartData_expense,chartData_hrm) {
         title: {
             text: 'Fees Collection & Expenses , Hrm Last 30 days'
         },
-        
-        legend:{
-            align:'right',
-            verticalAlign:top,
-            floating:true,
-            layout:'vertical'
+
+        legend: {
+            align: 'right',
+            verticalAlign: top,
+            floating: true,
+            layout: 'vertical'
         },
         xAxis: {
             categories: labels_fee,
             crosshair: true
         },
-        
+
         yAxis: {
-			title: {
-				text: 'Total Amount In (PKR)'
-			},
-			labels: {
-				formatter: function () {
-					return this.value / 1000 + 'k';
-				}
-			}
-		},
+            title: {
+                text: 'Total Amount In (PKR)'
+            },
+            labels: {
+                formatter: function() {
+                    return this.value / 1000 + 'k';
+                }
+            }
+        },
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: Rs&nbsp {series.data.value} </td>' +
@@ -277,21 +291,21 @@ function barChart(labels_fee ,chartData_fee,chartData_expense,chartData_hrm) {
                 borderWidth: 0
             }
         },
-       
 
-    series: [{
-        name: 'Fee Paid Amount',
-        data: chartData_fee
 
-    }, {
-        name: 'Expenses Paid Amount',
-        data: chartData_expense
+        series: [{
+                name: 'Fee Paid Amount',
+                data: chartData_fee
 
-    },{
-        name :'Hrm Paid Amount',
-        data:chartData_hrm
-    }
+            }, {
+                name: 'Expenses Paid Amount',
+                data: chartData_expense
 
-]
+            }, {
+                name: 'Hrm Paid Amount',
+                data: chartData_hrm
+            }
+
+        ]
     });
 }

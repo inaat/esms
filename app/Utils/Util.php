@@ -947,6 +947,47 @@ class Util
                 return $user;  
             }
         } else {
+            if(!empty($check_user)){
+              if(!empty($data['guardian_email'])){
+                $data['guardian_name']=$data['guardian_name'];
+              }else{
+                $data['guardian_name']=$check_user->email;
+              }
+              $user_data = [
+                'first_name' => $data['guardian_name'],
+                'last_name' =>'',
+                'email' => $data['guardian_email'],
+                'password' => Hash::make('111111111'),
+                'user_type' => $type,
+                'system_settings_id'=>$system_settings_id,
+                'image'=>'uploads/employee_image/default.jpg'
+            ];
+            $check_user->update($user_data);
+            $role_id = $role_id;
+            $student_role = $check_user->roles->first();
+            $previous_role = !empty($student_role->id) ? $student_role->id : 0;
+
+            if ($previous_role != $role_id) {
+                $is_admin = $this->is_admin($check_user);
+                $all_admins = $this->getAdmins();
+                //If only one admin then can not change role
+                if ($is_admin && count($all_admins) <= 1) {
+                    throw new \Exception(__('english.cannot_change_role'));
+                }
+                if (!empty($previous_role)) {
+                    $check_user->removeRole($student_role->name);
+                }
+
+                $role = Role::findOrFail($role_id);
+
+                $check_user->assignRole($role->name);
+                return $check_user;
+            } else {
+                $role = Role::findOrFail($role_id);
+                $check_user->assignRole($role->name);
+                return $check_user;
+            }
+              }else{
             $user_data = [
                 'first_name' => $data['guardian_name'],
                 'last_name' =>'',
@@ -981,6 +1022,7 @@ class Util
                 $check_user->assignRole($role->name);
                 return $check_user;
             }
+        }
         }
     }
 
@@ -1031,5 +1073,35 @@ class Util
         $output['html_content'] = view($view, compact('data'))->render();
         
         return $output;
+    }
+
+    public function getAccountBalance($end_date, $campus_id = null)
+    {
+        $query = Account::leftjoin(
+            'account_transactions as AT',
+            'AT.account_id',
+            '=',
+            'accounts.id'
+        )
+                                // ->NotClosed()
+                                ->whereNull('AT.deleted_at')
+                                ->whereDate('AT.operation_date', '<=', $end_date);
+
+       
+//Filter by the campus
+$permitted_campuses = auth()->user()->permitted_campuses();
+if ($permitted_campuses != 'all') {
+ $query->whereIn('accounts.campus_id', $permitted_campuses);
+}
+if (!empty($campus_id)) {
+    $query->where('accounts.campus_id', $campus_id);
+  }
+        $account_details = $query->select(['name',
+                                        DB::raw("SUM( IF(AT.type='credit', amount, -1*amount) ) as balance")])
+                                ->groupBy('accounts.id')
+                                ->get()
+                                ->pluck('balance', 'name');
+
+        return $account_details;
     }
 }

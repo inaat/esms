@@ -240,6 +240,7 @@ Route::middleware(['auth','language','SetSessionData','timezone','AdminSidebarMe
     Route::get('/gallery-elements/{id}/{elem_id}', 'Frontend\FrontGalleryController@upload_delete');
     Route::resource('front-settings', 'Frontend\FrontSettingController');
     Route::resource('front-sliders', 'Frontend\FrontSliderController');
+    Route::resource('front-abouts', 'Frontend\FrontAboutController');
 
 });
 Route::middleware(['FrontSessionData'])->group(function () {

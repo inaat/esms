@@ -38,7 +38,7 @@ class FrontAboutController extends Controller
         }
 
         if (request()->ajax()) {
-            $sliders = FrontAboutUs::select(['title', 'id','slider_image','btn_name','btn_url','description','status']);
+            $sliders = FrontAboutUs::select(['title', 'id','image','home_title','description','status']);
 
             return DataTables::of($sliders)
                             ->addColumn(
@@ -47,8 +47,8 @@ class FrontAboutController extends Controller
                                     $html= '<div class="dropdown">
                              <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">'. __("english.actions").'</button>
                              <ul class="dropdown-menu" style="">';
-                                    $html .= '<li><a  href="#" data-href="' .action('Frontend\FrontSliderController@edit', [$row->id]).'" class=" edit_slider_button dropdown-item"><i class="bx bxs-edit f-16 mr-15"></i>' . __("english.edit") . '</a></li>';
-                                    $html .= '<li><a  href="#" data-href="' .action('Frontend\FrontSliderController@destroy', [$row->id]).'" class=" delete_slider_button dropdown-item"><i class="bx bxs-trash f-16 mr-15"></i>' . __("english.delete") . '</a></li>';
+                                    $html .= '<li><a  href="' .action('Frontend\FrontAboutController@edit', [$row->id]).'" class=" dropdown-item"><i class="bx bxs-edit f-16 mr-15"></i>' . __("english.edit") . '</a></li>';
+                                    $html .= '<li><a  href="#" data-href="' .action('Frontend\FrontAboutController@destroy', [$row->id]).'" class=" delete_slider_button dropdown-item"><i class="bx bxs-trash f-16 mr-15"></i>' . __("english.delete") . '</a></li>';
 
 
                                     $html .= '</ul></div>';
@@ -56,29 +56,31 @@ class FrontAboutController extends Controller
                                     return $html;
                                 }
                             )
-                            ->editColumn('slider_image', function ($row) {
-                                    $image = file_exists(public_path('uploads/front_image/'.$row->slider_image)) ? $row->slider_image : 'default.jpg';
+                            ->editColumn('image', function ($row) {
+                                    $image = file_exists(public_path('uploads/front_image/'.$row->image)) ? $row->image : 'default.jpg';
                                     $img=' <img src="'.url('uploads/front_image/' . $image).'" class="img-border " width="50" height="50" alt="" ></div>';
                                     return $img;
                             })
                             ->removeColumn('id')
-                            ->rawColumns(['action','slider_image','description'])
+                            ->rawColumns(['action','image','description'])
                             ->make(true);
         }
 
-        return view('frontend.backend.slider.index');
+        return view('frontend.backend.about.index');
     }
 
 
    public function store(Request $request)
    {
        try {
-           $input = $request->only(['title','btn_name','btn_url','description','status']);
+           $input = $request->only(['title','home_title','description','status']);
            if (!empty($request->input('status'))) {
                $input['status']='publish';
            }
-           $filename=$this->commonUtil->uploadFile($request, 'slider_image', 'front_image', 'image');
-           $input['slider_image']=$filename;
+           $input['slug']=  Str::slug($input['title']);
+
+           $filename=$this->commonUtil->uploadFile($request, 'image', 'front_image', 'image');
+           $input['image']=$filename;
            FrontAboutUs::create($input);
            $output = ['success' => true,
                    'msg' => __("english.added_success")
@@ -90,23 +92,23 @@ class FrontAboutController extends Controller
            'msg' => __("english.something_went_wrong")
            ];
        }
-       return redirect('front-sliders')->with('status', $output);
+       return redirect('front-abouts')->with('status', $output);
    }
    public function create()
    {
-       return view('frontend.backend.slider.create');
+       return view('frontend.backend.about.create');
    }
 
    public function edit($id)
    {
-       $slider= FrontAboutUs::find($id);
-       return view('frontend.backend.slider.edit')->with(compact('slider'));
+       $about= FrontAboutUs::find($id);
+       return view('frontend.backend.about.edit')->with(compact('about'));
        ;
    }
    public function update(Request $request, $id)
    {
        try {
-           $input = $request->only(['title','btn_name','btn_url','description']);
+           $input = $request->only(['title','home_title','description','status']);
            if (!empty($request->input('status'))) {
                $input['status']='publish';
            } else {
@@ -115,16 +117,16 @@ class FrontAboutController extends Controller
            //dd($input);
            $gallery= FrontAboutUs::find($id);
            $gallery->title= $input['title'];
-           $gallery->btn_name= $input['btn_name'];
-           $gallery->btn_url= $input['btn_url'];
+           $gallery->home_title= $input['home_title'];
+           $gallery->slug=  Str::slug($input['title'].$input['home_title']);
            $gallery->status= $input['status'];
            $gallery->description= $input['description'];
-           if ($request->hasFile('slider_image') && $request->file('slider_image')->isValid()) {
-               if (File::exists(public_path('uploads/front_image/'. $gallery->slider_image))) {
-                   File::delete(public_path('uploads/front_image/'. $gallery->slider_image));
+           if ($request->hasFile('image') && $request->file('image')->isValid()) {
+               if (File::exists(public_path('uploads/front_image/'. $gallery->image))) {
+                   File::delete(public_path('uploads/front_image/'. $gallery->image));
 
-                   $filename=$this->commonUtil->uploadFile($request, 'slider_image', 'front_image', 'image');
-                   $gallery->slider_image=$filename;
+                   $filename=$this->commonUtil->uploadFile($request, 'image', 'front_image', 'image');
+                   $gallery->image=$filename;
                }
            }
            $gallery->save();
@@ -138,7 +140,7 @@ class FrontAboutController extends Controller
            'msg' => __("english.something_went_wrong")
            ];
        }
-       return $output;
+       return redirect('front-abouts')->with('status', $output);
    }
 
 
@@ -158,8 +160,8 @@ class FrontAboutController extends Controller
           try {
               $gallery= FrontAboutUs::find($id);
              
-              if (File::exists(public_path('uploads/front_image/'. $gallery->slider_image))) {
-                  File::delete(public_path('uploads/front_image/'. $gallery->slider_image));
+              if (File::exists(public_path('uploads/front_image/'. $gallery->image))) {
+                  File::delete(public_path('uploads/front_image/'. $gallery->image));
               }
               $gallery->delete();
               $output = ['success' => true,

@@ -22,10 +22,10 @@
                                      </div>
                                      <div class="clearfix"></div>
 
-                                     <div class="col-md-6 p-1" id="datetimepicker" data-target-input="nearest" data-target="#datetimepicker" data-toggle="datetimepicker">
+                                     <div class="col-md-6 p-1" id="other_datetimepicker" data-target-input="nearest" data-target="#other_datetimepicker" data-toggle="datetimepicker">
                                          {!! Form::label('paid_on', __('english.paid_on') . ':*') !!}
                                          <div class="input-group flex-nowrap input-group-append  input-group date"> <span class="input-group-text" id="addon-wrapping"><i class="fa fa-calendar"></i></span>
-                                             {!! Form::text('other_paid_on', @format_datetime($other_payment_line->paid_on), ['class' => 'form-control datetimepicker-input', 'data-target' => '#datetimepicker', 'required']) !!}
+                                             {!! Form::text('other_paid_on', @format_datetime($other_payment_line->paid_on), ['class' => 'form-control datetimepicker-input', 'data-target' => '#other_datetimepicker', 'required']) !!}
                                          </div>
                                      </div>
                                      <div class="col-md-6 p-1">

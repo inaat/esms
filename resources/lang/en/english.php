@@ -1531,4 +1531,14 @@ During The Admission',
 'school_name'=>'School Name',
 'logo'=>'Logo',
 
+'image'=>'Image',
+'about_page_title'=>'About Page Title',
+'manage_your_about_page'=>'Manage Your About Page',
+'about_page'=>'About Page',
+'about_page_list'=>'About Page List',
+'add_new_about_page'=>'Add New About Page',
+'edit_about_page'=>'Edit About Page',
+'home_title'=>'Home Title',
+'about_page_create'=>'About Page Create',
+
 ];

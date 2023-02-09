@@ -113,7 +113,7 @@ class HomeController extends Controller
             $total_paid_amount=$this->feeTransactionUtil->getTotalFeePaid($start, $end, null, $campus_id);
            // $total_expense=$this->expenseTransactionUtil->getTotalExpense($start, $end, $campus_id);
         //     dd($paid);
-
+            $output['account_balances']=$this->feeTransactionUtil->getAccountBalance($end, $campus_id);
             $output['active_students'] = $active_students;
             $output['total_paid_amount'] = $total_paid_amount;
             $output['inactive_students'] = $inactive_students;
@@ -144,7 +144,7 @@ class HomeController extends Controller
             $output['active_employees'] = $active_employees;
             $output['resign_employees'] = $resign_employees;
             $currency = request()->session()->get('currency');
-
+            
             //Chart for sells last 30 days
             $sells_last_30_days = $this->feeTransactionUtil->getFeePAidLast30Days($campus_id);
             $labels = [];

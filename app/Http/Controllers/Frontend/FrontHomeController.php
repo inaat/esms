@@ -24,9 +24,11 @@ class FrontHomeController extends Controller
         $news=FrontNews::get();
         $slider=FrontSlider::get();
         $about_us=FrontAboutUs::get();
+        $galleries = FrontGalleryContent::where('status','publish')->select(['title', 'id','slug','thumb_image'])->get();
+        //dd($galleries);
         $topers = null;
         //dd($topers[2]['data']->final_percentage);
-        return view('frontend.index')->with(compact('slider', 'news', 'about_us', 'topers'));
+        return view('frontend.index')->with(compact('slider', 'news', 'about_us', 'topers','galleries'));
     }
     public function about_index()
     {

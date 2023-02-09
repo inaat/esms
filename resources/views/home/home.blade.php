@@ -323,6 +323,39 @@
 
          <div class="row">
 
+             <div class="col-6 d-flex">
+                 <div class="card radius-10 w-100">
+                     <div class="card-body">
+                        <table class="table" id="assets_table">
+                            <tbody>
+                               
+                                <tr>
+                                    <th colspan="2">@lang('english.account_balances'):</th>
+                                </tr>
+                            </tbody>
+                            <tbody id="account_balances" class="pl-20-td">
+                                <tr>
+                                    <td colspan="2"><i class="fas fa-sync fa-spin fa-fw"></i></td>
+                                </tr>
+                            </tbody>
+                            <tbody class="text-primary"class="pl-20-td">
+                                <tr>
+                                    <th colspan="">       
+                                        @lang('english.total_assets'):
+                                    </th>
+                                    <td colspan="">       
+                                        <span id="total_assets"><i class="fas fa-sync fa-spin fa-fw"></i></span>
+                                      </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                     </div>
+                 </div>
+             </div>
+         </div>
+
+         <div class="row">
+
              <div class="col-12 d-flex">
                  <div class="card radius-10 w-100">
                      <div class="card-body">

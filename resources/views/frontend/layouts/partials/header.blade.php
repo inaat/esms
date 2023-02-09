@@ -12,7 +12,7 @@
          <div class="container">
              <div class="clearfix mobile-tab">
                  <div class="logo-box pull-left">
-                     <figure class="logo"><a href="index.html">
+                     <figure class="logo"><a href="url('/')">
                              <img  src="{{url('uploads/front_image/'.session()->get("front_details.logo_image"))}}"   alt="image"><br>
                              <p class="hjghjg centred">{{ session()->get("front_details.reg_no") }}</p>
                          </a></figure>
@@ -170,7 +170,7 @@
                                  </ul>
                              </li>
                              <li>
-                                 <a href="gallery.html">Gallery</a>
+                                 <a href="{{ url('gallery') }}">Gallery</a>
                                  <ul>
                                  </ul>
                              </li>

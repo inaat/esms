@@ -871,6 +871,11 @@ class AdminSidebarMenu
                             ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'front-sliders' ]
                         );
                         $sub->url(
+                            action('Frontend\FrontAboutController@index'),
+                            __('english.about_page'),
+                            ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'front-abouts' ]
+                        );
+                        $sub->url(
                             action('Frontend\FrontSettingController@index'),
                             __('english.settings'),
                             ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'front-settings' ]

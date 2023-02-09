@@ -27,7 +27,7 @@
                     <div class="service-block-one">
                         <div class="inner-box">
                             <div class="icon-box"><img src="../front/front_assets/images/kids.png" alt=""></div>
-                            <h3><a href="gallery.html">Photo Gallery</a></h3>
+                            <h3><a href="{{ url('gallery') }}">Photo Gallery</a></h3>
                         </div>
                     </div>
                 </div>

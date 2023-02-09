@@ -103,7 +103,7 @@
 
                  <div class="col-lg-3 col-6 footer-contact">
                  
-                     <h1 class="logo footerlogo"><a href="index.html"><img src="{{url('uploads/front_image/'.session()->get("front_details.logo_image"))}}" alt="logo"><span></span></a></h1>
+                     <h1 class="logo footerlogo"><a href="{{ url('/') }}"><img src="{{url('uploads/front_image/'.session()->get("front_details.logo_image"))}}" alt="logo"><span></span></a></h1>
                      <p>{{ session()->get("front_details.address") }}<br><br>
                          <strong>Phone:</strong> {{ session()->get("front_details.phone_no") }}<br>
                          <strong>Email:</strong>{{ session()->get("front_details.email") }}<br>
@@ -113,7 +113,7 @@
                  <div class="col-lg-3 col-6 footer-links">
                      <h4>Quick Links</h4>
                      <ul>
-                         <li><i class="bx bx-chevron-right"></i> <a href="index.html">Home</a></li>
+                         <li><i class="bx bx-chevron-right"></i> <a href="{{ url('/') }}">Home</a></li>
                          <li><i class="bx bx-chevron-right"></i> <a href="school-profile.html">About School</a></li>
                          <!--<li><i class="bx bx-chevron-right"></i> <a href="#">Certificates</a></li>-->
                          <li><i class="bx bx-chevron-right"></i> <a href="tc.html">TC</a></li>

@@ -78,7 +78,7 @@
     <link rel="icon" href="{{url('uploads/front_image/'.session()->get("front_details.logo_image"))}}" type="image/ico">
     <link href="{{ url('front/front_assets/css/style.css')}} " rel="stylesheet">
     <link href="{{ url('front/front_assets/css/responsive.css')}}" rel="stylesheet">
-    <link href="https://www.flawlessindia.co.in/static/NPS/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="{{ url('front/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
     <link href='{{ url('front/front_assets/css/boxicons.min.css')}}' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -100,7 +100,7 @@
     <script src="{{ url('front/front_assets/js/owl.js')}}"></script>
     <script src="{{ url('front/front_assets/js/wow.js')}}"></script>
     <script src="{{ url('front/front_assets/js/validation.js')}}"></script>
-    <script src="https://www.flawlessindia.co.in/static/NPS/assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="{{ url('front/swiper/swiper-bundle.min.js')}}"></script>
     <script src="{{ url('front/front_assets/js/jquery.fancybox.js')}}"></script>
     <script src="{{ url('front/front_assets/js/appear.js')}}"></script>
     <script src="{{ url('front/front_assets/js/parallax.min.js')}}"></script>

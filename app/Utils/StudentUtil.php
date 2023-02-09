@@ -238,12 +238,14 @@ class StudentUtil extends Util
             $student->user_id=$user->id;
             $student->save();
         $this->createWithdrawRegister($student);
+       
         if ($guardian_link_id == null) {
             $studentGuardian = StudentGuardian::where('student_id', $student_id)->first();
             $guardian = Guardian::where('id', $studentGuardian->guardian_id)->first();
             $guardian->fill($request['guardian']);
             $guardian->save();
             $guardian_login=$this->guardianCreateUpdateLogin($guardian, 'guardian', $guardian->id);
+        
         } else {
             $studentGuardian = StudentGuardian::where('student_id', $student_id)->first();
             $guardian = Guardian::where('id', $studentGuardian->guardian_id)->first();
