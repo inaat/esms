@@ -40,7 +40,7 @@ class ClassReportController extends Controller
             $class_id=request()->get('class_id');
             $class_section_id=request()->get('class_section_id');
             $classes=Classes::find($class_id);
-            $section=ClassSection::find($class_id);
+            $section=ClassSection::find($class_section_id);
             $student =Student::where('status','active')
             ->where('campus_id', $campus_id)
             ->where('current_class_id', $class_id)

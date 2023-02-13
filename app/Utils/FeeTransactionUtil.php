@@ -506,8 +506,8 @@ class FeeTransactionUtil extends Util
 public function getTotalFeePaid($start_date = null, $end_date = null, $student_id=null, $campus_id=null)
 {
     $query = FeeTransactionPayment::leftJoin('fee_transactions', 'fee_transaction_payments.fee_transaction_id', '=', 'fee_transactions.id')
-    ->whereIn('fee_transactions.type',['fee','other_fee','openning_balance'])
-    ->select(DB::raw('COALESCE(SUM(IF( is_return = 0, amount, amount*-1)),0)as total_paid', 'paid_on'));
+   ->whereIn('fee_transactions.type',['fee','other_fee','opening_balance','admission_fee'])
+    ->select(DB::raw('COALESCE(SUM(IF( is_return = 0, amount, amount*-1)),0) as total_paid', 'paid_on'));
     if (!empty($start_date) && !empty($end_date)) {
         $query->whereDate('paid_on', '>=', $start_date)
                 ->whereDate('paid_on', '<=', $end_date);

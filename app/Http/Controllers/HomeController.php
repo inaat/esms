@@ -64,6 +64,8 @@ class HomeController extends Controller
 
     public function index()
     {
+
+       //dd($this->commonUtil->strengthReport());
         $user = \Auth::user();
         if ($user->user_type == 'teacher') {
             return redirect('/dashboard');
@@ -105,9 +107,11 @@ class HomeController extends Controller
             $struck_up_students=$this->studentUtil->getStruckUpStudents($campus_id);
             $took_slc_students=$this->studentUtil->getTookSLCStudents($campus_id);
             $total_student_attendance=$this->studentUtil->getStudentTotalAttendances($campus_id, 'present', $start, $end);
+            $total_student_absent_attendance=$this->studentUtil->getStudentTotalAttendances($campus_id, 'absent', $start, $end);
 
             //Employee
             $total_employee_attendance=$this->employeeUtil->getEmployeeTotalAttendances($campus_id, 'present', $start, $end);
+            $total_employee_absent_attendance=$this->employeeUtil->getEmployeeTotalAttendances($campus_id, 'absent', $start, $end);
             $active_employees=$this->employeeUtil->getActiveEmployees($campus_id);
             $resign_employees=$this->employeeUtil->getResignEmployees($campus_id);
             $total_paid_amount=$this->feeTransactionUtil->getTotalFeePaid($start, $end, null, $campus_id);
@@ -122,6 +126,7 @@ class HomeController extends Controller
             $output['took_slc_students'] = $took_slc_students;
             $output['students_gender'] = $students_gender;
             $output['total_student_attendance'] = $total_student_attendance;
+            $output['total_student_absent_attendance'] = $total_student_absent_attendance;
              //Khan lala 
              //dd(\Carbon::now()->lastOfMonth()->format('Y-m-d'));
             $output['total_progress_collection_during_month']=$this->feeTransactionUtil->getTotalFeePaid(\Carbon::now()->startOfMonth()->format('Y-m-d'),\Carbon::now()->lastOfMonth()->format('Y-m-d'), null, $campus_id);
@@ -141,6 +146,7 @@ class HomeController extends Controller
 
             //Employee
             $output['total_employee_attendance'] = $total_employee_attendance;
+            $output['total_employee_absent_attendance'] = $total_employee_absent_attendance;
             $output['active_employees'] = $active_employees;
             $output['resign_employees'] = $resign_employees;
             $currency = request()->session()->get('currency');

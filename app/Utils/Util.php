@@ -7,6 +7,7 @@ use App\Models\Currency;
 use App\Models\FeeHead;
 use App\Models\ReferenceCount;
 use App\Models\Session;
+use App\Models\ClassSection;
 use App\Jobs\WhatsAppJob;
 use App\Models\SystemSetting;
 use App\Models\User;
@@ -1103,5 +1104,24 @@ if (!empty($campus_id)) {
                                 ->pluck('balance', 'name');
 
         return $account_details;
+    }
+
+    public function strengthReport(){
+       
+       
+                $count_class_sections_student=ClassSection::leftjoin('campuses as cam', 'class_sections.campus_id', '=', 'cam.id')
+                ->join('students', 'students.current_class_section_id', '=', 'class_sections.id')
+            ->leftJoin('classes as c-class', 'class_sections.class_id', '=', 'c-class.id')
+            ->select([
+                'cam.campus_name',
+                'c-class.title',
+                'class_sections.section_name',
+                DB::raw('count(students.id) as total_student')
+            ])->where('students.status', '=', 'active')
+            ->groupBy('class_sections.id')->orderBy('c-class.id');
+               
+
+            return $count_class_sections_student->get();
+              
     }
 }

@@ -1540,5 +1540,7 @@ During The Admission',
 'edit_about_page'=>'Edit About Page',
 'home_title'=>'Home Title',
 'about_page_create'=>'About Page Create',
-
+'individual_fee_collect_with_detail'=>'Individual Fee Collect With Detail',
+'total_student_absent'=>'Total Student Absent',
+'total_employee_absent'=>'Total Employee Absent',
 ];

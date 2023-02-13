@@ -149,10 +149,38 @@
                      <div class="card-body">
                          <div class="d-flex align-items-center">
                              <div>
+                                 <p class="mb-0 text-secondary ">@lang('english.total_employee_absent')</p>
+                                 <h4 class="font-weight-bold info-box-number total_employee_absent loader"><i class="widgets-icons  bg-light-warning text-warning fas fa-sync fa-spin fa-fw margin-bottom"></i></h4>
+                             </div>
+                             <div class="widgets-icons bg-light-warning text-warning ms-auto"><i class="bx bx-calendar"></i>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+             <div class="col">
+                 <div class="card radius-10">
+                     <div class="card-body">
+                         <div class="d-flex align-items-center">
+                             <div>
                                  <p class="mb-0 text-secondary ">@lang('english.total_student_present')</p>
                                  <h4 class="font-weight-bold info-box-number total_student_present loader"><i class="widgets-icons  bg-light-success text-success fas fa-sync fa-spin fa-fw margin-bottom"></i></h4>
                              </div>
                              <div class="widgets-icons bg-light-success text-success ms-auto"><i class="bx bx-calendar"></i>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+             <div class="col">
+                 <div class="card radius-10">
+                     <div class="card-body">
+                         <div class="d-flex align-items-center">
+                             <div>
+                                 <p class="mb-0 text-secondary ">@lang('english.total_student_absent')</p>
+                                 <h4 class="font-weight-bold info-box-number total_student_absent loader"><i class="widgets-icons  bg-light-warning text-warning fas fa-sync fa-spin fa-fw margin-bottom"></i></h4>
+                             </div>
+                             <div class="widgets-icons bg-light-warning text-warning ms-auto"><i class="bx bx-calendar"></i>
                              </div>
                          </div>
                      </div>
@@ -349,6 +377,27 @@
                                 </tr>
                             </tbody>
                         </table>
+                     </div>
+                 </div>
+             </div>
+             <div class="col-6 d-flex">
+                 <div class="card radius-10 w-100">
+                     <div class="card-body">
+                       
+                        <h5 class="card-title text-primary">@lang('english.strength_list')</h5>
+
+                        <div class="table-responsive">
+                            <table class="table mb-0" width="100%" id="class_section_table">
+                                <thead class="table-light" width="100%">
+                                    <tr>
+                                        <th>@lang('english.campus_name')</th>
+                                        <th>@lang('english.class_name')</th>
+                                        <th>@lang('english.section_name')</th>
+                                        <th>@lang('english.strength')</th>
+                                    </tr>
+                                </thead>
+        
+                            </table>
                      </div>
                  </div>
              </div>

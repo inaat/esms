@@ -244,6 +244,11 @@ class AdminSidebarMenu
                             );
                             $sub->url(
                                 action('IndividualFeeCollectionController@create'),
+                                __('english.individual_fee_collect_with_detail'),
+                                ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'fee-collection' ]
+                            );
+                            $sub->url(
+                                action('FeeCollectionController@create'),
                                 __('english.fee_collect_with_detail'),
                                 ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'fee-collection' ]
                             );

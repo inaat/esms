@@ -126,9 +126,15 @@ function update_statistics(start, end) {
             $(".total_employee_present").html(
                 data.total_employee_attendance
             );
+            $(".total_employee_absent").html(
+                data.total_employee_absent_attendance
+            );
             $(".total_student_present").html(
                 data.total_student_attendance
 
+            );
+            $(".total_student_absent").html(
+                data.total_student_absent_attendance
             );
             var labels_fee = [];
             stringArr = data.labels;
@@ -307,5 +313,60 @@ function barChart(labels_fee, chartData_fee, chartData_expense, chartData_hrm) {
             }
 
         ]
+    });
+
+
+    //class_section_table
+    var class_section_table = $("#class_section_table").DataTable({
+        dom: 'T<"clear"><"button">lfrtip',
+        bFilter: false,
+        bLengthChange: false,
+        processing: true,
+        serverSide: true,
+        "ajax": {
+            "url": "/report/strength",
+            "data": function(d) {
+
+
+                if ($('#filter_campus').length) {
+                    d.campus_id = $('#filter_campus').val();
+                }
+                if ($('#filter_class').length) {
+                    d.class_id = $('#filter_class').val();
+                }
+                if ($('#filter_section').length) {
+                    d.class_section_id = $('#filter_section').val();
+                }
+
+                d = __datatable_ajax_callback(d);
+            }
+        },
+        columns: [{
+                data: "campus_name",
+                name: "campus_name",
+                orderable: false,
+                searchable: false
+
+            }, {
+                data: "title",
+                name: "title",
+                orderable: false,
+                searchable: false
+
+            }, {
+                data: "section_name",
+                name: "section_name",
+                orderable: false,
+
+            }, {
+                data: "total_student",
+                name: "total_student",
+                orderable: false,
+                searchable: false
+
+            }
+
+            ,
+        ],
     });
 }
