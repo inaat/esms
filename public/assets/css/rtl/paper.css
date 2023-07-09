@@ -1,0 +1,244 @@
+@media print {
+    @page {
+        size: A4;
+        margin: 5px;
+        margin-bottom: 10px;
+        margin-top: 30px;
+        font-family: Arial, Helvetica, sans-serif;
+        size: A4;
+        -webkit-print-color-adjust: exact;
+
+    }
+
+    [contentEditable=true]:empty:not(:focus):before {
+        display: none;
+    }
+
+    .pagebreak {
+        page-break-after: always;
+
+    }
+
+    /* page-break-after works, as well */
+    .pto {
+        text-align: center;
+        color: red;
+    }
+
+    .print_data {
+        display: none;
+    }
+
+
+
+}
+
+
+/*inner*/
+* {
+    font-family: Arial, Helvetica, sans-serif;
+
+
+
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: inherit !important;
+    font-size: inherit !important;
+}
+
+
+
+.row {
+    margin: 0px;
+
+
+}
+
+p {
+    font-weight: inherit !important;
+    font-size: inherit !important;
+}
+
+.QuestHead {
+    font-size: 22px !important;
+}
+
+.QuestHeadLeft {
+    font-size: 19px !important;
+}
+
+p>span {
+    font-weight: inherit !important;
+    font-size: inherit !important;
+}
+
+
+
+
+* {
+    margin: 4px;
+    color: #000;
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-print-color-adjust: exact;
+
+
+
+}
+
+p {
+    display: inline;
+}
+
+body {
+    margin: 5px;
+    background: #fff;
+    zoom: 98%;
+
+}
+
+#tblMcqs {
+    display: none;
+}
+
+
+table.TextCenter {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    font-size: 16px;
+
+}
+
+table,
+th,
+td {
+    border: 1.5px solid #000;
+}
+
+td.textleft {
+    text-align: left;
+}
+
+td.textright {
+    text-align: right;
+}
+
+td.halfdevider {
+    width: 50%;
+}
+
+.th1 {
+    border: none;
+}
+
+.tr1 {
+    border: none;
+}
+
+.td1 {
+    border: none;
+}
+
+
+.head {
+    width: 100%;
+
+    /* 70% of the parent*/
+    background: #000;
+
+    text-align: center;
+    padding: 3px;
+    margin: 0px auto;
+    border-radius: 5px;
+    border-bottom: 1px solid #000;
+    
+
+
+
+}
+
+.head>h6 {
+    color: #fff;
+    font-size: 8px;
+    -webkit-print-color-adjust: exact;
+}
+
+.numberCircle {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 2px;
+
+    background: #fff;
+    border: 2px solid #666;
+    color: #666;
+    text-align: center;
+
+}
+
+span.circle {
+    border: 2px solid #000;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1em;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+}
+
+.page {
+    background: #ffffff;
+    display: block;
+    margin: 10px auto 10px auto;
+
+
+}
+
+.page[size="A4"] {
+    width: 22cm;
+}
+
+button {
+    background-color: #4CAF50;
+    /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.pagebreak {
+    page-break-after: always;
+
+}
+
+.pto {
+    text-align: center;
+    color: red;
+
+}
+
+[contentEditable=true]:empty:not(:focus):before {
+    content: attr(data-text)
+}
+
+hr {
+    border-top: 1px dashed #000;
+}

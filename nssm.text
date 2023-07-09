@@ -1,0 +1,8 @@
+call nssm.exe install queue_server "%cd%\run_server.bat"
+call nssm.exe set queue_server AppStdout "%cd%\storage\logs\queue_server_logs.log"
+call nssm.exe set queue_server AppStderr "%cd%\storage\logs\queue_server_logs.log"
+call nssm set queue_server AppRotateFiles 1
+call nssm set queue_server AppRotateOnline 1
+call nssm set queue_server AppRotateSeconds 86400
+call nssm set queue_server AppRotateBytes 1048576
+call sc start queue_server

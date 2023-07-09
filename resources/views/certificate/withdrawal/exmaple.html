@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@lang('english.fee_card')</title>
+<link href="https://fonts.googleapis.com/css?family=Michroma" rel="stylesheet">
+
+<style>
+    @media print {
+
+
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            position: relative;
+            height: 100%;
+
+        }
+
+        body:before {
+            content: '{{ session()->get("system_details.org_short_name") }}';
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+
+            color: #0d745e;
+            font-size: 100px;
+            font-weight: 500px;
+            font-family: 'certificate';
+
+            display: grid;
+            justify-content: center;
+            align-content: center;
+            opacity: 0.2;
+            transform: rotate(-45deg);
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .cursive {
+            font-family: "certificate";
+        }
+
+        .sans {
+            font-family: "Open Sans", sans-serif;
+        }
+
+        @page {
+            margin: 8px;
+            padding: 3px;
+        }
+
+
+
+        .pace-progress {
+            display: none;
+        }
+
+        * {
+            margin: 0px;
+            padding: 0px;
+            page-break-inside: avoid;
+            font-family: sans serif;
+
+        }
+
+        @page {
+
+            size: A4;
+            -webkit-print-color-adjust: exact;
+            page-break-inside: avoid;
+
+        }
+
+
+        body {
+            background-color: #fff;
+        }
+
+        .header {
+            margin: 0 auto;
+            text-align: center;
+
+        }
+
+        h2 {
+            margin: auto;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2:after {
+            content: '';
+            background: black;
+            width: 100%;
+            height: 2px;
+            display: block;
+
+        }
+
+        .underline:after {
+            content: '';
+            background: black;
+            width: 100%;
+            height: 2px;
+            display: block;
+
+        }
+
+
+        .container {
+            display: grid;
+            grid-template-columns: 150px 300px 300px;
+            margin: 0;
+            color: #000;
+
+        }
+
+        .info-container {
+            display: grid;
+            grid-template-columns: 50% 50%;
+            margin: 0;
+            color: #000;
+
+        }
+
+        .column,
+        p {
+            margin: 10px;
+
+
+        }
+
+        .text-align-center {
+            text-align: center;
+        }
+
+        .text-align-left {
+            padding: 5px;
+
+            text-align: left;
+        }
+
+        .text-align-right {
+            padding: 5px;
+
+            text-align: right;
+        }
+
+        .photo {
+            /* 70% of the parent*/
+            border: 1px solid {{  config('constants.head_bg_color') }};
+            ;
+            /* background:rgb(4,101,49); */
+            text-align: center;
+            /* color: white; */
+            padding: 3px;
+            border-radius: 5px;
+
+            text-align: center;
+        }
+        
+    .row 1{
+        
+        display: flex;
+        padding: 2px;
+
+    }
+
+    .underline {
+        
+        flex: 1;
+
+        flex-grow: 1;
+        border-bottom: 1px solid black;
+        margin-left: 5px;
+    }
+
+    }
+
+</style>
+</head>
+
+<body style="color:#000">
+
+    <div class="logo">
+        @include('common.logo')
+    </div>
+    <div class="header">
+        <h2 class="cursive bold" id="head" style="text-transform: capitalize">school Leaving Certificate</h2>
+    </div>
+    <div class="container ">
+        <div class="column photo">
+            @if (file_exists(public_path('uploads/student_image/' . $student->student_image)))
+            <img width="100%" height="130" src="{{ url('uploads/student_image/' . $student->student_image) }}" />
+            @else
+            <img width="100%" height="150" src="{{ url('uploads/student_image/default.png') }}" />
+            @endif
+
+        </div>
+        <div class="column">
+            <table width="100%" style="border:1px solid black">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">SlC No:</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="border:1px solid black;margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">@lang('english.roll_no'):</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="border:1px solid black;margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">@lang('english.certificate_no'):</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="column">
+            <table width="100%" style="border:1px solid black">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">Date of Admission:</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="border:1px solid black;margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">@lang('english.admission_no'):</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="border:1px solid black;margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">@lang('english.issue_date'):</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+
+
+        </div>
+
+    </div>
+    <hr>
+    <div class="info" style="color:#000">
+        <p style="border:0.1px solid black; padding:5px">
+            <strong><label for="">@lang('english.name') Of Student:</label> <span style="margin-left:20%">_______________________</span></strong>
+        </p>
+        <p style="border:0.1px solid black; padding:5px">
+            <strong><label for="">@lang('english.name') Of Father:</label> <span style="margin-left:20%">_______________________</span></strong>
+        </p>
+        <p style="border:0.1px solid black; padding:5px">
+            <strong><label for="">@lang('english.date_of_birth')(@lang('english.in_figures')):</label><span style="margin-left:20%">_______________________</span></strong>
+        </p>
+        <p style="border:0.1px solid black; padding:5px">
+            <strong><label for="">@lang('english.date_of_birth')(@lang('english.in_words')):</label> <span style="margin-left:20%">_______________________</span></strong>
+        </p>
+    </div>
+    <div class="info-container ">
+
+        <div class="column">
+            <table width="100%" style="border:1px solid black">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">Date Of Admission:</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="border:1px solid black;margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">@lang('english.class')Of Admission:</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="border:1px solid black;margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">@lang('english.class')in whish Studying:</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="border:1px solid black;margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">Attendance (Possible):</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+        <div class="column">
+            <table width="100%" style="border:1px solid black">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">@lang('english.admission_no'):</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="border:1px solid black;margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">Date Of Leaving:</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="border:1px solid black;margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">Reason for Leaving:</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="border:1px solid black;margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class=" text-align-left">Attendance (Actual):</div>
+                        </th>
+                        <td>
+                            <div class=" text-align-center"><strong>2020-003</strong> </div>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div>
+ <div class='row1'>
+                    <div class='label'> <strong>@lang('english.name'):</strong></div>
+                    <div class="mg-left">
+                        <strong>5555555555555</strong>
+                    </div>
+
+                </div>
+    </div>
+
+</body>
+
+</html>
+
