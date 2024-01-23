@@ -34,11 +34,11 @@
             <tr>
                 <td> {{$loop->iteration}}
                 </td>
-                <td>{{ $section->classes->title }} {{ $section->section_name }}</td>
-                @foreach ($section->time_table as $time_table)
+               <td>{{ $section['section_name']}}</td>
+                @foreach ($section['timetables'] as $time_table)
                 @if(!empty($time_table->subjects))
                 <td> {{ $time_table->subjects->name }}  {{ $time_table->other ? '('.__('english.'.$time_table->other).')' : null }} <br>@if(!empty($time_table->teacher)) <strong>({{ ucwords($time_table->teacher->first_name . ' ' . $time_table->teacher->last_name) }})@endif</strong></td>
-                @else
+                @elseif(!empty($time_table->periods))
                 @if($time_table->periods->type=='lunch_break' || $time_table->periods->type=='paryer_time')
                 <td ><span class="vertical-text">@lang('english.'.$time_table->periods->type)</span></td>
                 @else
@@ -60,10 +60,15 @@
                                 @endif
                     <br>@if(!empty($time_table->note)) <strong>({{ ucwords($time_table->note ) }})@endif</strong>
                 </td>
-                @endif
-                @endif
-                @endforeach
+               @endif
+
+                                   @else
+                                   <td></td>
+                                @endif
+                                
+                                @endforeach 
             </tr>
+            
             @endforeach
         </tbody>
     </table>
@@ -71,3 +76,4 @@
 </body>
 
 </html>
+                    

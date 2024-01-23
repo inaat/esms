@@ -77,7 +77,7 @@ class TeacherApiController extends Controller
                 "last_name" => $user->last_name,
                 "gender" => $user->employee->gender,
                 "email" => $user->email,
-                "fcm_id" => "faErXC5qTTOstGL6n30ijx:APA91bHF64phU0sYY8vgDrmi2hpCAvLaTVItnm6BvXohihAWgJjWOZlX2UUdDyFxumVkzzgdsHSxP1n1JuHrMkzP2Q9eX_o_Ktz2pI1wHV54eEWP2zpY8NAuRYTX0RfZnwUT5EPRIZeg",
+                "fcm_id" => $auth->fcm_id,
                 "email_verified_at" => null,
                 "mobile" => $user->employee->mobile_no,
                 "image" => $image,
@@ -2226,7 +2226,7 @@ class TeacherApiController extends Controller
         return response()->json($response);
     }
 
-    public function submitExamMarksBySubjects(Request $request)
+   public function submitExamMarksBySubjects(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'exam_id' => 'required|numeric',
@@ -2257,11 +2257,11 @@ class TeacherApiController extends Controller
                         $sub->obtain_parc_mark = $marks['viva_marks'];
                         $sub->total_obtain_mark = $marks['obtained_marks'] + $marks['viva_marks'];
                         //viva_marks
-                        $obtain_percentage = ($marks['obtained_marks'] + $marks['viva_marks'] * 100) / $sub->total_mark;
+                        $obtain_percentage = ($sub->total_obtain_mark * 100) / $sub->total_mark;
                         $sub->obtain_percentage = $obtain_percentage;
                         $grades = ExamGrade::get();
                         foreach ($grades as $grade) {
-                            if ($obtain_percentage >= $grade->percentag_from && $obtain_percentage <= $grade->percentage_to) {
+                            if ($obtain_percentage >= $grade->percentage_from && $obtain_percentage <= $grade->percentage_to) {
                                 $sub->grade_id = $grade->id;
                                 $sub->remark = $grade->remark;
                             }
@@ -2284,12 +2284,17 @@ class TeacherApiController extends Controller
                         $exam_allocation->final_percentage = $final_percentage;
                         $grades = ExamGrade::get();
                         foreach ($grades as $grade) {
-                            if ($final_percentage >= $grade->percentag_from && $final_percentage <= $grade->percentage_to) {
+                            if ($final_percentage >= $grade->percentage_from && $final_percentage <= $grade->percentage_to) {
                                 $exam_allocation->grade_id = $grade->id;
                                 $exam_allocation->remark = $grade->remark;
                             }
                         }
                         $exam_allocation->save();
+                         $this->schoolPosition($exam_allocation->campus_id,$exam_allocation->session_id,$exam_allocation->exam_create_id);
+                        $this->classPosition($exam_allocation->campus_id,$exam_allocation->class_id,$exam_allocation->session_id,$exam_allocation->exam_create_id);
+                        $this->classSectionPosition($exam_allocation->campus_id,$exam_allocation->class_id,$exam_allocation->class_section_id,$exam_allocation->session_id,$exam_allocation->exam_create_id);
+                        $this->position_in_subject($exam_allocation->campus_id,$exam_allocation->class_id,$exam_allocation->session_id,$exam_allocation->exam_create_id,$request->subject_id);
+ 
                     }
                 }
 
@@ -2427,6 +2432,7 @@ class TeacherApiController extends Controller
         }
         return response()->json($response);
     }
+
 
 
     public function GetStudentExamResult(Request $request)
@@ -2703,7 +2709,7 @@ class TeacherApiController extends Controller
                         'id' => (int) $data->subject->id,
                         'name' => $data->subject->name . ' (' . $data->type . '.)',
                         'bg_color' => $data->subject->bg_color,
-                        'image' => $data->subject->image,
+                          'image' => file_exists(public_path('uploads/subjects/'.$data->subject->subject_icon)) ? url('uploads/subjects/'.$data->subject->subject_icon) : url('uploads/subjects/default.svg'),
                         'type' => $data->subject->type,
                     )
                 );
@@ -2758,13 +2764,13 @@ class TeacherApiController extends Controller
             foreach ($subjects as $key => $sub) {
                 # code...
 
-                $data[] = [
+               $data[] = [
                     "id" => (int) $sub->student->id,
                     "first_name" => $sub->student->first_name,
                     "last_name" => (string) $sub->student->last_name,
                     "roll_number" => $sub->student->roll_no,
-                    "theory_mark" => (int) $sub->obtain_theory_mark,
-                    "viva_mark" => (int) $sub->obtain_parc_mark,
+                    "theory_mark" =>  $sub->obtain_theory_mark,
+                    "viva_mark" =>  $sub->obtain_parc_mark,
                     "total_mark" => (int) $sub->total_mark,
                     "total_theory_mark" => (int) $sub->theory_mark,
                     "total_viva_mark" => (int) $sub->parc_mark,
@@ -3022,7 +3028,7 @@ class TeacherApiController extends Controller
         return response()->json($response);
     }
 
-    public function postAssessment(Request $request)
+     public function postAssessment(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
@@ -3132,6 +3138,91 @@ class TeacherApiController extends Controller
             );
         }
         return response()->json($response);
+    }
+
+/**
+     * Returns the content for the receipt
+     *
+     * @param  int  $business_id
+     * @param  int  $location_id
+     * @param  int  $transaction_id
+     * @param string $printer_type = null
+     *
+     * @return array
+     */
+    private function schoolPosition($campus_id, $session_id,$exam_create_id)
+    {
+        $top_students = DB::table('exam_allocations')
+        ->select('id','total_mark','obtain_mark','final_percentage')
+        ->selectRaw("FIND_IN_SET( final_percentage, ( SELECT GROUP_CONCAT( DISTINCT `final_percentage` ORDER BY `final_percentage` DESC ) FROM exam_allocations )) as rank ")
+        ->where('campus_id',$campus_id)
+        ->where('session_id',$session_id)
+        ->where('exam_create_id',$exam_create_id)
+        ->orderBy('rank','ASC')
+        ->get();
+       // dd($top_students);
+        foreach ($top_students as $key => $top_student) {
+            $exam_allocation=ExamAllocation::findOrFail($top_student->id);
+            $exam_allocation->merit_rank_in_school=$top_student->rank;
+            $exam_allocation->save();
+        }
+    }
+    private function classPosition($campus_id,$class_id, $session_id,$exam_create_id)
+    {
+
+        $top_students = DB::table('exam_allocations')
+        ->select('id','total_mark','obtain_mark')
+        ->selectRaw("FIND_IN_SET( obtain_mark, ( SELECT GROUP_CONCAT( DISTINCT `obtain_mark` ORDER BY `obtain_mark` DESC ) FROM exam_allocations Where 
+        campus_id=".$campus_id." And  class_id=".$class_id." And  session_id=".$session_id." And  exam_create_id=".$exam_create_id."  )) as rank ")
+        ->where('campus_id',$campus_id)
+        ->where('class_id',$class_id)
+        ->where('session_id',$session_id)
+        ->where('exam_create_id',$exam_create_id)
+        ->orderBy('rank','ASC')
+        ->get();
+        foreach ($top_students as $key => $top_student) {
+            $exam_allocation=ExamAllocation::findOrFail($top_student->id);
+            $exam_allocation->class_position=$top_student->rank;
+            $exam_allocation->save();
+        }
+    }
+    private function classSectionPosition($campus_id,$class_id,$class_section_id, $session_id,$exam_create_id)
+    {
+        $top_students = DB::table('exam_allocations')
+        ->select('id','total_mark','obtain_mark')
+        ->selectRaw("FIND_IN_SET( obtain_mark, ( SELECT GROUP_CONCAT( DISTINCT `obtain_mark` ORDER BY `obtain_mark` DESC ) FROM exam_allocations Where 
+        campus_id=".$campus_id." And  class_id=".$class_id." And  class_section_id=".$class_section_id." And  session_id=".$session_id." And  exam_create_id=".$exam_create_id."  )) as rank ")
+        ->where('campus_id',$campus_id)
+        ->where('class_id',$class_id)
+        ->where('class_section_id',$class_section_id)
+        ->where('session_id',$session_id)
+        ->where('exam_create_id',$exam_create_id)
+        ->orderBy('rank','ASC')
+        ->get();
+        foreach ($top_students as $key => $top_student) {
+            $exam_allocation=ExamAllocation::findOrFail($top_student->id);
+            $exam_allocation->class_section_position=$top_student->rank;
+            $exam_allocation->save();
+        }
+    }
+    private function position_in_subject($campus_id,$class_id, $session_id,$exam_create_id,$subject_id)
+    {    
+        $top_students = DB::table('exam_subject_results')
+        ->select('id','total_mark','total_obtain_mark')
+        ->selectRaw("FIND_IN_SET( total_obtain_mark, ( SELECT GROUP_CONCAT( DISTINCT `total_obtain_mark` ORDER BY `total_obtain_mark` DESC ) FROM exam_subject_results Where 
+        campus_id=".$campus_id." And  class_id=".$class_id." And  subject_id=".$subject_id." And  session_id=".$session_id." And  exam_create_id=".$exam_create_id."  )) as rank ")
+        ->where('campus_id',$campus_id)
+        ->where('class_id',$class_id)
+        ->where('session_id',$session_id)
+        ->where('exam_create_id',$exam_create_id)
+        ->where('subject_id',$subject_id)
+        ->orderBy('rank','ASC')
+        ->get();
+        foreach ($top_students as $key => $top_student) {
+            $exam_subject=ExamSubjectResult::findOrFail($top_student->id);
+            $exam_subject->position_in_subject=$top_student->rank;
+            $exam_subject->save();
+        }
     }
 
     

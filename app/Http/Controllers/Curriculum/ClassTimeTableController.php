@@ -42,9 +42,8 @@ class ClassTimeTableController extends Controller
         }
 
         $system_settings_id = session()->get('user.system_settings_id');
-
+         
         $check_period =[];
-        $class_time_table_title=[];
         $sections=ClassSection::with(['campuses','classes','time_table','time_table.subjects','time_table.teacher','time_table.periods'])->orderBy('class_id');
         $permitted_campuses = auth()->user()->permitted_campuses();
         if ($permitted_campuses != 'all') {
@@ -79,19 +78,32 @@ class ClassTimeTableController extends Controller
             $class_section_id=null;
         }
         $sections_t=$sections->get();
+        $periods=ClassTimeTablePeriod::orderBy('id')->get();
         $sections=[];
         foreach ($sections_t as $section){
             
-            if($section->time_table->count()> 0){
-                $sections[]=$section;
-            foreach ($section->time_table as $time_table){
-                $inArray=in_array($time_table->periods->id,$check_period );
-                if($inArray ==false){
-                    $class_time_table_title[]= $this->commonUtil->format_time($time_table->periods->start_time).' To '.$this->commonUtil->format_time($time_table->periods->end_time).' '.$time_table->periods->name;
-                    array_push($check_period,$time_table->periods->id);
+             if($section->time_table->count()> 0){
+                $class_time_table=[];
+                foreach($periods as $period){
+                    
+                    $tt=ClassTimeTable::with(['campuses','classes','subjects','teacher','periods'])
+                    ->where('campus_id',$section->campus_id)
+                    ->where('class_id',$section->class_id)
+                    ->where('class_section_id',$section->id)
+                    ->where('period_id',$period->id)->first();
+                    if(!empty($tt)){
+                    
+                        $class_time_table[]= $tt;
+                    }else{
+                       $class_time_table[]= [];
+
+                    }
                 }
-            }
-            }
+              
+                $sections[]=['section_name'=>$section->classes->title.'  ' . $section->section_name,
+                'timetables'=>$class_time_table];
+           
+             }
         } 
         $campuses=Campus::forDropdown();
         if (!empty($campus_id)) {
@@ -105,16 +117,19 @@ class ClassTimeTableController extends Controller
         }else{
             $class_sections=[];
         }
+        foreach($periods as $period){
+            $class_time_table_title[]= $this->commonUtil->format_time($period->start_time).' To '.$this->commonUtil->format_time($period->end_time).' '.$period->name;
+        }
+        $all_subjects=ClassSubject::allSubjectDropdown();
+        $teachers=HrmEmployee::forDropdown();
         if (request()->has('print')) {
             $print = request()->get('print');
             if (!empty($print)) {
                 $snappy=$this->generateFeeCard($sections,$class_time_table_title);
                 return $snappy->stream();            }
         }
-        $all_subjects=ClassSubject::allSubjectDropdown();
-        $teachers=HrmEmployee::forDropdown();
-
-       // dd($all_subjects);
+      
+       
         return view('Curriculum.class_time_table.index')->with(compact('classes','class_sections','sections','class_time_table_title','campuses','campus_id','class_id','class_section_id','all_subjects','teachers'));
     }
          /**
@@ -319,8 +334,7 @@ class ClassTimeTableController extends Controller
 
         if (request()->ajax()) {
             try {
-                $input = $request->only(['campus_id','subject_id','class_id','class_section_id','period_id']);
-                $period =ClassTimeTablePeriod::findOrFail($id);
+                $period =ClassTimeTable::findOrFail($id);
                 $period->delete();
 
                 $output = ['success' => true,

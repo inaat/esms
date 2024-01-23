@@ -1,11 +1,21 @@
+ 
+    @php
+               $front_counters =session()->get("front_counters");
+            @endphp
+            @if(!empty($front_counters->count()>0))
  <section id="counter-stats" class="wow fadeInRight" data-wow-duration="1.4s">
      <div class="container">
          <div class="row">
-             <div class="col-lg-3 col-6 stats">
-                 <div class="counting" data-count="35">0</div><span class="pone">+</span>
-                 <h5>Average Class Size</h5>
+            @foreach($front_counters as $data)
+            @if($data->status=='publish')
+            <div class="col-lg-3 col-6 stats">
+                 <div class="counting" data-count="{{ $data->number }}">0</div>
+                 <a  href="{{ $data->link }}"><h4> {{ $data->title }}</h5></a>
              </div>
-             <div class="col-lg-3 col-6 stats">
+             @endif
+             @endforeach
+
+             {{-- <div class="col-lg-3 col-6 stats">
                  <div class="counting" data-count="50">0</div><span class="ptwo">+</span>
                  <h5>Awards</h5>
              </div>
@@ -16,7 +26,7 @@
              <div class="col-lg-3 col-6 stats">
                  <div class="counting" data-count="15000">0</div><span class="pfour">+</span>
                  <h5>Success Students</h5>
-             </div>
+             </div> --}}
 
          </div>
          <!-- end row -->
@@ -24,3 +34,4 @@
      <!-- end container -->
 
  </section>
+ @endif

@@ -126,10 +126,9 @@ class FrontEventController extends Controller
            if ($request->hasFile('image') && $request->file('image')->isValid()) {
                if (File::exists(public_path('uploads/front_image/'. $event->image))) {
                    File::delete(public_path('uploads/front_image/'. $event->image));
-
-                   $filename=$this->commonUtil->uploadFile($request, 'image', 'front_image', 'image');
-                   $event->images=$filename;
                }
+               $filename=$this->commonUtil->uploadFile($request, 'image', 'front_image', 'image');
+               $event->images=$filename;
            }
            $event->save();
            $output = ['success' => true,

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Region;
 use App\Models\City;
 use App\Models\District;
+use App\Models\Student;
 use App\Models\Province;
 use Yajra\DataTables\Facades\DataTables;
 use App\Utils\Util;
@@ -160,7 +161,13 @@ class RegionController extends Controller
                 $region = Region::findOrFail($id);
                 $region->fill($input);
                 $region->save();
-
+                $students=Student::where('status','active')->where('region_id',$id)->where('student_transport_fee','>', 0)->get();
+                
+                foreach($students as $student){
+                    $student=Student::find($student->id);
+                    $student->student_transport_fee=$input['transport_fee'];
+                    $student->save();
+                }
                 $output = ['success' => true,
                             'msg' => __("english.updated_success")
                             ];

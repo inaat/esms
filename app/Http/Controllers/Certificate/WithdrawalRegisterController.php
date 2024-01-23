@@ -115,7 +115,7 @@ class WithdrawalRegisterController extends Controller
           //  'students.cast',
             'adm-class.title as admission_class',
             'c-class.title as leaving_class',
-        ]);
+        ])->orderBy('students.admission_date');
         
         $permitted_campuses = auth()->user()->permitted_campuses();
         if ($permitted_campuses != 'all') {
@@ -307,7 +307,7 @@ class WithdrawalRegisterController extends Controller
           //  'students.cast',
             'adm-class.title as admission_class',
             'c-class.title as leaving_class',
-        ]);
+        ])->orderBy('students.admission_date');
         $permitted_campuses = auth()->user()->permitted_campuses();
     if ($permitted_campuses != 'all') {
      $withdrawal_register->whereIn('students.campus_id', $permitted_campuses);
@@ -494,7 +494,7 @@ class WithdrawalRegisterController extends Controller
         $output['is_enabled'] = true;
         $receipt_details=[];
     
-        $output['html_content'] = view('certificate\withdrawal.print', compact('withdrawal_register', 'class_level'))->render();
+        $output['html_content'] = view('certificate.withdrawal.print', compact('withdrawal_register', 'class_level'))->render();
             
         return $output;
     }

@@ -74,7 +74,7 @@ class AssignSubjectTeacherController extends Controller
                              <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">'. __("english.actions").'</button>
                              <ul class="dropdown-menu" style="">';
                              $html.='<li><a class="dropdown-item  edit_class_subject_button"data-href="' . action('Curriculum\AssignSubjectTeacherController@edit', [$row->id]) . '"><i class="bx bxs-edit "></i> ' . __("english.edit") . '</a></li>';
-
+                             $html.='<li><a class="dropdown-item btn-danger  delete_assign_subject_button"data-href="' . action('Curriculum\AssignSubjectTeacherController@destroy', [$row->id]) . '"><i class="bx bxs-trash f-16 text-white"></i> ' . __("english.delete") . '</a></li>';
                         $html .= '</ul></div>';
     
                         return $html;
@@ -211,4 +211,55 @@ class AssignSubjectTeacherController extends Controller
         }
     }
   
+  
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        if (!auth()->user()->can('assign_subject.update')) {
+            abort(403, 'Unauthorized action.');
+        }
+  
+        if (request()->ajax()) {
+           try {
+               
+                
+                $subject_teacher = SubjectTeacher::findOrFail($id);
+                $old_teacher_id=$subject_teacher->teacher_id;
+                $subject_id=$subject_teacher->subject_id;
+                $subject_teacher->delete();
+                $check_teacher_slot=ClassTimeTable::where('subject_id', $subject_id)
+                ->where('class_id', $subject_teacher->class_id)
+                ->where('class_section_id', $subject_teacher->class_section_id)
+                ->where('campus_id', $subject_teacher->campus_id)->get();
+
+                if (!empty($check_teacher_slot)) {
+                    foreach ($check_teacher_slot as $teacher_slot) {
+                        $update_teacher_slot=ClassTimeTable::
+                        where('subject_id', $subject_id)
+                        ->where('teacher_id', $old_teacher_id)->first();
+
+                        $update_teacher_slot->delete();
+                       
+                    }
+                }
+
+                $output = ['success' => true,
+                            'msg' => __("english.updated_success")
+                           ];
+            } catch (\Exception $e) {
+                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+  
+                $output = ['success' => false,
+                            'msg' => __("english.something_went_wrong")
+                        ];
+            }
+  
+            return $output;
+        }
+    }
 }

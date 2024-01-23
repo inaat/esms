@@ -68,10 +68,12 @@
                             <th >@lang('english.roll_no')</th>
                             <th >@lang('english.first_name')</th>
                             <th >@lang('english.last_name')</th>
+                                                        <th >@lang('english.admission_date')</th>
+
                             <th >@lang('english.father_name')</th>
                             <th >@lang('english.date_of_brith')</th>
-                            <th >@lang('english.transport_fee')</th>
                             <th >@lang('english.tuition_fee')</th>
+                            <th >@lang('english.transport_fee')</th>
                             <th >@lang('english.mobile_no')</th>
                             <th >@lang('english.address')</th>
                         </tr>
@@ -80,20 +82,29 @@
                     <tbody id="fn_mark">
                         @foreach ($students as $std)
                         <tr>
+                            
                             <td>{{ $std->roll_no }}</td>
                             <td><input type="text" value="{{ $std->first_name}}" name="marks[{{$std->id}}][first_name]"  required class="form-control  tabkey addtabkey "> </td>
                             <td><input type="text" value="{{ $std->last_name}}" name="marks[{{$std->id}}][last_name]"   class="form-control  tabkey addtabkey "> 
                                 <input type="hidden" value="{{ $std->id }}" name="marks[{{$std->id}}][student_id]"/>
                             </td>
+                            
+                                                 <td> 
+                            <div style=""class="input-group flex-nowrap input-group-append  input-group date"> <span class="input-group-text" id="addon-wrapping"><i class="fa fa-calendar"></i></span>
+                                                 <input class="form-control datetimepicker-input date-timepicker" data-target-input="nearest" data-toggle="datetimepicker" required name="marks[{{$std->id}}][admission_date]" type="text" value="{{ @format_date($std->admission_date)}}">
+                                             </div>
+                                             </td>
                             <td><input type="text" value="{{ $std->father_name}}" name="marks[{{$std->id}}][father_name]"   class="form-control tabkey addtabkey "> </td>
                                <td> 
                             <div style=""class="input-group flex-nowrap input-group-append  input-group date"> <span class="input-group-text" id="addon-wrapping"><i class="fa fa-calendar"></i></span>
                                                  <input class="form-control datetimepicker-input date-timepicker" data-target-input="nearest" data-toggle="datetimepicker" required name="marks[{{$std->id}}][birth_date]" type="text" value="{{ @format_date($std->birth_date)}}">
                                              </div>
                                              </td>
+                                             
+                                              <td><input type="number" value="{{ $std->student_tuition_fee}}" name="marks[{{$std->id}}][student_tuition_fee]"  required class="form-control input_number tabkey addtabkey input_number"> </td>
                             <td><input type="number" value="{{ $std->student_transport_fee}}" name="marks[{{$std->id}}][student_transport_fee]"  required class="form-control input_number tabkey addtabkey input_number"> </td>
 
-                            <td><input type="number" value="{{ $std->student_tuition_fee}}" name="marks[{{$std->id}}][student_tuition_fee]"  required class="form-control input_number tabkey addtabkey input_number"> </td>
+                           
                             <td><input type="text" value="{{ $std->mobile_no}}" name="marks[{{$std->id}}][mobile_no]"   class="form-control  tabkey addtabkey "> </td>
                             <td><input type="text" value="{{ $std->std_permanent_address}}" name="marks[{{$std->id}}][std_permanent_address]"   class="form-control  tabkey addtabkey "> </td>
 

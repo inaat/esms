@@ -152,16 +152,10 @@
     }
 
 </style>
-<div class="site-content" data-color="">
-
-    <nav aria-label="breadcrumb" class="breadjhj">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Gallery</li>
-        </ol>
-    </nav>
+<div class="aboutUs">
+      @component('frontend.components.widget', ['title'=>$query->title ])
+  @endcomponent
     <div class="container">
-
         <section>
              @if(!empty($data))
             <div id="image-gallery">

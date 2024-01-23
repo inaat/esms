@@ -59,6 +59,12 @@ $(document).ready(function() {
                 searchable: false,
             },
             {
+                data: "cnic_no",
+                name: "cnic_no",
+                orderable: false,
+                searchable: false,
+            },
+            {
                 data: "birth_date",
                 name: "birth_date",
                 orderable: false,
@@ -67,6 +73,9 @@ $(document).ready(function() {
             {
                 data: "father_name",
                 name: "father_name",
+            },{
+                data: "father_cnic_no",
+                name: "father_cnic_no",
             },
             {
                 data: "status",
@@ -463,8 +472,8 @@ $(document).ready(function() {
             },
             success: function(result) {
                 if (result) {
-                    $("#student_tuition_fee").val(result.tuition_fee);
-                    $("#student_transport_fee").val(result.transport_fee);
+                   /* $("#student_tuition_fee").val(result.tuition_fee);
+                    $("#student_transport_fee").val(result.transport_fee);*/
                 }
             },
         });

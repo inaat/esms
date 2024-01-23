@@ -20,8 +20,15 @@
                                  <i class="lni lni-printer"></i>@lang('english.mapping')</a>
                               </li>
                               @endcan
+                             
+
+                              @can('print.admission_form')
                               <li class="nav-item">
+                                <a class="nav-link "
+                                   href="{{ action('StudentController@emptyAdmissionForm') }}">
+                                 <i class="lni lni-printer"></i>@lang('english.print_admission_form')</a>
                               </li>
+                              @endcan
                           </ul>
                      </div>
 

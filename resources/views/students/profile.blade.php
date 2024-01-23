@@ -76,6 +76,7 @@
                             </div>
                         </div>
                         @foreach ($siblings as $std)
+                         @if($std->students!==null)
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="card-title text-primary">@lang('english.sibling')</h3>
@@ -118,7 +119,7 @@
 
                             </div>
                         </div>
-
+                         @endif
                         @endforeach
                     </div>
                     <div class="col-lg-9">

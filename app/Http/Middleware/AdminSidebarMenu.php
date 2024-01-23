@@ -281,6 +281,11 @@ class AdminSidebarMenu
                                 ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'fee-allocation' || request()->segment(1) == 'fees-assign-search' && request()->segment(2) == 'create']
                             );
                             $sub->url(
+                                action('FeeAllocationController@bulkAllocationCreate'),
+                               __('english.bulk'). __('english.fees_allocation'),
+                                ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'bulk-fee-allocation-create']
+                            );
+                            $sub->url(
                                 action('OtherFeeAllocationController@create'),
                                 __('english.other') . ' ' . __('english.fees_allocation'),
                                 ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'other-fee' || request()->segment(1) == 'fees-assign-search' && request()->segment(2) == 'create']
@@ -907,6 +912,13 @@ class AdminSidebarMenu
                                 ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'fee_remainder']
                             );
                         }
+                          if (auth()->user()->can('mobile_slider.view')) {
+                            $sub->url(
+                                action('MobileSliderController@index'),
+                                __('english.mobile_slider'),
+                                ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'sliders']
+                            );
+                        }
                         $sub->url(
                             action('WhatsAppController@index'),
                             __('Whatsapp Sms '),
@@ -1458,6 +1470,11 @@ class AdminSidebarMenu
                                     action('FeeAllocationController@create'),
                                     __('english.fees_allocation'),
                                     ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'fee-allocation' || request()->segment(1) == 'fees-assign-search' && request()->segment(2) == 'create']
+                                );
+                                $sub->url(
+                                    action('FeeAllocationController@bulkAllocationCreate'),
+                                   __('english.bulk'). __('english.fees_allocation'),
+                                    ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'bulk-fee-allocation-create']
                                 );
                                 $sub->url(
                                     action('OtherFeeAllocationController@create'),

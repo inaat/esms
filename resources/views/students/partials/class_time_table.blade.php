@@ -1,15 +1,12 @@
-<div class="card">
+{{-- <div class="card">
             <div class="card-body">
                 <h6 class="card-title text-primary">@lang('english.classes_time_table')</h6>
                 <hr>
                 <div class="row m-0">
                     @foreach ($timetables as $timetable)
                     <div class="col-md-3  ">
-                        {{-- <a class="" href="{{ action('TeacherLayout\TeacherDashboardController@show',[$timetable->subjects->id]) }}"> --}}
                         <div class="card">
                             <div class="card-body">
-                                {{-- <h6 class="card-title text-center text-primary">{{ $timetable->campuses->campus_name}}</h6> --}}
-                                {{-- <h6 class="card-title text-center text-primary">{{ $timetable->classes->title.' '. $timetable->section->section_name }}</h6> --}}
                                 <h6 class="card-title text-center text-primary">@if(!empty($timetable->subject_id )){{$timetable->subjects->name }} @endif
                                     @if(!empty($timetable->other))
                                     @lang('english.'.$timetable->other)
@@ -33,9 +30,8 @@
                                 <h6 class="card-title text-center text-primary">{{ @format_time($timetable->periods->start_time). ' To '. @format_time($timetable->periods->end_time)}}</h6>
                             </div>
                         </div>
-                        {{-- </a> --}}
                     </div>
                     @endforeach
                 </div>
             </div>
-        </div>
+        </div> --}}

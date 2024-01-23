@@ -71,12 +71,7 @@
 @section("script")
 
 <script>
-    $('#fancy-file-upload').FancyFileUpload({
-        params: {
-            action: 'fileuploader'
-        }
-        , maxfilesize: 1000000
-    });
+
     $('#type').on('change', function() {
         var value = $(this).val();
         if (value == 2) {
@@ -85,7 +80,12 @@
             $('.video_url').hide(200);
         }
     });
-
+    $('#fancy-file-upload').FancyFileUpload({
+        params: {
+            action: 'fileuploader'
+        }
+        , maxfilesize: 1000000
+    });
 </script>
 
 @endsection

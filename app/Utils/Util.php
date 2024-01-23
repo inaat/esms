@@ -8,6 +8,7 @@ use App\Models\FeeHead;
 use App\Models\ReferenceCount;
 use App\Models\Session;
 use App\Models\ClassSection;
+use App\Models\AccountTransaction;
 use App\Jobs\WhatsAppJob;
 use App\Jobs\ProcessWhatsapp;
 use App\Models\WhatsappLog;
@@ -49,7 +50,8 @@ class Util
             9 => __('lang.september'),
             10 => __('lang.october'),
             11 => __('lang.november'),
-            12 => __('lang.december'));
+            12 => __('lang.december')
+        );
         return $months;
     }
     /**
@@ -106,7 +108,7 @@ class Util
         if (config('app.env') == 'demo') {
             return null;
         }
-        
+
         $uploaded_file_name = null;
         if ($request->hasFile($file_name) && $request->file($file_name)->isValid()) {
             //Check if mime type is image
@@ -292,7 +294,7 @@ class Util
         $system_settings_id = session()->get('user.system_settings_id');
         $ref = ReferenceCount::where('ref_type', $type)
             ->where('system_settings_id', $system_settings_id)
-        //  ->where('session_close','=','open')
+            //  ->where('session_close','=','open')
             ->first();
         //dd($ref);
         if (!empty($ref)) {
@@ -393,8 +395,9 @@ class Util
     {
         //$query=FeeHead::whereNotIn('description',['Admission','Prospectus','Security','Tuition','Transport']);
 
-        $query = FeeHead::where('campus_id', $campus_id)
-            ->where('class_id', $class_id)->whereNotIn('description', ['Admission', 'Prospectus', 'Security', 'Tuition', 'Transport']);
+        $query = FeeHead::
+        //where('campus_id', $campus_id)
+            where('class_id', $class_id)->whereNotIn('description', ['Admission', 'Prospectus', 'Security', 'Tuition', 'Transport']);
 
         $fee_heads = $query->get();
         return $fee_heads;
@@ -426,13 +429,13 @@ class Util
     }
     public function syncDevice()
     {
-        $$client = new Client();
+        $client = new Client();
     }
-/**
- * Defines available Payment Types
- *
- * @return array
- */
+    /**
+     * Defines available Payment Types
+     *
+     * @return array
+     */
     public function payment_types()
     {
         // if(!empty($location)){
@@ -510,11 +513,11 @@ class Util
 
         if ($sms_service == 'twilio') {
             return $this->sendSmsViaTwilio($data);
-        }      
-          $sms_send_through_whatsapp =  config('constants.sms_send_through_whatsapp');
+        }
+        $sms_send_through_whatsapp = config('constants.sms_send_through_whatsapp');
 
-        if ($sms_send_through_whatsapp){
-                              
+        if ($sms_send_through_whatsapp) {
+
             return $this->sendSmsOnWhatsapp($data);
         }
 
@@ -590,36 +593,55 @@ class Util
     }
     public function sendSmsOnWhatsapp($data)
     {
-       // WhatsAppJob::dispatch($data);
+        // WhatsAppJob::dispatch($data);
         //ProcessWhatsapp::dispatch('555', '923428927305', 30, []);
         //dd(ProcessWhatsapp::dispatch('555', '923428927305', 30, []));
         //$whatsappGateway = WhatsappDevice::where('status', 'connected')->pluck('delay_time','id')->first();
         //if(count($whatsappGateway) < 1){
-            //$notify[] = ['error', 'Not available WhatsApp Gateway'];
-            //return back()->withNotify($notify);
-          //  return true;
+        //$notify[] = ['error', 'Not available WhatsApp Gateway'];
+        //return back()->withNotify($notify);
+        //  return true;
         //}
-        $addSeconds=30;
-        $schedule=1;
+        if(strlen(trim($data['mobile_number'])) > 10){
+        $addSeconds = 30;
+        $schedule = 1;
         $log = new WhatsappLog();
-        $log->message =$data['sms_body'];
-        $log->to =$data['mobile_number'];
+        $log->message = $data['sms_body'];
+        $log->to = $data['mobile_number'];
         $log->status = $schedule == 2 ? 2 : 1;
         $log->schedule_status = $schedule;
         $log->initiated_time = $schedule == 1 ? Carbon::now() : Carbon::now();
         $log->whatsapp_id = 8;
         $log->save();
-       if(!empty($data['add_second'])){
-        $addSeconds=$data['add_second'];
-       }
-       //dispatch_now(new ProcessWhatsapp($data['sms_body'],$data['mobile_number'],$log->id, []));
-       $setTimeInDelay = \Carbon::now();
-       dispatch(new ProcessWhatsapp($data['sms_body'],$data['mobile_number'], $log->id, []))->delay(Carbon::parse($setTimeInDelay)->addSeconds($addSeconds));
-      
-
-       
+        if (!empty($data['add_second'])) {
+            $addSeconds = $data['add_second'];
+        }
+        //dispatch_now(new ProcessWhatsapp($data['sms_body'],$data['mobile_number'],$log->id, []));
+        $setTimeInDelay = \Carbon::now();
+        dispatch(new ProcessWhatsapp($data['sms_body'], $data['mobile_number'], $log->id, []))->delay(Carbon::parse($setTimeInDelay)->addSeconds($addSeconds));
     }
-  
+
+
+    }
+    public function sendSmsOnWhatsappResend($id,$add_second)
+    {
+        
+        $addSeconds = 30;
+        $schedule = 1;
+        $log = WhatsappLog::find($id);
+        $log->status = 1;
+        $log->save();
+        if (!empty($add_second)) {
+            $addSeconds = $add_second;
+        }
+        //dispatch_now(new ProcessWhatsapp($data['sms_body'],$data['mobile_number'],$log->id, []));
+        $setTimeInDelay = \Carbon::now();
+        dispatch(new ProcessWhatsapp($log->message, $log->to, $log->id, []))->delay(Carbon::parse($setTimeInDelay)->addSeconds($addSeconds));
+
+
+
+    }
+
     public function getRollNo($session_id)
     {
         if (!empty($session_id)) {
@@ -707,15 +729,36 @@ class Util
         $digits_length = strlen($no);
         $i = 0;
         $str = array();
-        $words = array(0 => '', 1 => 'one', 2 => 'two',
-            3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six',
-            7 => 'seven', 8 => 'eight', 9 => 'nine',
-            10 => 'ten', 11 => 'eleven', 12 => 'twelve',
-            13 => 'thirteen', 14 => 'fourteen', 15 => 'fifteen',
-            16 => 'sixteen', 17 => 'seventeen', 18 => 'eighteen',
-            19 => 'nineteen', 20 => 'twenty', 30 => 'thirty',
-            40 => 'forty', 50 => 'fifty', 60 => 'sixty',
-            70 => 'seventy', 80 => 'eighty', 90 => 'ninety');
+        $words = array(
+            0 => '',
+            1 => 'one',
+            2 => 'two',
+            3 => 'three',
+            4 => 'four',
+            5 => 'five',
+            6 => 'six',
+            7 => 'seven',
+            8 => 'eight',
+            9 => 'nine',
+            10 => 'ten',
+            11 => 'eleven',
+            12 => 'twelve',
+            13 => 'thirteen',
+            14 => 'fourteen',
+            15 => 'fifteen',
+            16 => 'sixteen',
+            17 => 'seventeen',
+            18 => 'eighteen',
+            19 => 'nineteen',
+            20 => 'twenty',
+            30 => 'thirty',
+            40 => 'forty',
+            50 => 'fifty',
+            60 => 'sixty',
+            70 => 'seventy',
+            80 => 'eighty',
+            90 => 'ninety'
+        );
         $digits = array('', 'hundred', 'thousand', 'lakh', 'crore');
         while ($i < $digits_length) {
             $divider = ($i == 2) ? 10 : 100;
@@ -781,20 +824,19 @@ class Util
     }
 
     public function createEmployeeUpdateLogin($data, $hook_id, $role_id)
-    {   
-        $type='other';
-        
-        if ($role_id==1){
-            $type='admin';
-        }elseif ($role_id==2){
-            $type='teacher';
-        }
-        elseif ($role_id==4){
-            $type='staff';
+    {
+        $type = 'other';
+
+        if ($role_id == 1) {
+            $type = 'admin';
+        } elseif ($role_id == 2) {
+            $type = 'teacher';
+        } elseif ($role_id == 4) {
+            $type = 'staff';
         }
         $system_settings_id = session()->get('user.system_settings_id');
 
-        $check_user = User::where('hook_id', $hook_id)->whereNotIn('user_type',['student','guardian'])->first();
+        $check_user = User::where('hook_id', $hook_id)->whereNotIn('user_type', ['student', 'guardian'])->first();
         //dd($data);
         if (empty($check_user)) {
             if (!empty($data['email'])) {
@@ -806,9 +848,9 @@ class Util
                     'last_name' => $data['last_name'],
                     'campus_id' => $data['campus_id'],
                     'password' => $data['password'],
-                    'system_settings_id'=>$system_settings_id,
-                    'image'=>'uploads/employee_image/'.$data['employee_image']
-                    
+                    'system_settings_id' => $system_settings_id,
+                    'image' => 'uploads/employee_image/' . $data['employee_image']
+
                 ];
                 $user = User::create($details);
                 $role = Role::findOrFail($role_id);
@@ -823,8 +865,8 @@ class Util
                 'email' => $data['email'],
                 'password' => $data['password'],
                 'user_type' => $type,
-                'system_settings_id'=>$system_settings_id,
-                'image'=>'uploads/employee_image/'.$data['employee_image']
+                'system_settings_id' => $system_settings_id,
+                'image' => 'uploads/employee_image/' . $data['employee_image']
             ];
             $check_user->update($user_data);
             $role_id = $role_id;
@@ -856,9 +898,9 @@ class Util
 
     public function studentCreateUpdateLogin($data, $type, $hook_id)
     {
-        $role_id=3;
+        $role_id = 3;
         $system_settings_id = session()->get('user.system_settings_id');
-        $check_user = User::where('hook_id', $hook_id)->where('user_type','student')->first();
+        $check_user = User::where('hook_id', $hook_id)->where('user_type', 'student')->first();
         //dd($data);
         if (empty($check_user)) {
             if (!empty($data['email'])) {
@@ -870,9 +912,9 @@ class Util
                     'last_name' => $data['last_name'],
                     'campus_id' => $data['campus_id'],
                     'password' => Hash::make('111111111'),
-                    'system_settings_id'=>$system_settings_id,
-                    'image'=>'uploads/student_image/'.$data['student_image']
-                    
+                    'system_settings_id' => $system_settings_id,
+                    'image' => 'uploads/student_image/' . $data['student_image']
+
                 ];
                 $user = User::create($details);
                 $role = Role::findOrFail($role_id);
@@ -887,8 +929,8 @@ class Util
                 'email' => $data['email'],
                 'password' => Hash::make('111111111'),
                 'user_type' => $type,
-                'system_settings_id'=>$system_settings_id,
-                'image'=>'uploads/student_image/'.$data['student_image']
+                'system_settings_id' => $system_settings_id,
+                'image' => 'uploads/student_image/' . $data['student_image']
             ];
             $check_user->update($user_data);
             $role_id = $role_id;
@@ -921,10 +963,10 @@ class Util
 
     public function guardianCreateUpdateLogin($data, $type, $hook_id)
     {
-        $role_id=5;
+        $role_id = 5;
         $system_settings_id = session()->get('user.system_settings_id');
-        $check_user = User::where('hook_id', $hook_id)->where('user_type','guardian')->first();
-       // dd($check_user);
+        $check_user = User::where('hook_id', $hook_id)->where('user_type', 'guardian')->first();
+      // dd($check_user);
         if (empty($check_user)) {
             if (!empty($data['guardian_email'])) {
                 $details = [
@@ -932,133 +974,148 @@ class Util
                     'user_type' => $type,
                     'hook_id' => $hook_id,
                     'first_name' => $data['guardian_name'],
-                    'last_name' =>'',
+                    'last_name' => '',
                     'password' => Hash::make('111111111'),
-                    'system_settings_id'=>$system_settings_id,
-                    'image'=>'uploads/employee_image/default.jpg'
-                    
+                    'system_settings_id' => $system_settings_id,
+                    'image' => 'uploads/employee_image/default.jpg'
+
                 ];
-               // dd($details);
+                $login=User::where('email',$data['guardian_email'])->where('user_type','guardian')->first();
+                //dd($login);
+                if(!empty($login)){
+                    $login->delete(); 
+                }
                 $user = User::create($details);
                 $role = Role::findOrFail($role_id);
                 $user->assignRole($role->name);
                 return $user;
-            }else{
+            } else {
                 $details = [
-                    'email' => $hook_id.$type.'@gmail.com',
+                    'email' => $hook_id . $type . '@gmail.com',
                     'user_type' => $type,
                     'hook_id' => $hook_id,
                     'first_name' => $data['guardian_name'],
-                    'last_name' =>'',
+                    'last_name' => '',
                     'password' => Hash::make('111111111'),
-                    'system_settings_id'=>$system_settings_id,
-                    'image'=>'uploads/employee_image/default.jpg'
-                    
+                    'system_settings_id' => $system_settings_id,
+                    'image' => 'uploads/employee_image/default.jpg'
+
                 ];
-               // dd($details);
+                //dd($details);
                 $user = User::create($details);
                 $role = Role::findOrFail($role_id);
                 $user->assignRole($role->name);
-                return $user;  
+                return $user;
             }
         } else {
-            if(!empty($check_user)){
-              if(!empty($data['guardian_email'])){
-                $data['guardian_name']=$data['guardian_name'];
-              }else{
-                $data['guardian_name']=$check_user->email;
-              }
-              $user_data = [
-                'first_name' => $data['guardian_name'],
-                'last_name' =>'',
-                'email' => $data['guardian_email'],
-                'password' => Hash::make('111111111'),
-                'user_type' => $type,
-                'system_settings_id'=>$system_settings_id,
-                'image'=>'uploads/employee_image/default.jpg'
-            ];
-            $check_user->update($user_data);
-            $role_id = $role_id;
-            $student_role = $check_user->roles->first();
-            $previous_role = !empty($student_role->id) ? $student_role->id : 0;
-
-            if ($previous_role != $role_id) {
-                $is_admin = $this->is_admin($check_user);
-                $all_admins = $this->getAdmins();
-                //If only one admin then can not change role
-                if ($is_admin && count($all_admins) <= 1) {
-                    throw new \Exception(__('english.cannot_change_role'));
+            
+            if (!empty($check_user)) {
+                $check_email = User::where('email', $data['guardian_email'])->first();
+                 if (!empty($check_email)) {
+                //$check_email->delete();
+                   return false;
+                 }
+                if (!empty($data['guardian_email'])) {
+                    $data['guardian_email'] = $data['guardian_email'];
+                } else {
+                    $data['guardian_email'] = $check_user->email;
                 }
-                if (!empty($previous_role)) {
-                    $check_user->removeRole($student_role->name);
+                $user_data = [
+                    'first_name' => $data['guardian_name'],
+                    'last_name' => '',
+                    'email' => $data['guardian_email'],
+                    'password' => Hash::make('111111111'),
+                    'user_type' => $type,
+                    'system_settings_id' => $system_settings_id,
+                    'image' => 'uploads/employee_image/default.jpg'
+                ];
+               //dd($user_data);
+                $check_user->update($user_data);
+               // dd($check_user);
+                $role_id = $role_id;
+                $student_role = $check_user->roles->first();
+                $previous_role = !empty($student_role->id) ? $student_role->id : 0;
+
+                if ($previous_role != $role_id) {
+                    $is_admin = $this->is_admin($check_user);
+                    $all_admins = $this->getAdmins();
+                    //If only one admin then can not change role
+                    if ($is_admin && count($all_admins) <= 1) {
+                        throw new \Exception(__('english.cannot_change_role'));
+                    }
+                    if (!empty($previous_role)) {
+                        $check_user->removeRole($student_role->name);
+                    }
+
+                    $role = Role::findOrFail($role_id);
+
+                    $check_user->assignRole($role->name);
+                    return $check_user;
+                } else {
+                    $role = Role::findOrFail($role_id);
+                    $check_user->assignRole($role->name);
+                    return $check_user;
                 }
-
-                $role = Role::findOrFail($role_id);
-
-                $check_user->assignRole($role->name);
-                return $check_user;
             } else {
-                $role = Role::findOrFail($role_id);
-                $check_user->assignRole($role->name);
-                return $check_user;
-            }
-              }else{
-            $user_data = [
-                'first_name' => $data['guardian_name'],
-                'last_name' =>'',
-                'email' => $data['guardian_email'],
-                'password' => Hash::make('111111111'),
-                'user_type' => $type,
-                'system_settings_id'=>$system_settings_id,
-                'image'=>'uploads/employee_image/default.jpg'
-            ];
-            $check_user->update($user_data);
-            $role_id = $role_id;
-            $student_role = $check_user->roles->first();
-            $previous_role = !empty($student_role->id) ? $student_role->id : 0;
+               
+             
+                $user_data = [
+                    'first_name' => $data['guardian_name'],
+                    'last_name' => '',
+                    'email' => $data['guardian_email'],
+                    'password' => Hash::make('111111111'),
+                    'user_type' => $type,
+                    'system_settings_id' => $system_settings_id,
+                    'image' => 'uploads/employee_image/default.jpg'
+                ];
+               
+                $check_user->update($user_data);
+                $role_id = $role_id;
+                $student_role = $check_user->roles->first();
+                $previous_role = !empty($student_role->id) ? $student_role->id : 0;
 
-            if ($previous_role != $role_id) {
-                $is_admin = $this->is_admin($check_user);
-                $all_admins = $this->getAdmins();
-                //If only one admin then can not change role
-                if ($is_admin && count($all_admins) <= 1) {
-                    throw new \Exception(__('english.cannot_change_role'));
+                if ($previous_role != $role_id) {
+                    $is_admin = $this->is_admin($check_user);
+                    $all_admins = $this->getAdmins();
+                    //If only one admin then can not change role
+                    if ($is_admin && count($all_admins) <= 1) {
+                        throw new \Exception(__('english.cannot_change_role'));
+                    }
+                    if (!empty($previous_role)) {
+                        $check_user->removeRole($student_role->name);
+                    }
+
+                    $role = Role::findOrFail($role_id);
+
+                    $check_user->assignRole($role->name);
+                    return $check_user;
+                } else {
+                    $role = Role::findOrFail($role_id);
+                    $check_user->assignRole($role->name);
+                    return $check_user;
                 }
-                if (!empty($previous_role)) {
-                    $check_user->removeRole($student_role->name);
-                }
-
-                $role = Role::findOrFail($role_id);
-
-                $check_user->assignRole($role->name);
-                return $check_user;
-            } else {
-                $role = Role::findOrFail($role_id);
-                $check_user->assignRole($role->name);
-                return $check_user;
             }
-        }
         }
     }
 
-    public function accountOther($system_settings_id, $campus_id, $prepend_none, $closed = false, $default_campus_account=false, $show_balance = false)
+    public function accountOther($system_settings_id, $campus_id, $prepend_none, $closed = false, $default_campus_account = false, $show_balance = false)
     {
         $query = Account::where('system_settings_id', $system_settings_id);
 
-        
-            $query->leftjoin('account_transactions as AT', function ($join) {
-                $join->on('AT.account_id', '=', 'accounts.id');
-                $join->whereNull('AT.deleted_at');
-            })
+
+        $query->leftjoin('account_transactions as AT', function ($join) {
+            $join->on('AT.account_id', '=', 'accounts.id');
+            $join->whereNull('AT.deleted_at');
+        })
             ->select(
                 'accounts.name',
                 'accounts.id',
                 DB::raw("SUM( IF(AT.type='credit', amount, -1*amount) ) as balance")
             );
-            $permitted_campuses = auth()->user()->permitted_campuses();
-            if ($permitted_campuses != 'all') {
-              $query->whereIn('accounts.campus_id', $permitted_campuses);
-            }
+        $permitted_campuses = auth()->user()->permitted_campuses();
+        if ($permitted_campuses != 'all') {
+            $query->whereIn('accounts.campus_id', $permitted_campuses);
+        }
         // if (!empty($campus_id)) {
         //     $query->whereNotIn('accounts.campus_id' ,[$campus_id]);
         // }
@@ -1068,25 +1125,26 @@ class Util
 
         $accounts = $query->groupBy('accounts.id')->get();
 
-       
+
 
         return $accounts;
     }
-    public function receiptContent($data,$view)
+    public function receiptContent($data, $view)
     {
-        $output = ['is_enabled' => false,
-                    'print_type' => 'browser',
-                    'html_content' => null,
-                    'printer_config' => [],
-                    'data' => []
-                ];
+        $output = [
+            'is_enabled' => false,
+            'print_type' => 'browser',
+            'html_content' => null,
+            'printer_config' => [],
+            'data' => []
+        ];
 
         //Check if printing of invoice is enabled or not.
         //If enabled, get print type.
         $output['is_enabled'] = true;
-        $receipt_details=[];
+        $receipt_details = [];
         $output['html_content'] = view($view, compact('data'))->render();
-        
+
         return $output;
     }
 
@@ -1108,6 +1166,8 @@ $permitted_campuses = auth()->user()->permitted_campuses();
 if ($permitted_campuses != 'all') {
  $query->whereIn('accounts.campus_id', $permitted_campuses);
 }
+ $query->where('accounts.id','!=', 3);
+
 if (!empty($campus_id)) {
     $query->where('accounts.campus_id', $campus_id);
   }
@@ -1120,11 +1180,12 @@ if (!empty($campus_id)) {
         return $account_details;
     }
 
-    public function strengthReport(){
-       
-       
-                $count_class_sections_student=ClassSection::leftjoin('campuses as cam', 'class_sections.campus_id', '=', 'cam.id')
-                ->join('students', 'students.current_class_section_id', '=', 'class_sections.id')
+    public function strengthReport()
+    {
+
+
+        $count_class_sections_student = ClassSection::leftjoin('campuses as cam', 'class_sections.campus_id', '=', 'cam.id')
+            ->join('students', 'students.current_class_section_id', '=', 'class_sections.id')
             ->leftJoin('classes as c-class', 'class_sections.class_id', '=', 'c-class.id')
             ->select([
                 'cam.campus_name',
@@ -1133,9 +1194,180 @@ if (!empty($campus_id)) {
                 DB::raw('count(students.id) as total_student')
             ])->where('students.status', '=', 'active')
             ->groupBy('class_sections.id')->orderBy('c-class.id');
-               
 
-            return $count_class_sections_student->get();
-              
+
+        return $count_class_sections_student->get();
+
+    }
+
+
+
+
+    public function getTransportAccountBalance($end_date, $campus_id = null)
+    {
+        $query = Account::leftjoin(
+            'account_transactions as AT',
+            'AT.account_id',
+            '=',
+            'accounts.id'
+        )
+                                 ->NotClosed()
+                                ->whereNull('AT.deleted_at')
+                                ->whereDate('AT.operation_date', '<=', $end_date);
+
+       
+//Filter by the campus
+$permitted_campuses = auth()->user()->permitted_campuses();
+if ($permitted_campuses != 'all') {
+ $query->whereIn('accounts.campus_id', $permitted_campuses);
+}
+ $query->where('accounts.id','=', 3);
+
+if (!empty($campus_id)) {
+    $query->where('accounts.campus_id', $campus_id);
+  }
+        $account_details = $query->select(['name',
+                                        DB::raw("SUM( IF(AT.type='credit', amount, -1*amount) ) as balance")])
+                                ->groupBy('accounts.id')
+                                ->get()
+                                ->pluck('balance', 'name');
+
+        return $account_details;
+    }
+
+
+
+
+
+
+    public function getAccountOpeningBalance($end_date, $campus_id = null, $type = null)
+    {
+        $query = Account::leftjoin(
+            'account_transactions as AT',
+            'AT.account_id',
+            '=',
+            'accounts.id'
+        )
+            ->NotClosed()
+            ->whereNull('AT.deleted_at')
+            ->whereDate('AT.operation_date', '<=', $end_date);
+             $query->where('accounts.id','!=', 3);
+
+        //Filter by the campus
+        $permitted_campuses = auth()->user()->permitted_campuses();
+        if ($permitted_campuses != 'all') {
+            $query->whereIn('accounts.campus_id', $permitted_campuses);
+        }
+        if (!empty($campus_id)) {
+            $query->where('accounts.campus_id', $campus_id);
+        }
+        if ($type == 'opening_balance') {
+            $query->where('AT.sub_type', 'opening_balance');
+            $account_details = $query->select([
+                DB::raw("SUM( IF(AT.type='credit', amount, -1*amount) ) as balance")
+            ])
+                ->first();
+
+
+            return $account_details->balance;
+        }
+        if ($type == 'deposit') {
+            $query->where('AT.sub_type', 'deposit');
+            $account_details = $query->select([
+                DB::raw("SUM( IF(AT.type='credit', amount, -1*amount) ) as balance")
+            ])
+                ->first();
+
+
+            return $account_details->balance;
+        }
+        if ($type == 'debit') {
+            $query->where('AT.sub_type', 'debit');
+            $account_details = $query->select([
+                DB::raw("SUM( IF(AT.type='debit', amount, -1*amount) ) as balance")
+            ])
+                ->first();
+
+
+            return $account_details->balance;
+        }
+        // $account_details = $query->select(['name',
+        //                                 DB::raw("SUM( IF(AT.type='credit', amount, -1*amount) ) as balance")])
+        //                         ->groupBy('accounts.id')
+        //                         ->get()
+        //                         ->pluck('balance', 'name');
+
+
+
+    }
+    public function getAccountBeginningBalance($start_date,$end_date, $campus_id = null, $type = null){
+        //dd($start_date,$end_date);
+
+        $query = Account::where('id','!=', 3)->where('id','!=', 4)->get();
+        $details=[];
+        foreach($query as $ac)
+        {
+    $before_bal_query = AccountTransaction::
+        where('account_transactions.account_id', $ac->id)
+        ->whereDate('account_transactions.operation_date', '<', $start_date)
+        ->select([
+            DB::raw("COALESCE(SUM(IF(account_transactions.type = 'credit', account_transactions.amount, 0)),0) as bf_credit"),
+            DB::raw("COALESCE(SUM(IF(account_transactions.type = 'debit', account_transactions.amount, 0)),0) as bf_debit"),
+        ])
+        ->whereNull('account_transactions.deleted_at')->first();
+
+ $beginning_balance=($before_bal_query->bf_credit-$before_bal_query->bf_debit);
+ $details[]=[
+    'name'=>$ac->name,
+    'id'=>$ac->id,
+    'beginning_balance'=>$beginning_balance
+ ];
+        }
+        //dd($details);
+        return $details;
+        }
+
+    public function dateConversion($start,$end){
+       
+        $end_date=$end;    
+        $_date=explode('-',$end_date) ;
+        if($_date[2]>=26){
+            $month=$_date['1']+1;
+            if($month<=12){
+                    $end_date=Carbon::parse($_date[0].'-'.$month.'-01')->format('Y-m-d');           
+    
+                }else{
+                    $end_date=Carbon::parse($_date[0].'-'.$_date['1'].'-26')->format('Y-m-d');           
+    
+                }
+        
+            }
+            $start_date=$start; 
+            $_date = explode('-', $start_date);
+            if ($_date[2]>= 1 && $_date[2]<26 ) {
+                $month = $_date['1'] - 1;
+                if ((int)$month >= 1 && (int)$month <= 12) {
+                    $start_date = Carbon::parse($_date[0] . '-' . $month . '-26')->format('Y-m-d');
+
+                } else {
+                    $start_date = Carbon::parse($_date[0]-1 . '-' . $_date['1'] . '-26')->format('Y-m-d');
+
+                }
+            }
+             if ((int)$_date[2]===26 || (int)$_date[2]===27 || (int)$_date[2]===28 || (int)$_date[2]===29 || (int)$_date[2]===30 || (int)$_date[2]===31  ) {
+                $month = $_date['1'] ;
+                if ($month >= 1 && $month <= 12) {
+                    $start_date = Carbon::parse($_date[0] . '-' . $month . '-26')->format('Y-m-d');
+                }
+            }
+        return ['start_date'=>$start_date,
+        'end_date'=>$end_date];
     }
 }
+
+
+
+
+
+////DELETE FROM student_guardians WHERE id NOT IN (SELECT * FROM (SELECT MIN(n.id) FROM student_guardians n GROUP BY n.student_id) x);
+///--init-command="SET SESSION FOREIGN_KEY_CHECKS=0;"

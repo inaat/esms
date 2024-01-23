@@ -10,7 +10,8 @@ function send_notification($user, $title, $body, $type)
    // $FcmToken = "fvrFhVShTwecB48WOa9xeV:APA91bF66EGpSekhxak-XcNE-CqRk5HU6IFbCWwW5S5Pqz8l7XgEqLsL788lJJyUCmPHyUWioZ-bpPkKqS1-UbpFGW3KGMLhcR_tbqHRDZ3Tajbz5T5cP93FiTR8uqiidicS7ZquKcR4";
 
     $url = 'https://fcm.googleapis.com/fcm/send';
-    $serverKey = "AAAA_i8HSGc:APA91bHs-Xw4bYn5KKjkjH8biV3x_z3_ClshM1ffmcbhNqVBfExNt6OxkmiXqCC0WfJpWcIxoTG1Sl00UbPP0I0YEc2wFw2N3__-rMoyEaQi32c_rxHvH6d-unZqUuM6m6HPyFxVYScT";
+   /* $serverKey = "AAAA_i8HSGc:APA91bHs-Xw4bYn5KKjkjH8biV3x_z3_ClshM1ffmcbhNqVBfExNt6OxkmiXqCC0WfJpWcIxoTG1Sl00UbPP0I0YEc2wFw2N3__-rMoyEaQi32c_rxHvH6d-unZqUuM6m6HPyFxVYScT";*/
+   $serverKey ="AAAA6XSTsf8:APA91bHVKLJ4EGWgztswaH7Gud2ItXZevaGxl-KYpEWaqMRhGOBjFms6zWdxJ0VMmbYuTvlyN_TvHG6JlL_qZnsKhOHkBFSBq0kXxcVVXlUGVC624qD8H_Ie_PYYKS-fhbVWmWpE_8SK";
 
     $notification_data1 = [
         'click_action' => 'FLUTTER_NOTIFICATION_CLICK',

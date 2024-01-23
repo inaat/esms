@@ -37,7 +37,9 @@
                             <div class="card-body">
                                 <span class="text-info ">@lang('english.number_of_students') : {{ $student }}</span><br>
                                 <span class="text-info ">@lang('english.total_subjects') : {{ $total_subject }}</span><br>
-                                <span class="text-info ">@lang('english.total_subjects_assigned_to_section') : {{ $assign_subjects->count() }}</span>
+                                <span class="text-info ">@lang('english.total_subjects_assigned_to_section') : {{ $assign_subjects->count() }}</span><br>
+                                <span class="text-info "> Total Male Student: {{ $male }}</span><br>
+                                <span class="text-info ">Total Female Student: {{ $female }}</span><br>
                             </div>
                         </div>
                         <div class="card card-solid  border-start border-0 border-4 border-primary">

@@ -228,10 +228,10 @@ class AttendanceController extends Controller
         $sections=ClassSection::forDropdown($system_settings_id, false, $input['class_id']);
 
         $campuses=Campus::forDropdown();
-        $students=$this->studentUtil->getStudentList($system_settings_id, $class_id, null, 'active');
+        $students=$this->studentUtil->getStudentList($system_settings_id, $class_id,$class_section_id, 'active');
         $attendance_list=Attendance::leftJoin('students', 'students.id', '=', 'attendances.student_id')
                 ->where('students.current_class_id', $class_id)
-                //->where('students.current_class_section_id', $class_section_id)
+                ->where('students.current_class_section_id', $class_section_id)
                 ->where('students.status', 'active')
                 ->where('students.campus_id', $campus_id)
                 ->whereDate('clock_in_time', '=', $date)

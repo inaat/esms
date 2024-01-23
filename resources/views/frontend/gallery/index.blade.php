@@ -2,16 +2,10 @@
 @section('title', __('english.galleries'))
 @section('wrapper')
 
-
-<div class="site-content" data-color="">
-
-    <nav aria-label="breadcrumb" class="breadjhj">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Gallery</li>
-        </ol>
-    </nav>
-    <div class="container">
+<div class="aboutUs">
+      @component('frontend.components.widget', ['title'=>"Gallery"])
+  @endcomponent
+    <div class="container "style="margin-top: 15px;">
         <div class="row txtsearch">
             <div class="col-md-6">
                 <div class="input-group">

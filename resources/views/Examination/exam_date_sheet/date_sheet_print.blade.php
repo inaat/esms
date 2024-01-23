@@ -159,7 +159,8 @@
                 <tfoot>
                     <tr>
                         <td colspan="{{ $details->count()+1 }}">
-                            <p style="float:right; margin-top:10px;">@lang('english.controller_of_examination')<br>Mr Asif Khan</p>
+                            <p style="float:right; margin-top:10px;">@lang('english.controller_of_examination')<br>Mr Ihsan Ullah Khan
+</p>
                         </td>
                     <tr>
                 </tfoot>

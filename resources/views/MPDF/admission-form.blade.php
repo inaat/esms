@@ -281,7 +281,7 @@
     <div class="page print_area" size="A4" id="page">
         <div class="logo">
         
-                   @include('common.logo')
+                   <img src="https://explainerkhan.com/uploads/business_logos/1692769444_a01.jpg" width="100%"  style="height:130px;  width:100%;">
         </div>
           
         <div id="head">

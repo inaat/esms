@@ -35,7 +35,10 @@ use App\Models\Curriculum\SubjectTeacher;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\TimetableCollection;
 use App\Models\StudentGuardian;
+use App\Models\Guardian;
 use App\Models\Student;
+use App\Models\FeeTransaction;
+use App\Utils\StudentUtil;
 
 class ParentApiController extends Controller
 {
@@ -43,17 +46,29 @@ class ParentApiController extends Controller
 
     private $client;
 
-    public function __construct()
+  
+     protected $studentUtil;
+   
+
+
+    /**
+     * Constructor
+     *
+     * @param ModuleUtil $moduleUtil
+     * @return void
+     */
+    public function __construct(StudentUtil $studentUtil)
     {
-        $this->client = OClient::where('password_client', 1)->first();
+        $this->studentUtil = $studentUtil;
+                $this->client = OClient::where('password_client', 1)->first();
 
     }
     public function login(Request $request)
     {
-            // $auth = Auth::user();
-            // if ($request->fcm_id) {
-            //     $auth->fcm_id = $request->fcm_id;
-            //     $auth->save();
+            // $AUTH = AUTH::USER();
+            // IF ($REQUEST->FCM_ID) {
+            //     $AUTH->FCM_ID = $REQUEST->FCM_ID;
+            //     $AUTH->SAVE();
             // }
 
             $validator = Validator::make($request->all(), [
@@ -70,9 +85,14 @@ class ParentApiController extends Controller
                 return response()->json($response);
             }
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                
                 //        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 //Here Email Field is referenced as a GR Number for Student
-                $auth = Auth::user();
+                   $auth = Auth::user();
+            if ($request->fcm_id) {
+                $auth->fcm_id = $request->fcm_id;
+                $auth->save();
+            }
                 if (!$auth->hasRole('Guardian#1')) {
                     $response = array(
                         'error' => true,
@@ -96,6 +116,8 @@ class ParentApiController extends Controller
                 $class_section_name = $child->students->current_class->title . " " . $child->students->current_class_section->section_name;
             //Set Medium name
             $medium_name = $child->students->current_class->classLevel->title;
+                      $image = file_exists(public_path('uploads/student_image/'.$child->students->student_image)) ? url('uploads/student_image/'.$child->students->student_image) : url('uploads/student_image/default.png');
+
                 $children_data[]=[
                     "id" => $child->students->id,
                     "first_name" => $child->students->first_name,
@@ -103,7 +125,7 @@ class ParentApiController extends Controller
                     "gender" => $child->students->gender,
                     "email" => $child->students->email,
                     "mobile" => $child->students->mobile_no,
-                    "image" => "https://e-school.wrteam.in/storage/students/zoCmIaKbQloD2tCAV35PeDhpTPJDUSYz2G2ueUoX.png",
+                    "image" => $image,
                     "dob" => $child->students->birth_date,
                     "current_address" => $child->students->std_current_address,
                     "permanent_address" => $child->students->std_permanent_address,
@@ -127,107 +149,29 @@ class ParentApiController extends Controller
                
                 
             }
+            $guardian =Guardian::where('id', $user->hook_id)->first();
             $user =
             array (
                 "id" => $user->id,
-                "first_name" => $user->first_name,
+                "first_name" => $guardian->guardian_name,
                 "last_name" => $user->last_name,
-              'gender' => 'Male',
-              'email' => 'parent@gmail.com',
-              'fcm_id' => 'dHRHN3jVRAuHWOu6C7D122:APA91bEgXX-UQhLGAcX6ZvzLjwvvXOHkHghEZ6HkHQ-CSAeOdkeubs9HA9Y5eHbc9K7ulzFlfwhl_5LOD68dTWIe01vJtHFcFExttbjZnKmVkvdTYqJDaCo7j1MvJXgit6jmDFQvP5Yy',
+              'gender' => '',
+              'email' =>$user->email,
+              'fcm_id' => $user->fcm_id,
               'email_verified_at' => NULL,
-              'mobile' => '1234567890',
-              'image' => 'https://e-school.wrteam.in/storage/parents/jFrVXjtWsr11lPGwpuZhyohMc3qgsGLMztPgYHJR.png',
-              'dob' => '1970-01-01',
-              'current_address' => NULL,
+              'mobile' => $guardian->guardian_phone,
+              'image' =>  url('uploads/employee_image/default.jpg'),
+
+              'dob' => '',
+              'current_address' => $guardian->guardian_address,
               'permanent_address' => NULL,
               'status' => 1,
               'reset_request' => 0,
-              'user_id' => 66,
-              'occupation' => 'Job',
+              'user_id' =>$guardian->id,
+              'occupation' => $guardian->guardian_occupation,
             );
             $data = array_merge($user, ['children' => $children_data]);
-           /* dd($data);
-              $children= 
-              array (
-                0 => 
-                array (
-                  'id' => 2,
-                  'user_id' => 65,
-                  'class_section_id' => 5,
-                  'category_id' => 3,
-                  'admission_no' => '2022-232',
-                  'roll_number' => 123,
-                  'caste' => 'Hindu',
-                  'religion' => 'Hindu',
-                  'admission_date' => '2022-06-13',
-                  'blood_group' => 'A+',
-                  'height' => '6.43',
-                  'weight' => '57',
-                  'is_new_admission' => 1,
-                  'father_id' => 3,
-                  'mother_id' => 2,
-                  'guardian_id' => 0,
-                  'first_name' => 'Punit',
-                  'last_name' => 'Jangam',
-                  'image' => 'https://e-school.wrteam.in/storage/students/tDJ9rwnQapGVVH8E636FZaIv1Wheu1Zut1OnJGR0.png',
-                  'class_section_name' => '10 A',
-                  'medium_name' => 'Gujrati',
-                  'category_name' => 'OBC',
-                ),
-                1 => 
-                array (
-                  'id' => 3,
-                  'user_id' => 68,
-                  'class_section_id' => 5,
-                  'category_id' => 4,
-                  'admission_no' => '2022-233',
-                  'roll_number' => 1,
-                  'caste' => 'Hindu',
-                  'religion' => 'Hindu',
-                  'admission_date' => '2022-06-14',
-                  'blood_group' => 'A+',
-                  'height' => '5.5',
-                  'weight' => '59',
-                  'is_new_admission' => 1,
-                  'father_id' => 3,
-                  'mother_id' => 4,
-                  'guardian_id' => 0,
-                  'first_name' => 'Sagar',
-                  'last_name' => 'Gor',
-                  'image' => 'https://e-school.wrteam.in/storage/students/C9fg5gzsUsCAuoGcLz228ygpfQp4YJzqn1V4aa73.jpg',
-                  'class_section_name' => '10 A',
-                  'medium_name' => 'Gujrati',
-                  'category_name' => 'General',
-                ),
-                2 => 
-                array (
-                  'id' => 4,
-                  'user_id' => 69,
-                  'class_section_id' => 2,
-                  'category_id' => 4,
-                  'admission_no' => '2022-234',
-                  'roll_number' => 1,
-                  'caste' => 'muslim',
-                  'religion' => 'muslim',
-                  'admission_date' => '2022-12-07',
-                  'blood_group' => 'A+',
-                  'height' => '5.7',
-                  'weight' => '75',
-                  'is_new_admission' => 1,
-                  'father_id' => 3,
-                  'mother_id' => 4,
-                  'guardian_id' => 0,
-                  'first_name' => 'shakir',
-                  'last_name' => 'memon',
-                  'image' => 'https://e-school.wrteam.in/storage/students/1670387623-dummy_student.png',
-                  'class_section_name' => '9 B',
-                  'medium_name' => 'Gujrati',
-                  'category_name' => 'General',
-                )
-            );
-         $data = array_merge($user, ['children' => $children]);
-*/
+          
          $response = array(
                 'error' => false,
                 'message' => 'User logged-in!',
@@ -246,26 +190,7 @@ class ParentApiController extends Controller
         }
     }
 
-    // public function getChildren(Request $request) {
-    //     try {
-    //         $user = $request->user();
-    //         $children = $user->parent->children->load(['user:id,first_name,last_name']);
-    //         $response = array(
-    //             'error' => false,
-    //             'message' => 'Children Fetched Successfully.',
-    //             'data' => $children,
-    //             'code' => 200,
-    //         );
-    //         return response()->json($response, 200);
-    //     } catch (\Exception $e) {
-    //         $response = array(
-    //             'error' => true,
-    //             'message' => trans('error_occurred'),
-    //             'code' => 103,
-    //         );
-    //         return response()->json($response, 200);
-    //     }
-    // }
+   
 
     public function subjects(Request $request)
     {
@@ -287,7 +212,7 @@ class ParentApiController extends Controller
           //dd($subjects);
             $core_subjects=[];
             foreach ($subjects as $key => $subject) {
-              
+                $image = file_exists(public_path('uploads/subjects/'.$subject->subject_icon)) ? url('uploads/subjects/'.$subject->subject_icon) : url('uploads/subjects/default.svg');
               $core_subjects[]=[
                 'id' => 9,
                 'class_id' => 1,
@@ -300,7 +225,7 @@ class ParentApiController extends Controller
                   'name' => $subject->name,
                   'code' => $subject->code,
                   'bg_color' =>  $subject->bg_color,
-                  'image' =>  $subject->image,
+                  'image' =>  $image,
                   'medium_id' =>  $subject->medium_id,
                   'type' =>  $subject->type,
                ]
@@ -754,7 +679,7 @@ class ParentApiController extends Controller
                             'email' => $subject->teacher->email,
                             'fcm_id' => NULL,
                             'email_verified_at' => NULL,
-                            'mobile' => $subject->teacher->mobile_no,
+                            'mobile' => '',
                             'image' => $image,
                             'dob' => $subject->teacher->birth_date,
                             'current_address' => $subject->teacher->current_address,
@@ -799,6 +724,7 @@ class ParentApiController extends Controller
             );
             return response()->json($response);
         }
+      
         try {
             $exam_data_db=ExamAllocation::with(['student','campuses','session','current_class','current_class_section','exam_create','exam_create.term','grade','subject_result','subject_result.subject_grade','subject_result.subject_name'])
             ->where('student_id', $request->child_id)  ->get();
@@ -936,8 +862,8 @@ class ParentApiController extends Controller
            foreach ($exam_data_db as $data) {
                $exam_data[] = array(
                    'id' => $data->id,
-                   'total_marks' => $data->subject->total,
-                   'passing_marks' => $data->subject->passing_percentage,
+                     'total_marks' => (int)$data->subject->total,
+                   'passing_marks' => (int)$data->subject->passing_percentage,
                    'date' => $data->date,
                    'starting_time' => $data->start_time,
                    'ending_time' => $data->end_time,
@@ -945,7 +871,7 @@ class ParentApiController extends Controller
                        'id' => $data->subject->id,
                        'name' => $data->subject->name .' ('.$data->type.')',
                        'bg_color' => $data->subject->bg_color,
-                       'image' => $data->subject->image,
+                       'image' => file_exists(public_path('uploads/subjects/'.$data->subject->subject_icon)) ? url('uploads/subjects/'.$data->subject->subject_icon) : url('uploads/subjects/default.svg'),
                        'type' => $data->subject->type,
                    )
                );
@@ -978,6 +904,16 @@ class ParentApiController extends Controller
             );
             return response()->json($response);
         }
+          $student = $this->studentUtil->getStudentDue($request->child_id);
+                    if ($student->total_due >0) {
+                          $response = array(
+                   'error' => false,
+                  'data' =>  [],
+                   'code' => 200,
+               );
+                           return response()->json($response);
+
+                    }
         try {
             $exam_result_db=ExamAllocation::with(['student','campuses','session','current_class','current_class_section','exam_create','exam_create.term','grade','subject_result','subject_result.subject_grade','subject_result.subject_name'])
              ->where('student_id', $request->child_id) ->get();
@@ -1050,5 +986,53 @@ class ParentApiController extends Controller
             return 0;
         }
         
+    }
+    public function feeTransactions(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'child_id' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            $response = array(
+                'error' => true,
+                'message' => $validator->errors()->first(),
+                'code' => 102,
+            );
+            return response()->json($response);
+        }
+        $data=[];
+         $query = FeeTransaction::where('student_id',$request->child_id)->
+         select(
+            'fee_transactions.id',
+            'fee_transactions.transaction_date',
+            'fee_transactions.payment_status',
+            'fee_transactions.type',
+           'fee_transactions.discount_amount',
+            'fee_transactions.final_total',
+              DB::raw('(SELECT SUM(IF(TP.is_return = 1,-1*TP.amount,TP.amount)) FROM fee_transaction_payments AS TP WHERE
+                        TP.fee_transaction_id=fee_transactions.id) as total_paid')
+                   
+                )->orderBy('fee_transactions.transaction_date', 'desc')->get();
+   foreach($query as $transaction){
+    $data[]= [
+    
+           "id"=> 1,
+      "month_name"=> (string) Carbon::parse($transaction->transaction_date)->format('d F Y').' '. __('english.transaction_types.' . $transaction->type) ,
+        "final_total"=> (string)number_format($transaction->final_total,1),
+      "total_paid"=> (string)number_format($transaction->total_paid,1),
+      "payment_status"=> (string)$transaction->payment_status,
+      "balance"=> (string)(number_format($transaction->final_total-$transaction->total_paid,1))
+    
+  ];
+   }
+ 
+
+         $response = array(
+               'error' => false,
+              'data' =>  $data,
+               'code' => 200,
+           );
+           return response()->json($response);
     }
 }

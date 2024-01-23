@@ -63,9 +63,9 @@ return [
             ]) : [],
             'dump' => [
                // 'dump_binary_path' => 'D:/EnayatSoftware/laragon/bin/mysql/mysql-5.7.24-win32/bin', // only the path, so without `mysqldump` or `pg_dump`
-                'dump_binary_path' => 'D:\xampp\mysql\bin',// or `pg_dump`
-                'use_single_transaction',
-                'timeout' => 60 * 5, // 5 minute timeout
+                //'dump_binary_path' => 'D:\xampp\mysql\bin',// or `pg_dump`
+                //'use_single_transaction',
+                //'timeout' => 60 * 5, // 5 minute timeout
              ],
         ],
 

@@ -376,5 +376,36 @@ class ExpenseTransactionUtil extends Util
         
         return $expenses;
     }
+    public function getTotalExpensePaid($start_date = null, $end_date = null, $employee_id=null, $campus_id=null)
+    {
+        $query =ExpenseTransactionPayment::leftJoin('expense_transactions', 'expense_transaction_payments.expense_transaction_id', '=', 'expense_transactions.id')
+        ->select(DB::raw('COALESCE(SUM(IF( is_return = 0, expense_transaction_payments.amount, expense_transaction_payments.amount*-1)),0) as total_paid', 'paid_on'));
+        if (!empty($start_date) && !empty($end_date)) {
+            $query->whereDate('expense_transaction_payments.paid_on', '>=', $start_date)
+                    ->whereDate('expense_transaction_payments.paid_on', '<=', $end_date);
+        }
+        if ($start_date==null){   
+           
+            $query->whereDate('expense_transaction_payments.paid_on', '<=', $end_date);
+            //dd( $query->get());
+            
+        }
+        if (!empty($employee_id)) {
+            $query->where('expense_transaction_payments.payment_for', $employee_id);
+        }
+        $permitted_campuses = auth()->user()->permitted_campuses();
+        if ($permitted_campuses != 'all') {
+            $query->whereIn('expense_transaction_payments.campus_id', $permitted_campuses);
+        }
+        if (!empty($campus_id)) {
+            $query->where('expense_transaction_payments.campus_id', $campus_id);
+        }
+    
+        return $query->first()->total_paid;
+    }
+
+
+
+   
 
 }

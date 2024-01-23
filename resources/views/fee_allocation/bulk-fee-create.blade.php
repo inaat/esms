@@ -35,10 +35,7 @@
                          {!! Form::select('class_ids[]', [], null, ['class' => 'form-select select2 global-classes','required', 'multiple','style' => 'width:100%']) !!}
                      </div>
                      
-                    <div class="col-md-3 p-2">
-                                {!! Form::label('english.sessions', __('english.sessions') . ':*') !!}
-                                {!! Form::select('session_id',$sessions,$active_session, ['class' => 'form-select select2 ','required', 'style' => 'width:100%', 'required', 'placeholder' => __('english.please_select')]) !!}
-                    </div>
+                   
                      <div class="col-sm-3 p-2">
                          {!! Form::label('due_date', __('english.due_date') . ':*', ['classs' => 'form-lable']) !!}
 
@@ -49,9 +46,14 @@
                          </div>
                      </div>
                      <div class="col-md-3 p-2">
-                         {!! Form::label('english.fee_month', __('english.fee_month') . ':*') !!}
-                         {!! Form::select('month_ids[]',__('english.months'),$now_month, ['class' => 'form-select select2','multiple', 'required', 'style' => 'width:100%']) !!}
-                     </div>
+                        {!! Form::label('month_year', __('english.month_year') . ':*') !!}
+                        <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
+                                    class="fa fa-calendar"></i></span>
+
+                            {!! Form::text('month_year',null, ['class' => 'form-control', 'placeholder' => __('english.month_year'), 'required', 'readonly']) !!}
+
+                        </div>
+                    </div>
                  </div>
                  <div class="d-lg-flex align-items-center mt-4 gap-3">
                      <div class="ms-auto"><button class="btn btn-primary radius-30 mt-2 mt-lg-0" type="submit">
@@ -75,6 +77,12 @@
  <script type="text/javascript">
      $(document).ready(function() {
 
+
+        $('#month_year').datepicker({
+                 autoclose: true,
+                 format: 'mm/yyyy',
+                 minViewMode: "months"
+             });
 
 
      });

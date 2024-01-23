@@ -1,216 +1,185 @@
- <div class=""></div>
 
- <div class="top-header">
+    <!--====== HEADER PART START ======-->
+
+     <div class="top-header">
      <div class="topscrollBox">
          <marquee onmouseover="stop();" onmouseout="start();" scrollamount="3">
              <a href="#"><span><strong>Notice :</strong> Admission for class XI 2022-23</span> </a>
          </marquee>
      </div>
  </div>
- <header class="main-header" style="background-color:#000; height: 152px;">
-     <div class="header-bottom">
-         <div class="container">
-             <div class="clearfix mobile-tab">
-                 <div class="logo-box pull-left">
-                     <figure class="logo"><a href="url('/')">
-                             <img  src="{{url('uploads/front_image/'.session()->get("front_details.logo_image"))}}"   alt="image"><br>
-                             <p class="hjghjg centred">{{ session()->get("front_details.reg_no") }}</p>
-                         </a></figure>
-                 </div>
-                 
-                 <div class="topheading">
-                     <h2>{{ session()->get("front_details.school_name") }}</h2>
-                 </div>
-                 <ul class="topcontact">
-                     <li><a href="tel:0946-745746"><i class="fa fa-phone" aria-hidden="true"></i> : {{ session()->get("front_details.phone_no") }}</a></li>
-                     <li><a href="mailto:info@swatcollegiate.edu.pk"><i class="fa fa-envelope" aria-hidden="true"></i> : {{ session()->get("front_details.email") }}</a></li>
-                 </ul>
-                 <div class="nav-outer pull-right clearfix">
-                     <ul class="top-tab">
-                         <li class="btn-box"><a class="theme-btn" href="#"></a></li>
-                       
-                     </ul>
+    <header id="header-part ">
 
-                 </div>
-             </div>
-             <div class="menu-area">
-                 <nav class="main-menu navbar-expand-lg">
-                     <div class="navbar-header">
-                         <!-- Toggle Button -->
-                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                             <span class="icon-bar"></span>
-                             <span class="icon-bar"></span>
-                             <span class="icon-bar"></span>
-                         </button>
-                     </div>
-                     <div class="navbar-collapse collapse clearfix">
-                         <ul class="navigation clearfix">
-                             <li>
-                                 <a href="{{ url('/') }}">Home</a>
-                                 <ul>
-                                 </ul>
-                             </li>
-                              <li class="dropdown">
-                                 <a href="{{ action('Frontend\FrontHomeController@about_index') }}">About</a>
-                                 <ul>
-                                  @php
+        <div class="header-top d-none d-lg-block">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <div class="header-contact text-lg-left text-center" style="padding-top: 0px">
+                            <ul>
+                                <li style="padding-left: 7px"><img src="{{ url('front/images/all-icon/map.png') }}"
+                                        alt="icon"><span style="padding-left: 6px">{{ session()->get("front_details.address") }}</span></li>
+                                <li><img src="{{ url('front/images/all-icon/email.png') }}" alt="icon"><span><a
+                                            href="mailto:{{ session()->get("front_details.email") }}"
+                                            style="color: #d7e2da">{{ session()->get("front_details.email") }}</a></span></li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="header-about text-lg-right text-center">
+
+
+                            <ul>
+                             @if(!empty(session()->get("front_details.facebook")))
+                                <li><a href="{{ session()->get("front_details.facebook") }}" target="_blank"><i
+                                            class="fa fa-facebook-f"></i></a></li>
+                            @endif
+                            @if(!empty(session()->get("front_details.twitter")))
+                                <li><a href="{{ session()->get("front_details.twitter") }}" target="_blank"><i
+                                            class="fa fa-twitter"></i></a></li>
+                             @endif
+                            @if(!empty(session()->get("front_details.instagram")))
+                                <li><a href="{{ session()->get("front_details.instagram") }}" target="_blank"><i
+                                            class="fa fa-instagram"></i></a></li>
+                             @endif
+                            @if(!empty(session()->get("front_details.linkedin")))
+                                <li><a href="{{ session()->get("front_details.linkedin") }}" target="_blank"><i
+                                            class="fa fa-linkedin"></i></a></li>
+                             @endif
+                            @if(!empty(session()->get("front_details.youTube")))
+                                <li><a href="{{ session()->get("front_details.youTube") }}" target="_blank"><i
+                                            class="fa fa-youtube"></i></a></li>
+                             @endif
+                            @if(!empty(session()->get("front_details.skype")))
+                                <li><a href="{{ session()->get("front_details.skype") }}" target="_blank"><i
+                                            class="fa fa-skype"></i></a></li>
+                             @endif
+                                
+                            </ul>
+
+
+                        </div>
+                    </div>
+                    <!--   <div class="col-lg-6">
+                        <div class="header-opening-time text-lg-right text-center">
+                            <p>Opening Hours : Monday to Saturay - 8 Am to 5 Pm</p>
+                        </div>
+                    </div>-->
+                </div> <!-- row -->
+            </div> <!-- container -->
+        </div> <!-- header top -->
+
+        <div class="header-logo-support pb-1 pt-1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-5 col-md-5">
+                        <div class="logo">
+                            <a href="index-2.html">
+                                <img src="{{url('uploads/front_image/'.session()->get("front_details.logo_image"))}}" alt="Logo">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-7 pt-25">
+                        <div class="support-button d-none d-md-block float-right">
+                            <div class="support float-left">
+                                <div class="icon">
+                                    <img src="{{ url('front/images/all-icon/support.png') }}" alt="icon">
+                                </div>
+                                <div class="cont">
+                                    <p>Need Help? call us.</p>
+                                    <span> {{ session()->get("front_details.phone_no") }}</span>
+                                   
+                                </div>
+                            </div>
+                            <div class="button float-left">
+                                <a href="https://admissions.imdcollege.edu.pk/" target="_blank" class="main-btn">Apply
+                                    Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- container -->
+        </div> <!-- header logo support -->
+
+        <div class="navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-11 col-md-10 col-sm-9 col-8">
+                        <nav class="navbar navbar-expand-lg">
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+
+                            <div class="navbar-collapse sub-menu-bar collapse" id="navbarSupportedContent">
+                                <ul class="navbar-nav mr-auto">
+                                    <li class="nav-item">
+                                        <a class="active" href="{{ url('/') }}">Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ action('Frontend\FrontHomeController@about_index') }}">About</a>
+                                          @php
                                     $about_nav =frontMenu();
                                   @endphp
-                                  @foreach ($about_nav as  $nav)
-                                     <li class="sub-dropdown"><a href="{{ action('Frontend\FrontHomeController@about_show', [$nav->slug,$nav->id]) }}">{{ $nav->title }}</a>
+                                        <ul class="sub-menu">
+                                            @foreach ($about_nav as  $nav)
+                                     <li ><a href="{{ action('Frontend\FrontHomeController@about_show', [$nav->slug,$nav->id]) }}">{{ $nav->title }}</a>
                                        
                                      </li>
                                        @endforeach
-                                 </ul>
-                             </li>
-                             <li>
-                                 <a href="{{ url('gallery') }}">Gallery</a>
-                                 <ul>
-                                 </ul>
-                             </li>
-                             <li class="dropdown">
-                                <a href="{{ action('Frontend\FrontHomeController@event_index') }}">Event</a>
-                                <ul>
-                                 @php
-                                   $event_nav =frontEventMenu();
-                                 @endphp
-                                 @foreach ($event_nav as  $nav)
-                                    <li class="sub-dropdown"><a href="{{ action('Frontend\FrontHomeController@event_show', [$nav->slug,$nav->id]) }}">{{ $nav->title }}</a>
-                                      
+                                        </ul>
                                     </li>
-                                      @endforeach
-                                </ul>
-                            </li>
-                             <li>
-                              @if (Auth::check())
+                                 
+                                    <li class="nav-item">
+                                        <a href="{{ url('gallery') }}">Gallery</a>
+                                    </li>
+                              
+                                    
+     <li class="nav-item">
+                                        <a  href="{{ action('Frontend\FrontHomeController@event_index') }}">Event</a>
+                                          @php
+                                   $event_nav =frontEventMenu();
+                                  @endphp
+                                        <ul class="sub-menu">
+                                            @foreach ( $event_nav  as  $nav)
+                                     <li ><a  href="{{ action('Frontend\FrontHomeController@event_show', [$nav->slug,$nav->id]) }}">{{ $nav->title }}</a>
+                                       
+                                     </li>
+                                       @endforeach
+
+                                       
+                                        </ul>
+                                    </li>
+                                     <li class="nav-item">
+                                        <a href="{{ action('Frontend\FrontHomeController@faculty')}}">Faculty</a>
+										 
+                                    </li>
+                                       <li class="nav-item">
+ @if (Auth::check())
                                  <a href="{{ url('/home') }}">Dashboard</a>
                                 @else
                                  <a href="{{ url('/login') }}">Login</a>
-                                @endif
-                              
-                                 
-                             </li> 
-                             {{-- <li class="dropdown">
-                                 <a href="admissions.html">Admissions</a>
-                                 <ul>
-                                     <li class="sub-dropdown"><a href="admission-criteria.html">Admission Criteria</a>
-                                     </li>
-                                 </ul>
-                             </li> --}}
-                             {{-- <li>
-                                 <a href="alumni.html">Alumni</a>
-                                 <ul>
-                                 </ul>
-                             </li> --}}
-                             {{-- <li>
-                                 <a href="gallery.html">Gallery</a>
-                                 <ul>
-                                 </ul>
-                             </li> --}}
-                             {{-- <li>
-                                 <a href="contact.html">Contact</a>
-                                 <ul>
-                                 </ul>
-                             </li> --}}
-                             {{-- <li>
-                                 <a class="colorChange" href="../front/front_assets/images/admissionlist.pdf" target="_blank">Admissions List</a>
-                             </li>  --}}
-                         </ul>
-                     </div>
-                 </nav>
-             </div>
-         </div>
-     </div>
-     <!--Sticky Header-->
-     <div class="sticky-header">
-         <div class="container clearfix">
-             <div class="menu-area">
-                 <nav class="main-menu navbar-expand-lg">
-                     <div class="navbar-header">
-                         <!-- Toggle Button -->
-                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                             <span class="icon-bar"></span>
-                             <span class="icon-bar"></span>
-                             <span class="icon-bar"></span>
-                         </button>
-                     </div>
-                     <div class="navbar-collapse collapse clearfix">
-                         <ul class="navigation clearfix">
-                             <li>
-                                 <a href="Home.html">Home</a>
-                                 <ul>
-                                 </ul>
-                             </li>
-                             <li class="dropdown">
-                                 <a href="about.html">About</a>
-                                 <ul>
-                                     <li><a href="infrastructure.html">Infrastructure</a></li>
-                                     <li><a href="../front/from-the-principal-s-desk.html">From The Principal's Desk</a></li>
-                                     <li><a href="aim.html">Aim</a></li>
-                                     <li><a href="vision.html">Vision</a></li>
-                                     <li><a href="rules-and-regulations.html">Rules and Regulations</a></li>
-                                     <li><a href="manager-s-desk.html">Manager's Desk</a></li>
-                                     <li><a href="chairperson-s-message.html">Chairperson's Message</a></li>
-                                     <li><a href="profile.html">Profile</a></li>
-                                     <li><a href="other-committees.html">Other Committees</a></li>
-                                     <li><a href="managing-committee.html">Managing Committee</a></li>
-                                     <li><a href="mandatory-public-disclosure.html">Mandatory Public Disclosure</a></li>
-                                 </ul>
-                             </li>
-                             <li>
-                                 <a href="academic.html">Academic</a>
-                                 <ul>
-                                 </ul>
-                             </li>
-                             <li>
-                                 <a href="events.html">Events</a>
-                                 <ul>
-                                 </ul>
-                             </li>
-                             <li>
-                                 <a href="achievements.html">Achievements</a>
-                                 <ul>
-                                 </ul>
-                             </li>
-                             <li class="dropdown">
-                                 <a href="admissions.html">Admissions</a>
-                                 <ul>
-                                     <li><a href="admission-criteria.html">Admission Criteria</a></li>
-                                 </ul>
-                             </li>
-                             <li>
-                                 <a href="alumni.html">Alumni</a>
-                                 <ul>
-                                 </ul>
-                             </li>
-                             <li>
-                                 <a href="{{ url('gallery') }}">Gallery</a>
-                                 <ul>
-                                 </ul>
-                             </li>
-                             <li>
-                                 <a href="contact.html">Contact</a>
-                                 <ul>
-                                 </ul>
-                             </li>
-                         </ul>
-                     </div>
-                 </nav>
-             </div>
-         </div>
-     </div>
-     <nav class="social">
-         <ul>
-             <li><a href="{{ session()->get("front_details.facebook") }}" target="_blank">Facebook <i style="color: #1880a7;" class="social-icon social-facebook icon-facebook bx bxl-facebook"></i></a></li>
-             <li><a href="{{ session()->get("front_details.instagram") }}" target="_blank">Instagram <i style="color: #e01d6e;" class="social-icon social-instagram bx bxl-instagram"></i></a></li>
-             <li><a href="{{ session()->get("front_details.twiter") }}" target="_blank">Twitter <i style="color: #36c1f5;" class="social-icon social-twitter icon-twitter bx bxl-twitter"></i></a></li>
-         </ul>
-     </nav>
-     <div class="sticky-style-2">
-         <a target="_blank" href="enquiry.html">
-             <b class="font-weight-5" style="margin-right: 17px;"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAASRJREFUSEvdldFNxDAQRGcqgA6ACqAEOoHrACqBDoBOKOHo4K4DqGDQWLsR8SWxddEJ6fxjRVnP7L51NsSJF0+sjzM0kHQP4A3A9ZH4dgA2JD99/gCRJAdcHSmex3Ykb+YMFFHfAJ5JvveYSXoE8ALgsgiTJfmpCtIgdW1gIxseLEkWtLANhtVjsAHwCuACwDa4eh+WpLvol/cfAE/x3K7AGYSAK7gFMEJWIflyBSS3kgqBZgUZEAhcyUOknj1JJB/OPBE2DeYaGhknMocVJPUlmDXIF1MGf6ox66ECI6njVxl0XtflHvSILMU0ezCHKjG1Evh/g94MG3F7kmVYLv4Palzx8dWjpPbax0c3PU2rUTAS6+3DaCa1kKx9f4a/zLVI6vO/GgaVGZzCF9UAAAAASUVORK5CYII=" /></b>Enquiry</a>
+                                @endif                                    </li>
+                                </ul>
+                            </div>
+                        </nav> <!-- nav -->
+                    </div>
+                    <!--   <div class="col-lg-2 col-md-2 col-sm-3 col-4">
+                        <div class="right-icon text-right">
+                            <ul>
+                                <li><a href="#" id="search"><i class="fa fa-search"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-bag"></i><span>0</span></a></li>
+                            </ul>
+                        </div>
+                    </div>-->
+                </div>
+            </div> <!-- container -->
+        </div>
 
-     </div>
- </header>
+    </header>
 
-
+    <!--====== HEADER PART ENDS ======-->

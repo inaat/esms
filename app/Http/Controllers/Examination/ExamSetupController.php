@@ -75,6 +75,8 @@ class ExamSetupController extends Controller
                     $html .= '<li><a href="' . action('Examination\ExamSetupController@enrolledSubjects', [$row->id]) . '" class="dropdown-item "><i class="fa-solid fa-arrow-left"></i> ' . __("english.enrolled_subjects") . '</a></li>';
                     $html .= '<li><a href="' . action('Examination\ExamSetupController@updateSubjectsMark', [$row->id]) . '" class="dropdown-item "><i class="fas fa-edit"></i> ' . __("english.update_subjects_marks") . '</a></li>';
 
+                    /*$html .= '<li><a href="' . action('Examination\ExamSetupController@destroy', [$row->id]) . '" class="dropdown-item btn-danger delete_exam_setup_button"><i class="bx bxs-trash f-16 "></i> ' . __("english.delete") . '</a></li>';*/
+
 
                     $html .= '</ul></div>';
 
@@ -475,7 +477,7 @@ public function updateSubjectsMarkPost(Request $request)
 
         return view('Examination.exam_setup.enrolled_students', compact('students'));
     }
-    public function destroy($id)
+  public function destroy($id)
     {
         if (!auth()->user()->can('exam_setup.view')) {
             abort(403, 'Unauthorized action.');
@@ -657,4 +659,6 @@ public function postDeleteSubjects(Request $request)
 
     return redirect('exam/setup')->with('status', $output);
 }
+
+
 }

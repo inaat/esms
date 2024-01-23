@@ -20,9 +20,11 @@ class EmployeeUtil extends Util
         $employee_input = $request->only(['campus_id','employeeID','first_name' ,'last_name','father_name','gender', 'birth_date','joining_date',
         'religion' ,'mobile_no','email','cnic_no','blood_group','nationality' ,'mother_tongue' ,'country_id','province_id' ,
         'district_id' ,'city_id' ,'region_id','current_address','permanent_address','department_id' , 'designation_id' ,
-        'education_id' ,'basic_salary' ,'pay_period','employee_image','password','bank_details']);
+        'education_ids' ,'basic_salary','default_allowance','default_deduction' ,'pay_period','employee_image','password','bank_details']);
         $employee_input['birth_date']=$this->uf_date($employee_input['birth_date']);
         $employee_input['joining_date']=$this->uf_date($employee_input['joining_date']);
+        $input['education_ids'] = !empty($request->input('education_ids')) ? $request->input('education_ids') : null;
+
         if (!empty($employee_input['employee_image'])) {
             $employee_image = $this->uploadFile($request, 'employee_image', 'employee_image', 'image', $employee_input['employeeID']);
             $employee_input['employee_image'] = $employee_image;
@@ -36,6 +38,8 @@ class EmployeeUtil extends Util
         $employee_input['password'] = Hash::make($employee_input['password']);
 
         $employee_input['basic_salary'] = $this->num_uf($employee_input['basic_salary']);
+        $employee_input['default_allowance'] = $this->num_uf($employee_input['default_allowance']);
+        $employee_input['default_deduction'] = $this->num_uf($employee_input['default_deduction']);
         $employee=HrmEmployee::create($employee_input);
         $user=$this->createEmployeeUpdateLogin($employee, $employee->id, $request->input('role'));
         $employee->user_id=$user->id;
@@ -64,9 +68,10 @@ class EmployeeUtil extends Util
         $employee_input = $request->only(['campus_id','employeeID','first_name' ,'last_name','father_name','gender', 'birth_date','joining_date',
         'religion' ,'mobile_no','email','cnic_no','blood_group','nationality' ,'mother_tongue' ,'country_id','province_id' ,
         'district_id' ,'city_id' ,'region_id','current_address','permanent_address','department_id' , 'designation_id' ,
-        'education_id' ,'basic_salary' ,'pay_period','employee_image','password','bank_details']);
+        'education_ids' ,'basic_salary' ,'default_allowance','default_deduction','pay_period','employee_image','password','bank_details']);
         $employee_input['birth_date']=$this->uf_date($employee_input['birth_date']);
         $employee_input['joining_date']=$this->uf_date($employee_input['joining_date']);
+        $input['education_ids'] = !empty($request->input('education_ids')) ? $request->input('education_ids') : null;
         $employee=HrmEmployee::with(['user'])->find($id);
         if (!empty($employee_input['employee_image'])) {
             if (File::exists(public_path('uploads/employee_image/'.$employee->employee_image))) {
@@ -85,6 +90,8 @@ class EmployeeUtil extends Util
         $employee_input['bank_details'] = !empty($employee_input['bank_details']) ? json_encode($employee_input['bank_details']) : null;
         $employee_input['email'] = !empty($employee_input['email']) ? $employee_input['email'] : $employee_input['employeeID'].'@gmail.com';
         $employee_input['basic_salary'] = $this->num_uf($employee_input['basic_salary']);
+        $employee_input['default_allowance'] = $this->num_uf($employee_input['default_allowance']);
+        $employee_input['default_deduction'] = $this->num_uf($employee_input['default_deduction']);
         $employee->fill($employee_input);
         $employee->save();
         $employee_user=HrmEmployee::with(['user'])->find($id);

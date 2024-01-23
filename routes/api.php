@@ -162,6 +162,7 @@ Route::group(['prefix' => 'parent'], function () {
             Route::get('get-exam-list', [ParentApiController::class, 'getExamList']); // Exam list Route
             Route::get('get-exam-details', [ParentApiController::class, 'getExamDetails']); // Exam Details Route
             Route::get('exam-marks', [ParentApiController::class, 'getExamMarks']); //Exam Marks
+             Route::get('get-fee-list', [ParentApiController::class, 'feeTransactions']);
         });
     });
 });

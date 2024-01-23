@@ -21,7 +21,7 @@ use App\Models\FeeTransactionPayment;
 use App\Models\Discount;
 use App\Models\Vehicle;
 use App\Models\Attendance;
-use App\Models\AssessmentStudent;
+use App\Models\FeeHead;
 use App\Models\StudentDocument;
 use Yajra\DataTables\Facades\DataTables;
 use App\Utils\StudentUtil;
@@ -129,7 +129,83 @@ class StudentController extends Controller
     //         $std->save();
     //     }
     //    dd(1); // outpu
-  
+     /*     
+        $ranges = [ // the start of each age-range.
+    
+    '0-0' => 0,
+    '1-1' => 1,
+    '2-2' => 2,
+    '3-3' => 3,
+    '4-4' => 4,
+    '5-5' => 5,
+    '6-6' => 6,
+    '7-7' => 7,
+    '8-8' => 8,
+    '9-9' => 9,
+    '10-10' => 10,
+    '11-11' => 11,
+    '12-12' => 12,
+    '13-13' => 13,
+    '14-14' => 14,
+    '15-15' => 15,
+    '16-16' => 16,
+    '17-17' => 17,
+    '18-18' => 18,
+    '19-19' => 19,
+    '20-20' => 20,
+    '21+' => 21
+];
+$classes=Classes::get();
+$data=[];
+foreach($classes as $cls){
+$female = Student::where('status','active')->where('current_class_id',$cls->id)->where('gender','female')->
+    get()
+    ->map(function ($user) use ($ranges) {
+        $age = Carbon::parse($user->birth_date)->age;
+        foreach($ranges as $key => $breakpoint)
+        {
+            if ($breakpoint >= $age)
+            {
+                $user->range = $key;
+                break;
+            }
+        }
+
+        return $user;
+    })
+    ->mapToGroups(function ($user, $key) {
+        return [$user->range => $user];
+    })
+    ->map(function ($group) {
+        return count($group);
+    })
+    ->sortKeys();
+    $male = Student::where('status','active')->where('current_class_id',$cls->id)->where('gender','male')->
+    get()
+    ->map(function ($user) use ($ranges) {
+        $age = Carbon::parse($user->birth_date)->age;
+        foreach($ranges as $key => $breakpoint)
+        {
+            if ($breakpoint >= $age)
+            {
+                $user->range = $key;
+                break;
+            }
+        }
+
+        return $user;
+    })
+    ->mapToGroups(function ($user, $key) {
+        return [$user->range => $user];
+    })
+    ->map(function ($group) {
+        return count($group);
+    })
+    ->sortKeys();
+$data[]=['clasa_name'=>$cls->title,'male'=>$male,'female'=>$female];
+//dd($output);
+}
+dd($data);*/
         if (!auth()->user()->can('student.view')) {
             abort(403, 'Unauthorized action.');
         }
@@ -151,6 +227,8 @@ class StudentController extends Controller
                 'class_sections.section_name as section_name',
                 'adm_section.section_name as adm_section_name',
                 'students.father_name',
+                'students.father_cnic_no',
+                'students.cnic_no',
                 'students.birth_date',
                 'students.roll_no',
                 'students.mobile_no',
@@ -233,6 +311,12 @@ class StudentController extends Controller
                     $student_list->where('students.roll_no', 'like', "%{$roll_no}%");
                 }
             }
+             if (request()->has('gender')) {
+                $gender = request()->get('gender');
+                if (!empty($gender)) {
+                    $student_list->where('students.gender',$gender);
+                }
+            }
             if (request()->has('only_transport')) {
                 $only_transport = request()->get('only_transport');
                 if (!empty($only_transport)) {
@@ -253,6 +337,9 @@ class StudentController extends Controller
                         $html.='<li><a class="dropdown-item "href="' . action('StudentController@edit', [$row->id]) . '"><i class="bx bxs-edit "></i> ' . __("english.edit") . '</a></li>';
 if ($row->total_admission_fee<=0) {
     $html.='<li><a class="dropdown-item admission_add_button " href="#" data-href="' . action('StudentController@addAdmissionFee', [$row->id]) . '"><i class="bx bxs-plus-square "></i> ' . __("english.add_admission_fee") . '</a></li>';
+}else{
+        $html.='<li><a class="dropdown-item admission_add_button " href="#" data-href="' . action('StudentController@addAdmissionFee', [$row->id]) . '"><i class="bx bxs-plus-square "></i> ' . __("View Admission Fee") . '</a></li>';
+
 }
                     }
                     if (auth()->user()->can('student.profile')) {
@@ -497,8 +584,8 @@ if ($row->total_admission_fee<=0) {
         $domicile = District::forDropdown($system_settings_id, false);
         $student=Student::with(['guardian','guardian.student_guardian'])->find($id);
         //dd($student);
-        $siblings=StudentGuardian::with(['student_guardian','students'])->where('student_id', '!=', $student->id)->where('guardian_id', $student->guardian->student_guardian->id)->get();
-        // dd($siblings->students->first_name);
+        $siblings=StudentGuardian::with(['student_guardian','students'])->where('student_id', '!=', $student->id)->where('guardian_id', $student->guardian?$student->guardian->student_guardian->id:null)->get();
+        //dd($siblings->students->first_name);
 
         // dd($student->guardian->student_guardian->guardian_name);
         $classes=Classes::forDropdown($system_settings_id, false, $student->campus_id);
@@ -564,18 +651,17 @@ if ($row->total_admission_fee<=0) {
             } else {
                 $output= $this->studentUtil->updateStudent($request, $id);
             }
-            // $this->studentUtil->setAndGetReferenceCount('admission_no', false, true);
-            // $this->studentUtil->setAndGetRollNoCount('roll_no', false, true, $input['adm_session_id']);
+           
             DB::commit();
         } catch (\Exception $e) {
-            DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+             DB::rollBack();
+             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
-            $output = ['success' => false,
-                    'msg' => __("english.something_went_wrong")
-                ];
-        }
-        return redirect('students')->with('status', $output);
+             $output = ['success' => false,
+                     'msg' => __("english.something_went_wrong")
+                 ];
+         }
+         return redirect('students')->with('status', $output);
     }
 
     /**
@@ -646,8 +732,9 @@ if ($row->total_admission_fee<=0) {
         $student=Student::with(['guardian','guardian.student_guardian'])->find($id);
         $fee_heads=$this->studentUtil->getAdmissionFeeHeads($student->campus_id, $student->current_class_id);
         $classes=Classes::find($student->adm_class_id);
-        //dd($classes->admission_fee);
-        return view('students/partials.admission_fee')->with(compact('student', 'fee_heads', 'classes'));
+        $actual_transcation=FeeTransaction::with(['fee_lines','fee_lines.feeHead'])->where('type','admission_fee')->where('student_id',$id)->first();
+        //dd($actual_transcation);
+        return view('students/partials.admission_fee')->with(compact('student', 'fee_heads', 'classes','actual_transcation'));
     }
     public function postAdmissionFee(Request $request)
     {
@@ -869,6 +956,17 @@ if ($row->total_admission_fee<=0) {
         $snappy->save('uploads/pdf/'.$pdf_name);//save pdf file
         return $snappy->stream();
     }
+       public function emptyAdmissionForm()
+    {
+        if (!auth()->user()->can('print.admission_form')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+       
+        return view('MPDF.empty-admission-form');
+        
+       
+    }
     public function studentProfile($id)
     {
         if (!auth()->user()->can('student.profile')) {
@@ -878,7 +976,8 @@ if ($row->total_admission_fee<=0) {
 
         if ($user->hook_id == $id || $user->user_type =='guardian' || $user->user_type =='admin' || $user->user_type =='other') {
             $student = Student::with(['studentCategory','guardian','guardian.student_guardian','admission_class','current_class','current_class_section'])->findOrFail($id);
-            $siblings=StudentGuardian::with(['students','students.admission_class','students.current_class','students.current_class_section'])->where('student_id', '!=', $id)->where('guardian_id', $student->guardian->student_guardian->id)->get();
+           
+            $siblings=StudentGuardian::with(['students','students.admission_class','students.current_class','students.current_class_section'])->where('student_id', '!=', $id)->where('guardian_id', $student->guardian?$student->guardian->student_guardian->id:'')->get();
             $exam=ExamAllocation::with(['student','campuses','session','current_class','current_class_section','exam_create','exam_create.term','grade','subject_result','subject_result.subject_grade','subject_result.subject_name'])
             ->where('session_id', $this->studentUtil->getActiveSession())
             ->where('student_id', $id)->get();
@@ -1113,10 +1212,13 @@ if ($row->total_admission_fee<=0) {
         $campus_id=$input['campus_id'];
         $class_id=$input['class_id'];
         $class_section_id=null;
-        $students=Student::where('campus_id',$campus_id)
-                ->where('current_class_id', $class_id)
+        $students=Student::where('campus_id',$campus_id);
+         if(!empty($class_id)){
+            $students->where('current_class_id', $class_id)  ;
+         }
+               
               //  ->where('current_class_section_id', $class_section_id)
-                ->where('status','active')->get();
+           $students=$students->where('status','active')->get();
        // dd($students);
 
         $campuses=Campus::forDropdown();
@@ -1145,8 +1247,10 @@ if ($row->total_admission_fee<=0) {
             $student->is_transport=1;
             }
             $student->birth_date= $this->studentUtil->uf_date($mark['birth_date']);
+             $student->admission_date= $this->studentUtil->uf_date($mark['admission_date']);
             $student->student_tuition_fee=$student_tuition_fee;
             $student->mobile_no=$mark['mobile_no'];
+           // $student->gender=$mark['gender'];
             $student->std_permanent_address=$mark['std_permanent_address'];
             $student->father_name=$mark['father_name'];
             $student->save();
@@ -1172,38 +1276,5 @@ if ($row->total_admission_fee<=0) {
     return redirect('students/bulk-edit')->with('status', $output);
 
 }
-
-
-public function get_assessments()
-  {
-      if (!auth()->user()->can('student_assessment.view')) {
-          abort(403, 'Unauthorized action.');
-      }
-      if (request()->ajax()) {
-          $student_id = request()->input('student_id');
-          $student_document=AssessmentStudent::where('student_id', $student_id)->select(['assessment_date', 'id']);
-          return Datatables::of($student_document)
-          ->addColumn(
-              'action',
-              function ($row) {
-                  $html= '<div class="dropdown">
-             <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">'. __("english.actions").'</button>
-             <ul class="dropdown-menu" style="">';
-                  
-                 
-                  if (auth()->user()->can('student_document.delete')) {
-                      $html.='<li><a class="dropdown-item btn-danger delete_document_destroy_button "href="#" data-href="' . action('StudentController@document_destroy', [$row->id]) . '"><i class="fas fa-trash"></i> ' . __("english.delete") . '</a></li>';
-                  }
-                  $html .= '</ul></div>';
-
-                  return $html;
-              }
-          )
-
-              ->removeColumn('id')
-              ->rawColumns(['action','assessment_date'])
-              ->make(true);
-      }
-  }
 
 }

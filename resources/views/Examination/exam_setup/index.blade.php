@@ -117,7 +117,35 @@
               
                 ],
             });
+            $(document).on("click", "a.delete_exam_setup_button", function() {
+                swal({
+                    title: LANG.sure,
+                    text: LANG.confirm_delete_designation,
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        var href = $(this).data("href");
+                        var data = $(this).serialize();
 
+                        $.ajax({
+                            method: "DELETE",
+                            url: href,
+                            dataType: "json",
+                            data: data,
+                            success: function(result) {
+                                if (result.success == true) {
+                                    toastr.success(result.msg);
+                                    exam_terms_table.ajax.reload();
+                                } else {
+                                    toastr.error(result.msg);
+                                }
+                            },
+                        });
+                    }
+                });
+            });
 
         });
     </script>

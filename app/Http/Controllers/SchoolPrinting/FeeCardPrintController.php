@@ -150,10 +150,11 @@ class FeeCardPrintController extends Controller
                 if (!empty($section_id)) {
                     $students->where('current_class_section_id', $section_id);
                 }
-                $students = $students->get('id');
                 if (request()->input('only_transport')=='true') {
                     $students->where('student_transport_fee','>',0);
                 }
+                $students = $students->get('id');
+            
                 $feeCards = [];
                 foreach ($students as $student_id) {
                     $current_transaction = $this->__current_transaction($student_id->id, $transaction_date);

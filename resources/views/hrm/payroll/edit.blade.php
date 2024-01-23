@@ -30,7 +30,11 @@
                          </strong>{{ ucwords($transaction->employee->father_name) }}<br>
                          <strong>@lang('english.employeeID'): </strong>{{ ucwords($transaction->employee->employeeID) }}<br>
                          <strong>@lang('english.basic_salary'): </strong>@format_currency($transaction->employee->basic_salary)
-                         <input type="hidden" id="transaction_final_total" name="" value="{{$transaction->employee->basic_salary }}">
+                         <input type="hidden" id="transaction_final_total" name="" value="{{$transaction->employee->basic_salary }}"><br>
+                         <strong>@lang('english.default_allowance'): </strong>@format_currency($transaction->employee->default_allowance)
+                         <input type="hidden" id="transaction_default_allowance" name="" value="{{$transaction->employee->default_allowance }}"><br>
+                         <strong>@lang('english.default_deduction'): </strong>@format_currency($transaction->employee->default_deduction)
+                         <input type="hidden" id="transaction_default_deduction" name="" value="{{$transaction->employee->default_deduction}}">
 
                      </p>
                  </div>

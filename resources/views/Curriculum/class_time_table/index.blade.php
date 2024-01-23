@@ -81,20 +81,30 @@
                             <tr>
                                 <td> {{$loop->iteration}}
                                 </td>
-                                <td>{{ $section->classes->title }} {{ $section->section_name }}</td>
-                                @foreach ($section->time_table as $time_table)
-                            
+                                <td>{{ $section['section_name']}}</td>
+                                @foreach ($section['timetables'] as $time_table)
                                 @if(!empty($time_table->subjects))
-                                <td> <a data-href="{{ action('Curriculum\ClassTimeTableController@edit', [$time_table->id])}}" class="edit_time_table">{{$time_table->subjects->name }}
+                                      <td> 
+                                <a class=" delete_period_button" data-href="{{ action('Curriculum\ClassTimeTableController@destroy', [$time_table->id])}}"><i class="bx bxs-trash "></i> Delete</a><br>
+                                
+                                
+                                <a data-href="{{ action('Curriculum\ClassTimeTableController@edit', [$time_table->id])}}" class="edit_time_table">{{$time_table->subjects->name }}
                                     {{ $time_table->other ? '('.__('english.'.$time_table->other).')' : null }}
                                     <br>@if(!empty($time_table->teacher)) <strong>({{ ucwords($time_table->teacher->first_name . ' ' . $time_table->teacher->last_name) }})@endif</strong></a></td>
-                                @else
-                                @if($time_table->periods->type=='lunch_break' || $time_table->periods->type=='paryer_time')
+                                   @elseif(!empty($time_table->periods))
+                                                                @if($time_table->periods->type=='lunch_break' || $time_table->periods->type=='paryer_time')
                                 <td style="text-align:center;   vertical-align: middle;
-                                   writing-mode: vertical-lr;"><a data-href="{{ action('Curriculum\ClassTimeTableController@edit', [$time_table->id])}}" class="edit_time_table">@lang('english.'.$time_table->periods->type)</a></td>
+                                   writing-mode: vertical-lr;">
+                                   
+                                                                   <a class=" delete_period_button" data-href="{{ action('Curriculum\ClassTimeTableController@destroy', [$time_table->id])}}"><i class="bx bxs-trash "></i> Delete</a><br>
+
+                                   <a data-href="{{ action('Curriculum\ClassTimeTableController@edit', [$time_table->id])}}" class="edit_time_table">@lang('english.'.$time_table->periods->type)</a></td>
                                 @else
                                 <td style="text-align:center;
-                                "><a data-href="{{ action('Curriculum\ClassTimeTableController@edit', [$time_table->id])}}" class="edit_time_table">
+                                ">
+                                                                <a class=" delete_period_button" data-href="{{ action('Curriculum\ClassTimeTableController@destroy', [$time_table->id])}}"><i class="bx bxs-trash "></i> Delete</a><br>
+
+                                <a data-href="{{ action('Curriculum\ClassTimeTableController@edit', [$time_table->id])}}" class="edit_time_table">
                                 @if(!empty($time_table->other))
                                 @lang('english.'.$time_table->other) 
                                 @endif
@@ -113,8 +123,12 @@
                                    <br>@if(!empty($time_table->note)) <strong>({{ ucwords($time_table->note ) }})@endif</strong></a></td>
 
                                 @endif
+
+                                   @else
+                                   <td></td>
                                 @endif
-                                @endforeach
+                                
+                                @endforeach 
                             </tr>
                             @endforeach
                         </tbody>
@@ -204,6 +218,36 @@
                             },
                         });
                     });
+                });
+            });
+
+             $(document).on("click", "a.delete_period_button", function() {
+                swal({
+                    title: LANG.sure,
+                    text: LANG.confirm_delete_class_subject,
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        var href = $(this).data("href");
+                        var data = $(this).serialize();
+
+                        $.ajax({
+                            method: "DELETE",
+                            url: href,
+                            dataType: "json",
+                            data: data,
+                            success: function(result) {
+                                if (result.success == true) {
+                                    toastr.success(result.msg);
+                                    window.location.reload(true);
+                                } else {
+                                    toastr.error(result.msg);
+                                }
+                            },
+                        });
+                    }
                 });
             });
     });

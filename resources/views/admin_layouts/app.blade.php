@@ -2,6 +2,8 @@
 <html  lang="{{ app()->getLocale() }}" dir="{{in_array(session()->get('user.language', config('app.locale')), config('constants.langs_rtl')) ? 'rtl' : 'ltr'}}">
 {{-- class="color-sidebar sidebarcolor2 color-header headercolor4 --}}
 <head>
+  {{--  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1580489596045533"
+     crossorigin="anonymous"></script>--}}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
@@ -369,6 +371,18 @@ background: #157d4c;
 
     @yield("script")
     @include("admin_layouts.theme-control")
+  {{--  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1580489596045533"
+     crossorigin="anonymous"></script>
+<!-- Banner -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1580489596045533"
+     data-ad-slot="4324707098"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>--}}
 </body>
 
 </html>

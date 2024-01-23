@@ -348,7 +348,7 @@ class NotificationUtil extends Util
 
         return $whatsapp_link;
     }
-    public function SendNotification($notification_type,$student,$attendance, $sms_body=null)
+    public function SendNotification($notification_type,$student,$attendance, $sms_body=null,$add_second=null)
     {
         $notification_template = HrmNotificationTemplate::
                 where('template_for', $notification_type)
@@ -357,7 +357,7 @@ class NotificationUtil extends Util
         
         $data['email_settings'] = $business->email_settings;
         $data['sms_settings'] = $business->sms_settings;
-    
+        $data['add_second']=$add_second;
         $whatsapp_link = '';
          if (!empty($notification_template )) {
         if (!empty($notification_template->auto_send) || !empty($notification_template->auto_send_sms) || !empty($notification_template->auto_send_wa_notif)) {

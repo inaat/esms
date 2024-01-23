@@ -73,6 +73,12 @@ $(document).ready(function () {
                     var transaction_final_total = __read_number(
                         $("#transaction_final_total")
                     );
+                    var transaction_default_allowance = __read_number(
+                        $("#transaction_default_allowance")
+                    );
+                    var transaction_default_deduction = __read_number(
+                        $("#transaction_default_deduction")
+                    );
                     if (transaction_final_total > 0) {
                         var day_salary = transaction_final_total / 30;
                         var divider = $(this).find(".deduction-divider").val();
@@ -88,7 +94,7 @@ $(document).ready(function () {
                         ? __read_number($(this).find(".deduction-amount"))
                         : 0;
                     var subtotal = deduction;
-                    total = total + subtotal;
+                    total = total + subtotal +(transaction_default_allowance-transaction_default_deduction);
                 }
             });
             table

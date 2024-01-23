@@ -192,7 +192,7 @@
                 });
             });
 
-            $(document).on("click", "a.delete_class_subject_button", function() {
+            $(document).on("click", "a.delete_assign_subject_button", function() {
                 swal({
                     title: LANG.sure,
                     text: LANG.confirm_delete_class_subject,

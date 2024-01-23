@@ -80,12 +80,15 @@ function update_statistics(start, end) {
         success: function(data) {
             var account_balances = data.account_balances;
 
+              var count=0;
             $('table#assets_table tbody#account_balances').html('');
             for (var key in account_balances) {
+
                 var accnt_bal = __currency_trans_from_en(data.account_balances[key]);
                 var accnt_bal_with_sym = __currency_trans_from_en(data.account_balances[key], true);
-                var account_tr = '<tr><td class="pl-20-td">' + key + ':</td><td><input type="hidden" class="asset" value="' + accnt_bal + '">' + accnt_bal_with_sym + '</td></tr>';
+                var account_tr = '<tr><td class="pl-20-td">' + key + ':</td><td><input type="hidden" class="asset" value="' + accnt_bal + '">' + accnt_bal_with_sym + '<br><span class="badge text-white text-uppercase  bg-primary">beginning balance ->:'+__currency_trans_from_en(data.beginning_balance[count]['beginning_balance'])+'</span>'+'</td></tr>';
                 $('table#assets_table tbody#account_balances').append(account_tr);
+             count+=1;
             }
             var total_assets = 0;
 
@@ -94,6 +97,25 @@ function update_statistics(start, end) {
             });
 
             $('span#total_assets').text(__currency_trans_from_en(total_assets, true));
+            ///trans
+                        var transport_account_balances = data.transport_account_balances;
+
+            $('table#transport_assets_table tbody#transport_account_balances').html('');
+            for (var key in transport_account_balances) {
+                var accnt_bal = __currency_trans_from_en(data.transport_account_balances[key]);
+                var accnt_bal_with_sym = __currency_trans_from_en(data.transport_account_balances[key], true);
+                var account_tr = '<tr><td class="pl-20-td">' + key + ':</td><td><input type="hidden" class="transport_asset" value="' + accnt_bal + '">' + accnt_bal_with_sym + '</td></tr>';
+                $('table#transport_assets_table tbody#transport_account_balances').append(account_tr);
+            }
+            var transport_total_assets = 0;
+
+            $('input.transport_asset').each(function() {
+                transport_total_assets += __read_number($(this));
+            });
+
+            $('span#transport_total_assets').text(__currency_trans_from_en(transport_total_assets, true));
+            ///
+            
             $(".active_students").html(
                 data.active_students
             );
@@ -127,7 +149,11 @@ function update_statistics(start, end) {
             $(".total_progress_collection_during_month").html(
                 __currency_trans_from_en(data.total_progress_collection_during_month, true)
             );
-            $(".total_profit_amount").html(
+          
+              $(".total_profit_amount").html(
+                __currency_trans_from_en((data.total_progress_collection_during_month - data.total_hrm_paid_amount-data.total_expense)+data.account_opening_balance+data.total_hrm_paid_amount, true)
+            );
+              $(".total_montly_profit_amount").html(
                 __currency_trans_from_en(data.total_progress_collection_during_month - data.total_hrm_paid_amount, true)
             );
             $(".total_transport_dues_this_month").html(

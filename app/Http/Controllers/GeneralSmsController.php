@@ -96,15 +96,17 @@ class GeneralSmsController extends Controller
     {
       
               
-        
+        $add_second=0;
             foreach ($input['class_section'] as $key => $section_id) {
                 # code...
                 $students=Student::where('current_class_section_id', $section_id)->where('status', 'active')->get();
                 //dd($students);
+                
                 foreach ($students as $epe) {
+                    $addSecond =  $addSecond +30;
                     $student= Student::where('id', $epe->id)->first();
-
-                    $response=$this->notificationUtil->SendNotification(null, $student, null, $input['description']);
+ 
+                    $response=$this->notificationUtil->SendNotification(null, $student, null, $input['description'],$add_second);
                 }
             }
         
@@ -114,9 +116,12 @@ class GeneralSmsController extends Controller
        
             $employees=HrmEmployee::where('status', 'active')->get();
             //dd($employee);
+            $add_second=0;
+
             foreach ($employees as $std) {
+                $addSecond =  $addSecond +30;
                 $employee= HrmEmployee::where('id', $std->id)->first();
-                $response=$this->notificationUtil->SendNotification(null, $employee, null, $input['description']);
+                $response=$this->notificationUtil->SendNotification(null, $employee, null, $input['description'],$add_second);
             }
         
     }

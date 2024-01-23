@@ -252,6 +252,10 @@ public function getTotalHrmPaid($start_date = null, $end_date = null,$employee_i
         $query->whereDate('paid_on', '>=', $start_date)
         ->whereDate('paid_on', '<=', $end_date);
     }
+    if ($start_date==null){     
+        $query->whereDate('paid_on', '<=', $end_date);
+        
+    }
     if (!empty($employee_id)) {
         $query->where('payment_for',$employee_id);
     }

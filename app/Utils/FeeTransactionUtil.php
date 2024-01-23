@@ -535,6 +535,11 @@ public function getTotalFeePaid($start_date = null, $end_date = null, $student_i
         $query->whereDate('fee_transaction_payments.paid_on', '>=', $start_date)
                 ->whereDate('fee_transaction_payments.paid_on', '<=', $end_date);
     }
+    if ($start_date==null){   
+       
+        $query->whereDate('fee_transaction_payments.paid_on', '<=', $end_date);
+        
+    }
     if (!empty($student_id)) {
         $query->where('fee_transaction_payments.payment_for', $student_id);
     }

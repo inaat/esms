@@ -147,6 +147,7 @@ Route::middleware(['auth','language','SetSessionData','timezone','AdminSidebarMe
     Route::resource('report-attendance', 'Report\AttendanceReportController');
     Route::post('/attendance-employee', 'Report\AttendanceReportController@employeeStore');
     Route::get('/admission-form/{id}', 'StudentController@admissionForm');
+    Route::get('/empty-admission-form', 'StudentController@emptyAdmissionForm');
     Route::resource('income-report', 'Report\IncomeReportController');
     Route::get('income-summary', 'Report\IncomeReportController@IncomeSummaryCreate');
     Route::post('income-summary-report', 'Report\IncomeReportController@getIncomeSummaryReport');
@@ -241,7 +242,7 @@ Route::get('/exam/single-date-sheet', 'Examination\ExamDateSheetController@singl
     Route::resource('vehicles', 'VehicleController');
     Route::resource('assignments', 'AssignmentController');
     Route::resource('announcements', 'AnnouncementController');
-    Route::resource('slider', 'SliderController');
+    Route::resource('sliders', 'MobileSliderController');
 
 
     //Reports
@@ -279,6 +280,7 @@ Route::get('/exam/single-date-sheet', 'Examination\ExamDateSheetController@singl
     Route::resource('front-news', 'Frontend\FrontNewsController');
     Route::resource('front-notices', 'Frontend\FrontNoticeController');
     Route::resource('front-events', 'Frontend\FrontEventController');
+    Route::resource('front-counters', 'Frontend\FrontCounterController');
 
     Route::resource('sms-logs', 'WhatsAppController');
     Route::get('sms-status', 'WhatsAppController@smsStatus');
@@ -300,6 +302,7 @@ Route::get('/exam/single-date-sheet', 'Examination\ExamDateSheetController@singl
 });
 Route::middleware(['FrontSessionData'])->group(function () {
     Route::get('/', 'Frontend\FrontHomeController@index');
+    Route::get('/faculty', 'Frontend\FrontHomeController@faculty');
     Route::get('/about-us', 'Frontend\FrontHomeController@about_index');
     Route::get('about-us-{slug}/{id}', 'Frontend\FrontHomeController@about_show');
     Route::get('news-{slug}/{id}', 'Frontend\FrontHomeController@news_show');

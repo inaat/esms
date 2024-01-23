@@ -122,10 +122,9 @@ class FrontSliderController extends Controller
            if ($request->hasFile('slider_image') && $request->file('slider_image')->isValid()) {
                if (File::exists(public_path('uploads/front_image/'. $gallery->slider_image))) {
                    File::delete(public_path('uploads/front_image/'. $gallery->slider_image));
-
-                   $filename=$this->commonUtil->uploadFile($request, 'slider_image', 'front_image', 'image');
-                   $gallery->slider_image=$filename;
                }
+               $filename=$this->commonUtil->uploadFile($request, 'slider_image', 'front_image', 'image');
+               $gallery->slider_image=$filename;
            }
            $gallery->save();
            $output = ['success' => true,

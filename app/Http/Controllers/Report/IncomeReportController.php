@@ -242,31 +242,8 @@ class IncomeReportController extends Controller
         }
         
         $expenses = $this->expenseTransactionUtil->getExpenseReport( $filters);
-         $hrm=$this->hrmTransactionUtil->getTotalHrm( $filters['start_date'], $filters['end_date'], $campus_id);
-        $values = [];
-        $labels = [];
-        foreach ($expenses as $expense) {
-            $values[] = [
-                'name'=>!empty($expense->category) ? $expense->category : __('english.others'),
-                'y'=>(float) $expense->total_expense
-            ] ;
-            $labels[] = !empty($expense->category) ? $expense->category : __('english.others');
-        }
-         $values[] = [
-                'name'=>'HRM',
-                'y'=>(float) $hrm
-            ] ;
-            $labels[] = __('english.hrm');
-     
-        $labels= json_encode($labels) ;
-        $values= json_encode($values) ;
-        dd($values);
-        $output=[
-            'labels'=>$labels,
-            'values',$values,
-            // 'expenses',$expenses
-        ];
+        $hrm=$this->hrmTransactionUtil->getTotalHrm( $filters['start_date'], $filters['end_date'], $campus_id);
         
-        return  $output;
+       // return  $output;
     }
 }

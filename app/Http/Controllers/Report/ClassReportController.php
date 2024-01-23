@@ -23,13 +23,6 @@ class ClassReportController extends Controller
 {
     public function index()
     {
-    
-        // $title = 'New assignment added in English ' ;
-        // $body = 'asdasdassd';
-        // $type = "assignment";
-        // $user = Student::where('id',347)->get()->pluck('user_id');
-        // send_notification($user, $title, $body, $type);
-        // dd($user);
         if (!auth()->user()->can('class_report.view')) {
             abort(403, 'Unauthorized action.');
         }
@@ -52,6 +45,17 @@ class ClassReportController extends Controller
             ->where('campus_id', $campus_id)
             ->where('current_class_id', $class_id)
             ->where('current_class_section_id', $class_section_id)->count();
+            $male =Student::where('status','active')
+            ->where('campus_id', $campus_id)
+            ->where('current_class_id', $class_id)
+            ->where('current_class_section_id', $class_section_id)
+            ->where('gender','male')->count();
+             $female =Student::where('status','active')
+            ->where('campus_id', $campus_id)
+            ->where('current_class_id', $class_id)
+            ->where('current_class_section_id', $class_section_id)
+            ->where('gender','female')->count();
+           // dd($male,$female);
             
             $total_subject =ClassSubject::where('campus_id', $campus_id)
             ->where('class_id', $class_id)
@@ -69,7 +73,7 @@ class ClassReportController extends Controller
             $output['success'] = true;
             $output['msg']=  __("english.added_success");
             $output['html_content'] =view('Report.classes.get-class-report')
-            ->with(compact('classes','section','student','total_subject','assign_subjects','fee_heads'))->render();
+            ->with(compact('classes','section','student','total_subject','assign_subjects','fee_heads','male','female'))->render();
         }
         return $output;
     }

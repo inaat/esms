@@ -14,8 +14,11 @@ use App\Models\Exam\ExamAllocation;
 use App\Models\ClassSection;
 use App\Models\Campus;
 use App\Models\ClassLevel;
+use App\Models\Users;
 use App\Models\Classes;
 use App\Models\Session;
+use App\Models\HumanRM\HrmEmployee;
+use App\Models\HumanRM\HrmEducation;
 use DB;
 
 class FrontHomeController extends Controller
@@ -83,13 +86,56 @@ class FrontHomeController extends Controller
         return view('frontend.gallery.show')->with(compact('query', 'data'));
     }
     public function examResult()
-    {
-        return view('frontend.exam_result');
+    {        return view('frontend.exam_result');
     }
 
-    public function teachers()
+    public function faculty()
     {
-        return view('frontend.teachers');
+        $all_employees = HrmEmployee::leftJoin('hrm_designations', 'hrm_employees.designation_id', '=', 'hrm_designations.id')
+    ->whereIn('hrm_designations.designation', [
+        'Teacher', 'Director', 'Principal', 'Lecturer',
+        'Senior Lecturer', 'Visiting Lecturer', 'Visiting Faculty', 'Vice Principal'
+    ])
+    ->select(
+        'hrm_designations.designation',
+        'hrm_employees.education_ids',
+        'hrm_employees.employee_image',
+        DB::raw("CONCAT(COALESCE(hrm_employees.first_name, ''), ' ', COALESCE(hrm_employees.last_name, '')) as full_name")
+    )
+    ->get();
+      $faculty=[];
+        foreach ($all_employees as $key => $value) {
+
+            if (!empty($value->education_ids)) {
+                $educations = HrmEducation::whereIn('id', $value->education_ids)->pluck('education');
+        
+                if ($educations->count() > 1) {
+                    $educations = $educations->implode(', ');
+                } else {
+                    $educations = $educations->first();
+                }
+
+                $faculty[]=[
+                     'full_name'=>$value->full_name,
+                     'designation'=>$value->designation,
+                     'educations'=>$educations,
+                     'image' => file_exists(public_path('uploads/employee_image/'.$value->employee_image)) ? url('uploads/employee_image/'.$value->employee_image) : url('uploads/employee_image/default.jpg')
+
+                ];
+             
+            }else{
+                $faculty[]=[
+                    'full_name'=>$value->full_name,
+                    'designation'=>$value->designation,
+                    'educations'=>'',
+                    'image' => file_exists(public_path('uploads/employee_image/'.$value->employee_image)) ? url('uploads/employee_image/'.$value->employee_image) : url('uploads/employee_image/default.jpg')
+
+               ];
+            }
+            # code...
+        }
+
+        return view('frontend.faculty')->with(compact('faculty'));
     }
     public function toppers()
     {

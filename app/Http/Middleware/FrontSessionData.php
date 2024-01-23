@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Frontend\FrontSetting;
+use App\Models\Frontend\FrontCounter;
 
 
 
@@ -26,6 +27,9 @@ class FrontSessionData
             $front_details= FrontSetting::first();
          
             $request->session()->put('front_details', $front_details);
+            $front_counters= FrontCounter::get();
+         
+            $request->session()->put('front_counters', $front_counters);
 
      
 

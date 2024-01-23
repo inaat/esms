@@ -93,11 +93,11 @@ class CertificateBulkPrintController extends Controller
            //dd($certificate_issue);
             if (!empty($certificate_issue)) {
                 if ($input['certificate_type_id']==2) {
-                    $receipt = $this->certificatePrint($certificate_issue, 'certificate\certificate_bulk_print\print.birth');
+                    $receipt = $this->certificatePrint($certificate_issue, 'certificate.certificate_bulk_print.print.birth');
                 } elseif ($input['certificate_type_id']==3) {
-                    $receipt = $this->certificatePrint($certificate_issue, 'certificate\certificate_bulk_print\print.character');
+                    $receipt = $this->certificatePrint($certificate_issue, 'certificate.certificate_bulk_print.print.character');
                 } elseif ($input['certificate_type_id']==4) {
-                    $receipt = $this->certificatePrint($certificate_issue, 'certificate\certificate_bulk_print\print.provisional');
+                    $receipt = $this->certificatePrint($certificate_issue, 'certificate.certificate_bulk_print.print.provisional');
                 }
 
 

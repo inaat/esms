@@ -1,8 +1,9 @@
 <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
+        @if(empty($actual_transcation))
 
         {!! Form::open(['url' => action('\App\Http\Controllers\StudentController@postAdmissionFee'), 'method' => 'post', 'id' => 'admission_fee_add_form']) !!}
-
+      @endif
         <div class="modal-header bg-primary">
             <h5 class="modal-title" id="exampleModalLabel">@lang('english.create_admission_voucher')
                 ({{ ucwords($student->first_name . ' ' . $student->last_name) }})</h5>
@@ -31,7 +32,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                         
+                             @if(!empty($actual_transcation))
+                             @foreach ($actual_transcation->fee_lines as $line)
+                              <tr>
+                                  <td>{{$line->feeHead->description}}</td>
+                                  <td></td>
+                                  <td>{{$line->amount}}</td>
+                              </tr>
+                             @endforeach
+                             @else
                           @foreach ($fee_heads as $fee_head)
                                @if($fee_head->description=='Admission')
                                    <tr>
@@ -39,7 +48,7 @@
                                 <td class="text-center">
                                         {{-- <input class="" name='fee_heads[{{ $loop->iteration }}][check]'  type="checkbox" value="0"  id="flexCheckChecked"> --}}
                                
-                                     {!! Form::checkbox('fee_heads[' . $loop->iteration  . '][is_enabled]', 1, null, ['class' => 'form-check-input mt-2 fee-head-check']); !!}                                 </td>
+                                     {!! Form::checkbox('fee_heads[' . $loop->iteration  . '][is_enabled]', 1, null, ['class' => 'form-check-input mt-2 fee-head-check']) !!}                                 </td>
 
 
                                 </td>
@@ -57,7 +66,7 @@
                                 <td class="text-center">
                                         {{-- <input class="" name='fee_heads[{{ $loop->iteration }}][check]'  type="checkbox" value="0"  id="flexCheckChecked"> --}}
                                
-                                     {!! Form::checkbox('fee_heads[' . $loop->iteration  . '][is_enabled]', 1, null, ['class' => 'form-check-input mt-2 fee-head-check']); !!}                                 </td>
+                                     {!! Form::checkbox('fee_heads[' . $loop->iteration  . '][is_enabled]', 1, null, ['class' => 'form-check-input mt-2 fee-head-check']) !!}                                 </td>
 
 
                                 </td>
@@ -75,7 +84,7 @@
                                 <td class="text-center">
                                         {{-- <input class="" name='fee_heads[{{ $loop->iteration }}][check]'  type="checkbox" value="0"  id="flexCheckChecked"> --}}
                                
-                                     {!! Form::checkbox('fee_heads[' . $loop->iteration  . '][is_enabled]', 1, null, ['class' => 'form-check-input mt-2 fee-head-check']); !!}                                 </td>
+                                     {!! Form::checkbox('fee_heads[' . $loop->iteration  . '][is_enabled]', 1, null, ['class' => 'form-check-input mt-2 fee-head-check']) !!}                                 </td>
 
 
                                 </td>
@@ -89,12 +98,20 @@
                             </tr> 
                             @endif
                             @endforeach
+                             @endif
                              <tfoot>
+                     @if(!empty($actual_transcation))         
                       <tr>
+                        <th colspan="2" class="text-center">Total</th>
+                        <td><span class="">{{$actual_transcation->final_total}}</span></td>
+                      </tr>
+                      @else
+                       <tr>
                         <th colspan="2" class="text-center">Total</th>
                         <td><span class="final_total">0</span></td>
                         <input type="hidden" name="final_total" id="final_total" value="0">
                       </tr>
+                      @endif
                     </tfoot>
                         </tbody>
                     </table>
@@ -102,14 +119,20 @@
             </div>
 
         </div>
+        @if(empty($actual_transcation))
         <div class="modal-footer">
 
             <button type="submit" class="btn btn-primary">@lang( 'english.save' )</button>
             <button type="button" class="btn btn-default" data-bs-dismiss="modal">@lang( 'english.close' )</button>
         </div>
+        @endif
     </div>
+        @if(empty($actual_transcation))
 
     {!! Form::close() !!}
+    @endif
 
 </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
+
+

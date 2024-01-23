@@ -899,7 +899,7 @@ class StudentApiController extends Controller
                        'id' => $data->subject->id,
                        'name' => $data->subject->name .' ('.$data->type.')',
                        'bg_color' => $data->subject->bg_color,
-                       'image' => $data->subject->image,
+                       'image' => file_exists(public_path('uploads/subjects/'.$data->subject->subject_icon)) ? url('uploads/subjects/'.$data->subject->subject_icon) : url('uploads/subjects/default.svg'),
                        'type' => $data->subject->type,
                    )
                );

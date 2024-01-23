@@ -148,7 +148,6 @@
                      </div>
                  </div>
              </div>
-             <div class="clearfix"></div>
 
              <div class="col {{!empty($common_settings['active_employees']) ? '' : 'hide'}}">
                  <div class="card radius-10">
@@ -245,7 +244,7 @@
                      <div class="card-body">
                          <div class="d-flex align-items-center">
                              <div>
-                                 <p class="mb-0 text-secondary ">Progressive Fee Collection During The Month</p>
+                                 <p class="mb-0 text-secondary ">Progressive Fee Collection During the Month</p>
                                  <h4 class="font-weight-bold info-box-number total_progress_collection_during_month loader"><i class="widgets-icons  bg-light-success text-success fas fa-sync fa-spin fa-fw margin-bottom"></i></h4>
                              </div>
                              <div class="widgets-icons bg-light-success text-success ms-auto"><i class="bx bx-money"></i>
@@ -287,8 +286,22 @@
                      <div class="card-body">
                          <div class="d-flex align-items-center">
                              <div>
-                                 <p class="mb-0 text-secondary ">Progressive Expenses Collection During The Month</p>
+                                 <p class="mb-0 text-secondary ">Progressive Expenses Collection During the Month</p>
                                  <h4 class="font-weight-bold info-box-number total_hrm_paid_amount loader"><i class="widgets-icons  bg-light-success text-success fas fa-sync fa-spin fa-fw margin-bottom"></i></h4>
+                             </div>
+                             <div class="widgets-icons bg-gradient-burning  text-white ms-auto"><i class="bx bx-minus-circle"></i>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+                <div class="col">
+                 <div class="card radius-10">
+                     <div class="card-body">
+                         <div class="d-flex align-items-center">
+                             <div>
+                                 <p class="mb-0 text-secondary ">Total Fee Collection - Total Expenses</p>
+                                 <h4 class="font-weight-bold info-box-number total_montly_profit_amount loader"><i class="widgets-icons  bg-light-success text-success fas fa-sync fa-spin fa-fw margin-bottom"></i></h4>
                              </div>
                              <div class="widgets-icons bg-gradient-burning  text-white ms-auto"><i class="bx bx-minus-circle"></i>
                              </div>
@@ -310,21 +323,7 @@
                      </div>
                  </div>
              </div>
-             {{-- <div class="col">
-                <div class="card radius-10">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <ul>
-                               <li ><b>Cash Drwaer: RS 0</b></li>
-                               <li>Bank Khyber : RS 0</li> 
-                               <li><b>Bank Alfla : RS 0</b></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-            </div> --}}
-            <div class="clearfix"></div>
+          
 
              <div class="col">
                  <div class="card radius-10">
@@ -359,7 +358,7 @@
                      <div class="card-body">
                          <div class="d-flex align-items-center">
                              <div>
-                                 <p class="mb-0 text-secondary ">Progressive Transport Collection During The Month</p>
+                                 <p class="mb-0 text-secondary ">Progressive Transport Collection During the Month</p>
                                  <h4 class="font-weight-bold info-box-number total_transport_progressive_amount loader"><i class="widgets-icons  bg-light-success text-success fas fa-sync fa-spin fa-fw margin-bottom"></i></h4>
                              </div>
                              <div class="widgets-icons bg-light-success  text-white ms-auto"><i class="bx bx-money"></i>
@@ -407,10 +406,28 @@
                             <tbody class="text-primary"class="pl-20-td">
                                 <tr>
                                     <th colspan="">       
-                                        @lang('english.total_assets'):
+                                        @lang('english.assets'):
                                     </th>
                                     <td colspan="">       
                                         <span id="total_assets"><i class="fas fa-sync fa-spin fa-fw"></i></span>
+                                      </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                           <table class="table" id="transport_assets_table">
+
+                            <tbody id="transport_account_balances" class="pl-20-td">
+                                <tr>
+                                    <td colspan="2"><i class="fas fa-sync fa-spin fa-fw"></i></td>
+                                </tr>
+                            </tbody>
+                            <tbody class="text-primary"class="pl-20-td">
+                                <tr>
+                                    <th colspan="">       
+                                        @lang('english.assets'):
+                                    </th>
+                                    <td colspan="">       
+                                        <span id="transport_total_assets"><i class="fas fa-sync fa-spin fa-fw"></i></span>
                                       </td>
                                 </tr>
                             </tbody>

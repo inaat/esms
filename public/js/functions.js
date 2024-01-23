@@ -829,8 +829,10 @@ function __get_exam_term(doc) {
 ///Hrm///
 function __calculateTotalGrossAmount() {
     var transaction_final_total = __read_number($("#transaction_final_total"));
+    var transaction_default_allowance = __read_number($("#transaction_default_allowance"));
+    var transaction_default_deduction = __read_number($("#transaction_default_deduction"));
 
-    let total_gross_amount = transaction_final_total;
+    let total_gross_amount = transaction_final_total+(transaction_default_allowance-transaction_default_deduction);
     let total_allowance = 0;
     let total_deduction = 0;
 

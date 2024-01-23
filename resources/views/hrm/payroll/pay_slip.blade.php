@@ -71,6 +71,10 @@
                     <th width="16%" class="pttright reborder">Amount</th>
 
                 </tr>
+                    <tr>
+                    <td>@lang('english.default_allowance')</td>
+                    <td class="pttright reborder">@format_currency($transaction->default_allowance) </td>
+                </tr>
                 @foreach ($transaction->allowance as $allowance)
 
 
@@ -83,7 +87,7 @@
                 @endforeach
 
                 <th>@lang('english.total') Earning</th>
-                <th class="pttright reborder">@format_currency($transaction->allowances_amount) </th>
+                <th class="pttright reborder">@format_currency($transaction->allowances_amount+$transaction->default_allowance) </th>
 
                 </tr>
             </tbody>
@@ -99,6 +103,10 @@
                     <th width="20%" class="pttleft">Deduction</th>
                     <th width="16%" class="text-right">Amount</th>
                 </tr>
+                 <tr>
+                    <td>@lang('english.default_deduction')</td>
+                    <td class="pttright reborder">@format_currency($transaction->default_deduction) </td>
+                </tr>
                 @foreach ($transaction->deduction as $deduction)
 
 
@@ -111,7 +119,7 @@
                 <tr>
 
                     <th class="pttleft">Total Deduction</th>
-                    <th class="text-right">@format_currency($transaction->deductions_amount) </th>
+                    <th class="text-right">@format_currency($transaction->deductions_amount+$transaction->default_deduction) </th>
                 </tr>
             </tbody>
         </table>
@@ -146,11 +154,11 @@
 
                 <tr>
                     <th width="20%">Gross Salary</th>
-                    <td class="text-right">@format_currency($transaction->basic_salary+$transaction->allowances_amount) </td>
+                    <td class="text-right">@format_currency($transaction->basic_salary+$transaction->allowances_amount+$transaction->default_allowance) </td>
                 </tr>
                 <tr>
                     <th width="20%">Net Salary</th>
-                    <td class="text-right">@format_currency(($transaction->basic_salary+$transaction->allowances_amount)-$transaction->deductions_amount)  </td>
+                    <td class="text-right">@format_currency(($transaction->basic_salary+$transaction->allowances_amount+$transaction->default_allowance)-$transaction->deductions_amount-$transaction->default_deduction)  </td>
                 </tr>
                 <tr>
                     <th width="20%">Total Paid</th>

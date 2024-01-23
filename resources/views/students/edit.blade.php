@@ -141,10 +141,13 @@
                                 {!! Form::textarea('medical_history',$student->medical_history, ['class' => 'form-control','rows' => 1,'placeholder' => __('english.medical_history')]) !!}
 
                             </div>
-                            <div class="col-md-3 p-1">
+                            <div class="clearfix"></div>
+                            
+                            <div class="col-md-6 p-1">
 
                                 <div class="ms-auto p-3 ">
                                 @if(!$siblings->isEmpty())
+                                
                                     <button type="button" class="btn btn-danger radius-30 mt-lg-0  remove-sibling">
                                         <i class="bx bxs-trash"></i>@lang('english.remove_sibling')</button>
                                         <input type="hidden" class="" id="remove-sibling" name="remove-sibling">
@@ -155,13 +158,16 @@
                                    @endif
                                 </div>
                             </div>
-                            <div class="col-md-3 p-1 sibling_name">
+                            <div class="col-md-6 p-1 sibling_name">
                                 <div class="ms-auto p-3 ">
-                                                                <h6>Siblings Details</h6>
+                             
+                                <h6>Siblings Details</h6>
                                    @if(!$siblings->isEmpty())
                                    @foreach ($siblings as $sibling )
+                                   @if($sibling->students!==null)
+                                  
                                       <span id="sibling_name" class="badge bg-success">Sibling:{{ $sibling->students->first_name . '  '.$sibling->students->last_name}} / @lang('english.roll_no'):{{ $sibling->students->roll_no }} </span>
-
+                                   @endif
                                    @endforeach
                                    @else
 
@@ -228,11 +234,11 @@
                     <div class="form-group col-md-12">
                         <label>@lang('english.if_guardian_is')<small class="req form-check-label"> *</small>&nbsp;&nbsp;&nbsp;</label>
                         <label class="radio-inline">
-                            <input class="form-check-input" type="radio" name="guardian_is" @if($student->guardian->student_guardian->guardian_relation =='Father') checked="checked" @endif required value="Father" autocomplete="off"> @lang('english.father') </label>
+                            <input class="form-check-input" type="radio" name="guardian_is" @if($student->guardian?$student->guardian->student_guardian->guardian_relation =='Father':null) checked="checked" @endif required value="Father" autocomplete="off"> @lang('english.father') </label>
                         <label class="radio-inline">
-                            <input class="form-check-input" type="radio" name="guardian_is" @if($student->guardian->student_guardian->guardian_relation =='Mother') checked="checked" @endif value="Mother" autocomplete="off"> @lang('english.mother') </label>
+                            <input class="form-check-input" type="radio" name="guardian_is" @if($student->guardian?$student->guardian->student_guardian->guardian_relation =='Mother':null) checked="checked" @endif value="Mother" autocomplete="off"> @lang('english.mother') </label>
                         <label class="radio-inline">
-                            <input class="form-check-input" type="radio" name="guardian_is"  @if($student->guardian->student_guardian->guardian_relation =='Other') checked="checked" @endif value="Other" autocomplete="off"> @lang('english.other') </label>
+                            <input class="form-check-input" type="radio" name="guardian_is"  @if($student->guardian?$student->guardian->student_guardian->guardian_relation =='Other':null) checked="checked" @endif value="Other" autocomplete="off"> @lang('english.other') </label>
                         <span class="text-danger"></span>
                     </div>
                 </div>
@@ -243,31 +249,30 @@
                             <h5 class="card-title text-primary">@lang('english.parent_guardian_detail')</h5>
 
                             <div class="col-md-3 p-1">
-                            {{$student->guardian->guardian_name}}
                                 {!! Form::label('english.guardian_name', __('english.guardian_name') . ':*') !!}
-                                {!! Form::text('guardian[guardian_name]', $student->guardian->student_guardian->guardian_name, ['class' => 'form-control', 'id'=>'guardian_name','required','placeholder' => __('english.guardian_name')]) !!}
+                                {!! Form::text('guardian[guardian_name]', $student->guardian? $student->guardian->student_guardian->guardian_name:null, ['class' => 'form-control', 'id'=>'guardian_name','required','placeholder' => __('english.guardian_name')]) !!}
                             </div>
                             <div class="col-md-3 p-1">
                                 {!! Form::label('english.guardian_relation', __('english.guardian_relation') . ':*') !!}
-                                {!! Form::text('guardian[guardian_relation]', $student->guardian->student_guardian->guardian_relation, ['class' => 'form-control','id'=>'guardian_relation', 'required','placeholder' => __('english.guardian_relation')]) !!}
+                                {!! Form::text('guardian[guardian_relation]', $student->guardian?$student->guardian->student_guardian->guardian_relation:null, ['class' => 'form-control','id'=>'guardian_relation', 'required','placeholder' => __('english.guardian_relation')]) !!}
                             </div>
 
                             <div class="col-md-3 p-1">
                                 {!! Form::label('english.guardian_occupation', __('english.guardian_occupation') . ':*') !!}
-                                {!! Form::text('guardian[guardian_occupation]', $student->guardian->student_guardian->guardian_occupation, ['class' => 'form-control','id'=>'guardian_occupation', 'placeholder' => __('english.guardian_occupation')]) !!}
+                                {!! Form::text('guardian[guardian_occupation]', $student->guardian?$student->guardian->student_guardian->guardian_occupation:null, ['class' => 'form-control','id'=>'guardian_occupation', 'placeholder' => __('english.guardian_occupation')]) !!}
                             </div>
                             <div class="col-md-3 p-1">
                                 {!! Form::label('english.guardian_email', __('english.guardian_email') . ':*') !!}
-                                {!! Form::email('guardian[guardian_email]',$student->guardian->student_guardian->guardian_email?$student->guardian->student_guardian->guardian_email:'GU'.$student->email, ['class' => 'form-control','id'=>'guardian_email', 'placeholder' => __('english.guardian_email')]) !!}
+                                {!! Form::email('guardian[guardian_email]',$student->guardian? $student->guardian->student_guardian->guardian_email?$student->guardian->student_guardian->guardian_email:'GU'.$student->email:null, ['class' => 'form-control','id'=>'guardian_email', 'placeholder' => __('english.guardian_email')]) !!}
                             </div>
                             <div class="clearfix"></div>
                             <div class="col-md-3 p-1">
                                 {!! Form::label('english.guardian_phone', __('english.guardian_phone') . ':*') !!}
-                                {!! Form::tel('guardian[guardian_phone]', $student->guardian->student_guardian->guardian_phone, ['class' => 'form-control guardian_mobile','id'=>'guardian_phone','required', 'placeholder' => __('english.guardian_phone')]) !!}
+                                {!! Form::tel('guardian[guardian_phone]', $student->guardian? $student->guardian->student_guardian->guardian_phone:null, ['class' => 'form-control guardian_mobile','id'=>'guardian_phone','required', 'placeholder' => __('english.guardian_phone')]) !!}
                             </div>
                             <div class="col-md-9 p-1">
                                 {!! Form::label('english.guardian_address', __('english.guardian_address') . ':*') !!}
-                                {!! Form::textarea('guardian[guardian_address]',$student->guardian->student_guardian->guardian_address, ['class' => 'form-control ','rows' => 1,'id'=>'guardian_address', 'placeholder' => __('english.guardian_address')]) !!}
+                                {!! Form::textarea('guardian[guardian_address]',$student->guardian? $student->guardian->student_guardian->guardian_address:null, ['class' => 'form-control ','rows' => 1,'id'=>'guardian_address', 'placeholder' => __('english.guardian_address')]) !!}
                             </div>
                         </div>
                     </div>

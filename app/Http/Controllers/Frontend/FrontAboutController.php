@@ -121,13 +121,13 @@ class FrontAboutController extends Controller
            $gallery->slug=  Str::slug($input['title'].$input['home_title']);
            $gallery->status= $input['status'];
            $gallery->description= $input['description'];
-           if ($request->hasFile('image') && $request->file('image')->isValid()) {
+           //dd($request->hasFile('image'));
+           if ($request->hasFile('image')) {
                if (File::exists(public_path('uploads/front_image/'. $gallery->image))) {
                    File::delete(public_path('uploads/front_image/'. $gallery->image));
-
-                   $filename=$this->commonUtil->uploadFile($request, 'image', 'front_image', 'image');
-                   $gallery->image=$filename;
                }
+               $filename=$this->commonUtil->uploadFile($request, 'image', 'front_image', 'image');
+               $gallery->image=$filename;
            }
            $gallery->save();
            $output = ['success' => true,

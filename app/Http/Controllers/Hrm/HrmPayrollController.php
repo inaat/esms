@@ -325,6 +325,8 @@ if (auth()->user()->can('hrm_payment.view')) {
         }$user_id = $request->session()->get('user.id');
         $system_settings_id = $request->session()->get('user.system_settings_id');
         $basic_salary =  $this->employeeUtil->num_uf($employee->basic_salary);
+        $default_allowance =  $this->employeeUtil->num_uf($employee->default_allowance);
+        $default_deduction =  $this->employeeUtil->num_uf($employee->default_deduction);
         $month_year_arr = explode('/', $request->input('month_year'));
         $month = $month_year_arr[0];
         //Update reference count
@@ -345,8 +347,10 @@ if (auth()->user()->can('hrm_payment.view')) {
                     'month' => $month,
                     'employee_id' => $employee->id,
                     'transaction_date' =>$request->input('transaction_date'),
-                    'final_total' => ($basic_salary+$total_allowance)-$total_deduction,
+                    'final_total' => ($basic_salary+$total_allowance+$default_allowance)-$total_deduction -$default_deduction,
                     'basic_salary'=>$basic_salary,
+                    'default_allowance'=>$default_allowance,
+                    'default_deduction'=>$default_deduction,
                     'created_by' => $user_id,
                 ]);
         

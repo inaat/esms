@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Curriculum;
 
 use App\Http\Controllers\Controller;
+use App\Models\Curriculum\ClassTimeTable;
 use Illuminate\Http\Request;
 use App\Models\Curriculum\ClassTimeTablePeriod;
 use App\Models\Campus;
@@ -226,11 +227,22 @@ if (auth()->user()->can('study_period.delete')) {
             try {
                 
                 $period =ClassTimeTablePeriod::findOrFail($id);
+                $check=ClassTimeTable::where('period_id',$id)->first();
+                if (!empty($check)) {
+                    $output = ['success' => false,
+                    'msg' => __("You Can't Delete because the are use Class Time Table")
+                ];
+                } else {
+                
                 $period->delete();
 
                 $output = ['success' => true,
-                        'msg' => __("english.deleted_success")
-                        ];
+                'msg' => __("english.deleted_success")
+                ];
+                }
+               
+
+               
             } catch (\Exception $e) {
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 

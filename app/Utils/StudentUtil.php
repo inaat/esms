@@ -24,20 +24,62 @@ class StudentUtil extends Util
      * @param ModuleUtil $moduleUtil
      * @return void
      */
-    public function __construct( FeeTransactionUtil $feeTransactionUtil)
+    public function __construct(FeeTransactionUtil $feeTransactionUtil)
     {
         $this->feeTransactionUtil = $feeTransactionUtil;
-        
+
     }
     public function StudentCreate($request, $guardian_link_id = null)
     {
         if ($guardian_link_id == null) {
-            $student_input = $request->only(['campus_id', 'adm_session_id', 'admission_no', 'admission_date', 'roll_no', 'adm_class_id', 'adm_class_section_id',
-                'first_name', 'last_name', 'gender', 'birth_date', 'category_id', 'domicile_id', 'religion', 'mobile_no', 'email', 'cnic_no',
-                'blood_group', 'nationality', 'mother_tongue', 'medical_history', 'father_name', 'father_phone', 'father_occupation',
-                'father_cnic_no', 'mother_name', 'mother_phone', 'mother_occupation', 'mother_cnic_no', 'country_id', 'province_id',
-                'district_id', 'city_id', 'region_id', 'std_current_address', 'std_permanent_address', 'student_tuition_fee', 'is_transport', 'student_transport_fee', 'vehicle_id',
-                'remark', 'previous_school_name', 'last_grade', 'student_image', 'opening_balance']);
+            $student_input = $request->only([
+                'campus_id',
+                'adm_session_id',
+                'admission_no',
+                'admission_date',
+                'roll_no',
+                'adm_class_id',
+                'adm_class_section_id',
+                'first_name',
+                'last_name',
+                'gender',
+                'birth_date',
+                'category_id',
+                'domicile_id',
+                'religion',
+                'mobile_no',
+                'email',
+                'cnic_no',
+                'blood_group',
+                'nationality',
+                'mother_tongue',
+                'medical_history',
+                'father_name',
+                'father_phone',
+                'father_occupation',
+                'father_cnic_no',
+                'mother_name',
+                'mother_phone',
+                'mother_occupation',
+                'mother_cnic_no',
+                'country_id',
+                'province_id',
+                'district_id',
+                'city_id',
+                'region_id',
+                'std_current_address',
+                'std_permanent_address',
+                'student_tuition_fee',
+                'is_transport',
+                'student_transport_fee',
+                'vehicle_id',
+                'remark',
+                'previous_school_name',
+                'last_grade',
+                'student_image',
+                'opening_balance'
+            ]);
+             
             if (!empty($student_input['student_image'])) {
                 $student_image = $this->uploadFile($request, 'student_image', 'student_image', 'image', $student_input['roll_no']);
                 $student_input['student_image'] = $student_image;
@@ -65,21 +107,55 @@ class StudentUtil extends Util
             if (!empty($opening_balance)) {
                 $this->createOpeningBalanceTransaction($student->system_settings_id, $student, $opening_balance, false);
             }
-            $user=$this->studentCreateUpdateLogin($student, 'student', $student->id);
-            $student->user_id=$user->id;
+            $user = $this->studentCreateUpdateLogin($student, 'student', $student->id);
+            $student->user_id = $user->id;
             $student->save();
             $this->createWithdrawRegister($student);
+            
             $guardian = Guardian::create($request['guardian']);
+            $CheckStudentGuardian = StudentGuardian::where('student_id',$student->id)->first();
+            if(!empty($CheckStudentGuardian)){
+               $CheckStudentGuardian->delete() ;
+            }
             $studentGuardian = StudentGuardian::create([
                 'student_id' => $student->id,
                 'guardian_id' => $guardian->id,
             ]);
-            $guardian_login=$this->guardianCreateUpdateLogin($guardian, 'guardian', $guardian->id);
+           
+            $guardian_login = $this->guardianCreateUpdateLogin($guardian, 'guardian', $guardian->id);
         } else {
-            $student_input = $request->only(['campus_id', 'adm_session_id', 'admission_no', 'admission_date', 'roll_no', 'adm_class_id', 'adm_class_section_id',
-                'first_name', 'last_name', 'gender', 'birth_date', 'category_id', 'domicile_id', 'religion', 'mobile_no', 'email', 'cnic_no',
-                'blood_group', 'nationality', 'mother_tongue', 'medical_history', 'is_transport', 'student_tuition_fee', 'student_transport_fee', 'vehicle_id',
-                'remark', 'previous_school_name', 'last_grade', 'student_image', 'opening_balance']);
+            $student_input = $request->only([
+                'campus_id',
+                'adm_session_id',
+                'admission_no',
+                'admission_date',
+                'roll_no',
+                'adm_class_id',
+                'adm_class_section_id',
+                'first_name',
+                'last_name',
+                'gender',
+                'birth_date',
+                'category_id',
+                'domicile_id',
+                'religion',
+                'mobile_no',
+                'email',
+                'cnic_no',
+                'blood_group',
+                'nationality',
+                'mother_tongue',
+                'medical_history',
+                'is_transport',
+                'student_tuition_fee',
+                'student_transport_fee',
+                'vehicle_id',
+                'remark',
+                'previous_school_name',
+                'last_grade',
+                'student_image',
+                'opening_balance'
+            ]);
             if (!empty($student_input['student_image'])) {
                 $student_image = $this->uploadFile($request, 'student_image', 'student_image', 'image', $student_input['roll_no']);
                 $student_input['student_image'] = $student_image;
@@ -123,16 +199,20 @@ class StudentUtil extends Util
             if (!empty($opening_balance)) {
                 $this->createOpeningBalanceTransaction($student->system_settings_id, $student, $opening_balance, false);
             }
-            $user=$this->studentCreateUpdateLogin($student, 'student', $student->id);
-            $student->user_id=$user->id;
+            $user = $this->studentCreateUpdateLogin($student, 'student', $student->id);
+            $student->user_id = $user->id;
             $student->save();
+               $CheckStudentGuardian = StudentGuardian::where('student_id',$student->id)->first();
+            if(!empty($CheckStudentGuardian)){
+               $CheckStudentGuardian->delete() ;
+            }
             $studentGuardian = StudentGuardian::create([
                 'student_id' => $student->id,
                 'guardian_id' => $guardian_link_id,
             ]);
         }
     }
- 
+
 
     /**
      * Creates a new opening balance transaction for a contact
@@ -203,12 +283,56 @@ class StudentUtil extends Util
     public function updateStudent($request, $student_id, $guardian_link_id = null)
     {
         //'adm_class_id','adm_class_section_id',
-        $student_input = $request->only(['campus_id', 'adm_session_id', 'admission_no', 'admission_date', 'roll_no', 'current_class_id', 'current_class_section_id',
-            'first_name', 'last_name', 'gender', 'birth_date', 'category_id', 'domicile_id', 'religion', 'mobile_no', 'email', 'cnic_no',
-            'blood_group', 'nationality', 'mother_tongue', 'medical_history', 'father_name', 'father_phone', 'father_occupation',
-            'father_cnic_no', 'mother_name', 'mother_phone', 'mother_occupation', 'mother_cnic_no', 'country_id', 'province_id',
-            'district_id', 'city_id', 'region_id', 'std_current_address', 'std_permanent_address', 'is_transport', 'student_tuition_fee', 'student_transport_fee', 'vehicle_id',
-            'remark', 'previous_school_name', 'last_grade', 'student_image', 'opening_balance', 'old_roll_no','adm_class_id','adm_class_section_id']);
+        $student_input = $request->only([
+            'campus_id',
+            'adm_session_id',
+            'admission_no',
+            'admission_date',
+            'roll_no',
+            'current_class_id',
+            'current_class_section_id',
+            'first_name',
+            'last_name',
+            'gender',
+            'birth_date',
+            'category_id',
+            'domicile_id',
+            'religion',
+            'mobile_no',
+            'email',
+            'cnic_no',
+            'blood_group',
+            'nationality',
+            'mother_tongue',
+            'medical_history',
+            'father_name',
+            'father_phone',
+            'father_occupation',
+            'father_cnic_no',
+            'mother_name',
+            'mother_phone',
+            'mother_occupation',
+            'mother_cnic_no',
+            'country_id',
+            'province_id',
+            'district_id',
+            'city_id',
+            'region_id',
+            'std_current_address',
+            'std_permanent_address',
+            'is_transport',
+            'student_tuition_fee',
+            'student_transport_fee',
+            'vehicle_id',
+            'remark',
+            'previous_school_name',
+            'last_grade',
+            'student_image',
+            'opening_balance',
+            'old_roll_no',
+            'adm_class_id',
+            'adm_class_section_id'
+        ]);
         if (!empty($student_input['student_image'])) {
             $student_image = $this->uploadFile($request, 'student_image', 'student_image', 'image', $student_input['roll_no']);
             $student_input['student_image'] = $student_image;
@@ -234,52 +358,77 @@ class StudentUtil extends Util
         $student = Student::find($student_id);
         $student->fill($student_input);
         $student->save();
-        $user=$this->studentCreateUpdateLogin($student, 'student', $student->id);
-            $student->user_id=$user->id;
-            $student->save();
+        $user = $this->studentCreateUpdateLogin($student, 'student', $student->id);
+        $student->user_id = $user->id;
+        $student->save();
         $this->createWithdrawRegister($student);
-       
+
         if ($guardian_link_id == null) {
             $studentGuardian = StudentGuardian::where('student_id', $student_id)->first();
             $guardian = Guardian::where('id', $studentGuardian->guardian_id)->first();
             $guardian->fill($request['guardian']);
             $guardian->save();
-            $guardian_login=$this->guardianCreateUpdateLogin($guardian, 'guardian', $guardian->id);
-        
+            $guardian_login = $this->guardianCreateUpdateLogin($guardian, 'guardian', $guardian->id);
+
         } else {
-            $studentGuardian = StudentGuardian::where('student_id', $student_id)->first();
-            $guardian = Guardian::where('id', $studentGuardian->guardian_id)->first();
-            $guardian->delete();
-            $studentGuardianCreate = StudentGuardian::create([
-                'student_id' => $student->id,
-                'guardian_id' => $guardian_link_id,
-            ]);
-            $std_guardian = Guardian::where('id', $guardian_link_id)->first();
+            $this->studentReplace($student_id,$guardian_link_id);
+            $stg = StudentGuardian::where('guardian_id', $guardian_link_id)->count();
+            if ($stg > 1 || empty($studentGuardian)) {
+                $studentGuardianUpdate = StudentGuardian::where('student_id', $student_id)->first();
+                if(!empty($studentGuardianUpdate)){
+                $studentGuardianUpdate->update([
+                    'student_id' => $student->id,
+                    'guardian_id' => $guardian_link_id,
+                ]);
+            }else{
+                $studentGuardianCreate = StudentGuardian::Create([
+                    'student_id' => $student->id,
+                    'guardian_id' => $guardian_link_id,
+                ]);
+            }
+                
+            } else {
+                $studentGuardian = StudentGuardian::where('student_id', $student_id)->first();
+                $guardian = Guardian::where('id', $studentGuardian->guardian_id)->first();
+                $guardian->delete();
+                $login = User::where('hook_id', $studentGuardian->guardian_id)->where('user_type', 'guardian')->first();
+                if (!empty($login)) {
+                    $login->delete();
+                }
 
-            $guardian_login=$this->guardianCreateUpdateLogin($std_guardian, 'guardian', $std_guardian->id);
+                $studentGuardianCreate = StudentGuardian::Create([
+                    'student_id' => $student->id,
+                    'guardian_id' => $guardian_link_id,
+                ]);
+                $std_guardian = Guardian::where('id', $guardian_link_id)->first();
 
+                $guardian_login = $this->guardianCreateUpdateLogin($std_guardian, 'guardian', $std_guardian->id);
+            }
         }
+
+
         //dd($ob_transaction);
         if (!empty($ob_transaction)) {
-            if (!empty($ob_transaction->payment_status=='due')) {
-            $ob_transaction->before_discount_total = $opening_balance;
+            if (!empty($ob_transaction->payment_status == 'due')) {
+                $ob_transaction->before_discount_total = $opening_balance;
 
-         $ob_transaction->final_total = $opening_balance -$ob_transaction->discount_amount;
-        $ob_transaction->save();
-           
-       //Update opening balance payment status
-        $this->feeTransactionUtil->updatePaymentStatus($ob_transaction->id, $ob_transaction->final_total);
+                $ob_transaction->final_total = $opening_balance - $ob_transaction->discount_amount;
+                $ob_transaction->save();
+
+                //Update opening balance payment status
+                $this->feeTransactionUtil->updatePaymentStatus($ob_transaction->id, $ob_transaction->final_total);
             }
-       } else {
+        } else {
             //Add opening balance
             if (!empty($opening_balance)) {
                 $this->createOpeningBalanceTransaction($student->system_settings_id, $student, $opening_balance, false);
             }
         }
-          $output = ['success' => true,
-        'msg' => __("english.updated_success")
+        $output = [
+            'success' => true,
+            'msg' => __("english.updated_success")
         ];
-        return  $output;
+        return $output;
     }
 
     public function removeSibling($guardian, $student_id)
@@ -289,7 +438,7 @@ class StudentUtil extends Util
         $studentGuardian->guardian_id = $guardian->id;
         $studentGuardian->save();
     }
-    public function getStudentList($system_settings_id, $class_id, $class_section_id, $status = null,$already_exists=null )
+    public function getStudentList($system_settings_id, $class_id, $class_section_id, $status = null, $already_exists = null)
     {
         $query = Student::leftJoin('campuses', 'students.campus_id', '=', 'campuses.id')
             ->leftJoin('classes as c-class', 'students.current_class_id', '=', 'c-class.id')
@@ -309,7 +458,7 @@ class StudentUtil extends Util
             );
         if (!empty($already_exists)) {
             $query->whereNotIn('students.id', $already_exists);
-     }
+        }
         if (!empty($class_section_id)) {
             $query->where('students.current_class_section_id', $class_section_id);
         }
@@ -389,7 +538,7 @@ class StudentUtil extends Util
         //Filter by the campus
         $permitted_campuses = auth()->user()->permitted_campuses();
         if ($permitted_campuses != 'all') {
-          $query->whereIn('campus_id', $permitted_campuses);
+            $query->whereIn('campus_id', $permitted_campuses);
         }
         if (!empty($campus_id)) {
             $query->where('campus_id', $campus_id);
@@ -404,9 +553,9 @@ class StudentUtil extends Util
     {
         $query = Student::where('students.status', 'inactive');
         //Filter by the campus
-         $permitted_campuses = auth()->user()->permitted_campuses();
+        $permitted_campuses = auth()->user()->permitted_campuses();
         if ($permitted_campuses != 'all') {
-          $query->whereIn('campus_id', $permitted_campuses);
+            $query->whereIn('campus_id', $permitted_campuses);
         }
         if (!empty($campus_id)) {
             $query->where('campus_id', $campus_id);
@@ -421,9 +570,9 @@ class StudentUtil extends Util
     {
         $query = Student::where('students.status', 'pass_out');
         //Filter by the campus
-         $permitted_campuses = auth()->user()->permitted_campuses();
+        $permitted_campuses = auth()->user()->permitted_campuses();
         if ($permitted_campuses != 'all') {
-          $query->whereIn('campus_id', $permitted_campuses);
+            $query->whereIn('campus_id', $permitted_campuses);
         }
         if (!empty($campus_id)) {
             $query->where('campus_id', $campus_id);
@@ -438,9 +587,9 @@ class StudentUtil extends Util
     {
         $query = Student::where('students.status', 'struck_up');
         //Filter by the campus
-         $permitted_campuses = auth()->user()->permitted_campuses();
+        $permitted_campuses = auth()->user()->permitted_campuses();
         if ($permitted_campuses != 'all') {
-          $query->whereIn('campus_id', $permitted_campuses);
+            $query->whereIn('campus_id', $permitted_campuses);
         }
         if (!empty($campus_id)) {
             $query->where('campus_id', $campus_id);
@@ -455,9 +604,9 @@ class StudentUtil extends Util
     {
         $query = Student::where('students.status', 'took_slc');
         //Filter by the campus
-         $permitted_campuses = auth()->user()->permitted_campuses();
+        $permitted_campuses = auth()->user()->permitted_campuses();
         if ($permitted_campuses != 'all') {
-          $query->whereIn('campus_id', $permitted_campuses);
+            $query->whereIn('campus_id', $permitted_campuses);
         }
         if (!empty($campus_id)) {
             $query->where('campus_id', $campus_id);
@@ -472,9 +621,9 @@ class StudentUtil extends Util
     public function getStudentGender($campus_id)
     {
         $query = Student::where('students.status', 'active');
-         $permitted_campuses = auth()->user()->permitted_campuses();
+        $permitted_campuses = auth()->user()->permitted_campuses();
         if ($permitted_campuses != 'all') {
-          $query->whereIn('campus_id', $permitted_campuses);
+            $query->whereIn('campus_id', $permitted_campuses);
         }
         if (!empty($campus_id)) {
             $query->where('campus_id', $campus_id);
@@ -489,17 +638,17 @@ class StudentUtil extends Util
     }
     public function createWithdrawRegister($student)
     {
-            $check_student=WithdrawalRegister::where('student_id', $student->id)->first();
-            if (empty($check_student)){
-               $data=[
-                'adm_session_id'=>$student->adm_session_id,
-                'student_id'=>$student->id,
-                'campus_id'=>$student->campus_id,
-                'admission_class_id'=>$student->adm_class_id
-                
+        $check_student = WithdrawalRegister::where('student_id', $student->id)->first();
+        if (empty($check_student)) {
+            $data = [
+                'adm_session_id' => $student->adm_session_id,
+                'student_id' => $student->id,
+                'campus_id' => $student->campus_id,
+                'admission_class_id' => $student->adm_class_id
+
             ];
             WithdrawalRegister::create($data);
-           }
+        }
 
         return true;
     }
@@ -512,35 +661,35 @@ class StudentUtil extends Util
     public function getLedgerDetails($student_id, $start, $end)
     {
         //Get sum of totals before start date
-        $previous_transaction_sums = $this->__previous_transactionQuery($student_id, $start ,$end);
-       // dd($previous_transaction_sums);
+        $previous_transaction_sums = $this->__previous_transactionQuery($student_id, $start, $end);
+        // dd($previous_transaction_sums);
         // //Get payment totals before start date
-        $prev_payments = $this->__previous_paymentQuery($student_id, $start,$end);
-                          
-     
+        $prev_payments = $this->__previous_paymentQuery($student_id, $start, $end);
+
+
         $prev_total_fee_paid = $prev_payments;
         $total_prev_invoice = $previous_transaction_sums;
-        $total_prev_paid = $prev_total_fee_paid  ;
-        $beginning_balance =  $total_prev_invoice - $total_prev_paid;
+        $total_prev_paid = $prev_total_fee_paid;
+        $beginning_balance = $total_prev_invoice - $total_prev_paid;
         // $contact = Contact::find($student_id);
 
         // //Get transaction totals between dates
         $transactions = $this->__transactionQuery($student_id, $start, $end)
-                            ->get();
+            ->get();
         $ledger = [];
 
-        
+
         foreach ($transactions as $transaction) {
             $ledger[] = [
                 'date' => $transaction->transaction_date,
-                'ref_no' =>  $transaction->voucher_no,
+                'ref_no' => $transaction->voucher_no,
                 'type' => __('english.months.' . $transaction->month),
-    
-                'payment_status' =>  __('english.' . $transaction->payment_status),
+
+                'payment_status' => __('english.' . $transaction->payment_status),
                 'total' => '',
                 'payment_method' => '',
                 'debit' => $transaction->final_total,
-                'credit' => '' ,
+                'credit' => '',
                 'others' => ''
             ];
         }
@@ -548,36 +697,36 @@ class StudentUtil extends Util
         $fee_sum = $transactions->sum('final_total');
         //Get payment totals between dates
         $payments = $this->__paymentQuery($student_id, $start, $end)
-                        ->select('fee_transaction_payments.*','t.type as transaction_type', 't.ref_no')
-                        ->get();
-        
+            ->select('fee_transaction_payments.*', 't.type as transaction_type', 't.ref_no')
+            ->get();
+
         $paymentTypes = $this->payment_types();
-        
-         foreach ($payments as $payment) {
-            $ref_no =  $payment->ref_no;
+
+        foreach ($payments as $payment) {
+            $ref_no = $payment->ref_no;
             $note = $payment->note;
             if (!empty($ref_no)) {
-                $note .='<small>' . __('account.payment_for') . ': ' . $ref_no . '</small>';
+                $note .= '<small>' . __('account.payment_for') . ': ' . $ref_no . '</small>';
             }
 
-         
+
 
             $ledger[] = [
                 'date' => $payment->paid_on,
                 'ref_no' => $payment->payment_ref_no,
                 'type' => '',
-    
+
                 'payment_status' => '',
                 'total' => '',
                 'payment_method' => !empty($paymentTypes[$payment->method]) ? $paymentTypes[$payment->method] : '',
                 'payment_method_key' => $payment->method,
-                'debit' => '' ,
-                'credit' =>$payment->amount,
-                'others' =>  $note 
+                'debit' => '',
+                'credit' => $payment->amount,
+                'others' => $note
             ];
         }
-        
-       
+
+
         $total_fee_paid = $payments->where('is_return', 0)->sum('amount');
 
 
@@ -588,7 +737,7 @@ class StudentUtil extends Util
 
 
         $total_paid = $total_fee_paid;
-         $curr_due = ($total_fee - $total_paid)+$beginning_balance;
+        $curr_due = ($total_fee - $total_paid) + $beginning_balance;
 
         // //Sort by date
         if (!empty($ledger)) {
@@ -598,23 +747,25 @@ class StudentUtil extends Util
                 return $t1 - $t2;
             });
         }
-        $total_opening_bal = $beginning_balance ;
+        $total_opening_bal = $beginning_balance;
         //Add Beginning balance & openining balance to ledger
-        $ledger = array_merge([[
-            'date' => $start,
-            'ref_no' => '',
-            'type' => __('english.opening_balance'),
+        $ledger = array_merge([
+            [
+                'date' => $start,
+                'ref_no' => '',
+                'type' => __('english.opening_balance'),
 
-            'payment_status' => '',
-            'total' => '',
-            'payment_method' => '',
-            'debit' =>  abs($total_opening_bal),
-            'credit' => '',
-            'others' => ''
-        ]], $ledger) ;
+                'payment_status' => '',
+                'total' => '',
+                'payment_method' => '',
+                'debit' => abs($total_opening_bal),
+                'credit' => '',
+                'others' => ''
+            ]
+        ], $ledger);
 
         $bal = 0;
-        foreach($ledger as $key => $val) {
+        foreach ($ledger as $key => $val) {
             $credit = !empty($val['credit']) ? $val['credit'] : 0;
             $debit = !empty($val['debit']) ? $val['debit'] : 0;
 
@@ -629,8 +780,8 @@ class StudentUtil extends Util
 
             $ledger[$key]['balance'] = $balance;
         }
-        
-        
+
+
 
         $output = [
             'ledger' => $ledger,
@@ -644,15 +795,15 @@ class StudentUtil extends Util
         //dd($output);
         return $output;
     }
- /**
+    /**
      * Query to get transaction totals for a customer
      *
      */
     private function __transactionQuery($student_id, $start, $end = null)
     {
         $query = FeeTransaction::where('fee_transactions.student_id', $student_id);
-                    
-        if (!empty($start)  && !empty($end)) {
+
+        if (!empty($start) && !empty($end)) {
             $query->whereDate(
                 'fee_transactions.transaction_date',
                 '>=',
@@ -661,39 +812,39 @@ class StudentUtil extends Util
                 ->whereDate('fee_transactions.transaction_date', '<=', $end)->get();
         }
 
-        if (!empty($start)  && empty($end)) {
-           
+        if (!empty($start) && empty($end)) {
+
             $query->whereDate('fee_transactions.transaction_date', '<', $start);
-            
+
         }
-           
+
         return $query;
     }
     private function __previous_transactionQuery($student_id, $start, $end = null)
     {
-        $less_than= FeeTransaction::where('fee_transactions.student_id', $student_id);
+        $less_than = FeeTransaction::where('fee_transactions.student_id', $student_id);
         if (!empty($start)) {
-           
+
             $less_than->whereDate('fee_transactions.transaction_date', '<', $start);
-            
-        }  
+
+        }
         $less_than->select(
             DB::raw("SUM(final_total) as total_fee"),
-        ); 
-        $greater_than= FeeTransaction::where('fee_transactions.student_id', $student_id);
+        );
+        $greater_than = FeeTransaction::where('fee_transactions.student_id', $student_id);
         if (!empty($end)) {
-           
+
             $greater_than->whereDate('fee_transactions.transaction_date', '>', $end);
-            
-        } 
+
+        }
         $greater_than->select(
             DB::raw("SUM(final_total) as total_fee"),
-        ); 
-        
-           
-        return $greater_than->first()->total_fee+$less_than->first()->total_fee;
+        );
+
+
+        return $greater_than->first()->total_fee + $less_than->first()->total_fee;
     }
-    
+
     /**
      * Query to get payment details for a customer
      *
@@ -711,12 +862,12 @@ class StudentUtil extends Util
             //->whereNotNull('transaction_payments.transaction_id');
             ->whereNull('fee_transaction_payments.parent_id');
 
-        if (!empty($start)  && !empty($end)) {
+        if (!empty($start) && !empty($end)) {
             $query->whereDate('paid_on', '>=', $start)
-                        ->whereDate('paid_on', '<=', $end);
+                ->whereDate('paid_on', '<=', $end);
         }
 
-        if (!empty($start)  && empty($end)) {
+        if (!empty($start) && empty($end)) {
             $query->whereDate('paid_on', '<', $start);
         }
 
@@ -725,86 +876,106 @@ class StudentUtil extends Util
 
     private function __previous_paymentQuery($student_id, $start, $end = null)
     {
-            $less_than = FeeTransactionPayment::leftJoin(
-                'fee_transactions as t',
-                'fee_transaction_payments.fee_transaction_id',
-                '=',
-                't.id'
-            )
-                ->leftJoin('campuses as campus', 't.campus_id', '=', 'campus.id')
-                ->where('fee_transaction_payments.payment_for', $student_id)
-                //->whereNotNull('transaction_payments.transaction_id');
-                ->whereNull('fee_transaction_payments.parent_id');
-    
-            if (!empty($start)) {
-                $less_than->whereDate('paid_on', '<', $start);
-            }
-            $less_than->select('fee_transaction_payments.*', 'campus.campus_name as location_name', 't.type as transaction_type')
+        $less_than = FeeTransactionPayment::leftJoin(
+            'fee_transactions as t',
+            'fee_transaction_payments.fee_transaction_id',
+            '=',
+            't.id'
+        )
+            ->leftJoin('campuses as campus', 't.campus_id', '=', 'campus.id')
+            ->where('fee_transaction_payments.payment_for', $student_id)
+            //->whereNotNull('transaction_payments.transaction_id');
+            ->whereNull('fee_transaction_payments.parent_id');
+
+        if (!empty($start)) {
+            $less_than->whereDate('paid_on', '<', $start);
+        }
+        $less_than->select('fee_transaction_payments.*', 'campus.campus_name as location_name', 't.type as transaction_type')
             ->get();
-            $less_than_amount=$less_than->where('is_return', 0)->sum('amount');
-           
-            $greater_than = FeeTransactionPayment::leftJoin(
-                'fee_transactions as t',
-                'fee_transaction_payments.fee_transaction_id',
-                '=',
-                't.id'
-            )
-                ->leftJoin('campuses as campus', 't.campus_id', '=', 'campus.id')
-                ->where('fee_transaction_payments.payment_for', $student_id)
-                //->whereNotNull('transaction_payments.transaction_id');
-                ->whereNull('fee_transaction_payments.parent_id');
-    
-            if (!empty($end)) {
-                $greater_than->whereDate('paid_on', '>', $end);
-            }
-            $greater_than->select('fee_transaction_payments.*', 'campus.campus_name as location_name', 't.type as transaction_type')
+        $less_than_amount = $less_than->where('is_return', 0)->sum('amount');
+
+        $greater_than = FeeTransactionPayment::leftJoin(
+            'fee_transactions as t',
+            'fee_transaction_payments.fee_transaction_id',
+            '=',
+            't.id'
+        )
+            ->leftJoin('campuses as campus', 't.campus_id', '=', 'campus.id')
+            ->where('fee_transaction_payments.payment_for', $student_id)
+            //->whereNotNull('transaction_payments.transaction_id');
+            ->whereNull('fee_transaction_payments.parent_id');
+
+        if (!empty($end)) {
+            $greater_than->whereDate('paid_on', '>', $end);
+        }
+        $greater_than->select('fee_transaction_payments.*', 'campus.campus_name as location_name', 't.type as transaction_type')
             ->get();
-            $greater_than_amount=$greater_than->where('is_return', 0)->sum('amount');
-           
-            return $less_than_amount+$greater_than_amount;
+        $greater_than_amount = $greater_than->where('is_return', 0)->sum('amount');
+
+        return $less_than_amount + $greater_than_amount;
     }
 
 
 
-    
-    public  function  getStudentTotalAttendances($campus_id,$type,$start, $end = null){
+
+    public function getStudentTotalAttendances($campus_id, $type, $start, $end = null)
+    {
 
         $query = Attendance::leftJoin(
             'students as em',
             'attendances.student_id',
             '=',
             'em.id'
-        )->where('attendances.type',$type);
-      
+        )->where('attendances.type', $type);
+
         $permitted_campuses = auth()->user()->permitted_campuses();
         if ($permitted_campuses != 'all') {
-          $query->whereIn('em.campus_id', $permitted_campuses);
+            $query->whereIn('em.campus_id', $permitted_campuses);
         }
         if (!empty($campus_id)) {
             $query->where('em.campus_id', $campus_id);
         }
-        if (!empty($start)  && !empty($end)) {
+        if (!empty($start) && !empty($end)) {
             $query->whereDate('attendances.clock_in_time', '>=', $start)
-                        ->whereDate('attendances.clock_in_time', '<=', $end);
+                ->whereDate('attendances.clock_in_time', '<=', $end);
         }
-    
-        if (!empty($start)  && empty($end)) {
+
+        if (!empty($start) && empty($end)) {
             $query->whereDate('attendances.clock_in_time', '<', $start);
         }
         $query->select(
             DB::raw("COUNT(*) as total_attendance")
         );
-    
+
         $attendance_count = $query->first();
         return $attendance_count->total_attendance;
-    
-        }
+
+    }
+
+
+ public function studentReplace($student_id,$guardian_link_id){
+        $siblings=StudentGuardian::with(['student_guardian','students','students.current_class','students.current_class_section'])->where('guardian_id', $guardian_link_id)->first();
+        $student = Student::find($student_id);
+        $student->father_name=$siblings->students->father_name;
+        $student->father_phone=$siblings->students->father_phone;
+        $student->father_occupation=$siblings->students->father_occupation;
+        $student->father_cnic_no=$siblings->students->father_cnic_no;
+        $student->mother_name=$siblings->students->mother_name;
+        $student->mother_phone=$siblings->students->mother_phone;
+        $student->mother_occupation=$siblings->students->mother_occupation;
+        $student->mother_cnic_no=$siblings->students->mother_cnic_no;
+        $student->country_id=$siblings->students->country_id;
+        $student->province_id=$siblings->students->province_id;
+        $student->district_id=$siblings->students->district_id;
+        $student->city_id=$siblings->students->city_id;
+        $student->region_id=$siblings->students->region_id;
+        $student->std_current_address=$siblings->students->std_current_address;
+        $student->std_permanent_address=$siblings->students->std_permanent_address;
+        $student->save();
+    }
 
 
 
 
-      
 
-
-        
 }

@@ -159,7 +159,7 @@
                                              @endforeach
                                              @if($check)
 
-                                             <input type="radio" class="form-check-input" name="attendance[{{  $employee->id }}][status]" checked value="{{'present'}}">
+                                             <input type="radio" class="form-check-input" name="attendance[{{  $employee->id }}][status]"  value="{{'present'}}">
                                              <label class="form-check-label" for=""> @lang('english.present')</label>
                                              <input type="radio" class="form-check-input" name="attendance[{{  $employee->id }}][status]" value="{{'late'}}">
                                              <label class="form-check-label" for=""> @lang('english.late')</label>

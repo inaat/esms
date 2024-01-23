@@ -85,8 +85,10 @@
                                  <th>@lang('english.action')</th>
                                  <th>@lang('english.student_name')</th>
                                  <th>@lang('english.gender')</th>
+                                 <th>@lang('english.cnic_number')</th>
                                  <th>@lang('DOB/ Age')</th>
                                  <th>@lang('english.father_name')</th>
+                                 <th>@lang('english.father_cnic_no')</th>
                                  <th>@lang('english.status')</th>
                                  <th>@lang('english.roll_no')</th>
                                  <th>@lang('english.old_roll_no')</th>
@@ -106,6 +108,8 @@
                          </thead>
                          <tfoot>
                              <tr class=" footer-total">
+                                 <td></td>
+                                 <td></td>
                                  <td></td>
                                  <td></td>
                                  <td></td>

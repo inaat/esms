@@ -119,7 +119,7 @@
                                 <div class="col-md-12">
                                 <img src="{{ !empty($employee->employee_image)  ? url('uploads/employee_image/', $employee->employee_image) : url('uploads/employee_image/default.png') }}" class="employee_image card-img-top" width="192px" height="192px" alt="...">
                                 {!! Form::label('employee_image', __('english.employee_image') . ':') !!}
-                                {!! Form::file('employee_image', ['accept' => 'image/*','class' => 'form-control upload_employee_image']); !!}
+                                {!! Form::file('employee_image', ['accept' => 'image/*','class' => 'form-control upload_employee_image']) !!}
                                 </div>
                             </div>
                         </div>
@@ -271,15 +271,15 @@
 
                         <div class="col-md-4  p-1">
                             {!! Form::label('english.departments', __('english.departments') . ':*') !!}
-                            {!! Form::select('department_id', $departments, $employee->department_id, ['class' => 'form-select select2', 'style' => 'width:100%', 'placeholder' => __('english.please_select'), 'id' => 'department_id']) !!}
+                            {!! Form::select('department_id', $departments, $employee->department_id, ['class' => 'form-select select2', 'required', 'style' => 'width:100%', 'placeholder' => __('english.please_select'), 'id' => 'department_id']) !!}
                         </div>
                         <div class="col-md-4  p-1">
                             {!! Form::label('english.designations', __('english.designations') . ':*') !!}
-                            {!! Form::select('designation_id', $designations,$employee->designation_id, ['class' => 'form-select select2', 'style' => 'width:100%', 'placeholder' => __('english.please_select'), 'id' => 'designation_id']) !!}
+                            {!! Form::select('designation_id', $designations,$employee->designation_id, ['class' => 'form-select select2','required', 'style' => 'width:100%', 'placeholder' => __('english.please_select'), 'id' => 'designation_id']) !!}
                         </div>
                         <div class="col-md-4  p-1">
                             {!! Form::label('english.education', __('english.education') . ':*') !!}
-                            {!! Form::select('education_id', $educations, $employee->education_id, ['class' => 'form-select select2', 'style' => 'width:100%', 'placeholder' => __('english.please_select'), 'id' => 'education_id']) !!}
+    {!! Form::select('education_ids[]', $educations,$employee->education_ids, ['class' => 'form-select select2', 'multiple' => 'multiple', 'required', 'style' => 'width:100%', 'placeholder' => __('english.please_select'), 'id' => 'education_id']) !!}
                         </div>
                         <div class="col-md-4  p-1">
                   {!! Form::label('role', __( 'english.role' ) . ':*') !!} @show_tooltip(__('english.admin_role_location_permission_help'))
@@ -298,6 +298,22 @@
                                         class="fas fa-money-bill-alt"></i></span>
                                 {!! Form::text('basic_salary',@num_format($employee->basic_salary), ['class' => 'form-control input_number', 'required', 'placeholder' => __('english.basic_salary'), 'id' => 'basic salary']) !!}
                                 {!! Form::select('pay_period', ['month' => __('english.per') . ' ' . __('english.month'), 'week' => __('english.per') . ' ' . __('english.week'), 'day' => __('english.per') . ' ' . __('english.day')], $employee->pay_period, ['class' => 'width-60 pull-left form-select select2']) !!}
+
+                            </div>
+                        </div>
+                        <div class="col-md-6  p-1">
+                            {!! Form::label('english.default_allowance', __('english.default_allowance') . ':*') !!}
+                            <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
+                                        class="fas fa-money-bill-alt"></i></span>
+                                {!! Form::text('default_allowance',@num_format($employee->default_allowance), ['class' => 'form-control input_number', 'required', 'placeholder' => __('english.default_allowance'), 'id' => 'default_allowance']) !!}
+
+                            </div>
+                        </div>
+                        <div class="col-md-6  p-1">
+                            {!! Form::label('english.default_deduction', __('english.default_deduction') . ':*') !!}
+                            <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
+                                        class="fas fa-money-bill-alt"></i></span>
+                                {!! Form::text('default_deduction',@num_format($employee->default_deduction), ['class' => 'form-control input_number', 'required', 'placeholder' => __('english.default_deduction'), 'id' => 'default_deduction']) !!}
 
                             </div>
                         </div>
@@ -446,3 +462,8 @@
         });
     </script>
 @endsection
+
+
+
+{{-- ALTER TABLE `hrm_employees` ADD `default_allowance` DECIMAL(22,4) NOT NULL DEFAULT '0' AFTER `basic_salary`, ADD `default_deduction` DECIMAL(22,4) NOT NULL DEFAULT '0' AFTER `default_allowance`; --}}
+{{-- ALTER TABLE `hrm_transactions` ADD `default_allowance` DECIMAL(22,4) NOT NULL DEFAULT '0' AFTER `basic_salary`, ADD `default_deduction` DECIMAL(22,4) NOT NULL DEFAULT '0' AFTER `default_allowance`;  --}}

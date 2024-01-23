@@ -203,9 +203,10 @@ class FrontGalleryController extends Controller
                if (File::exists(public_path('uploads/front_image/'. $gallery->thumb_image))) {
                    File::delete(public_path('uploads/front_image/'. $gallery->thumb_image));
 
-                   $filename=$this->commonUtil->uploadFile($request, 'thumb_image', 'front_image', 'image');
-                   $gallery->thumb_image=$filename;
                }
+               
+               $filename=$this->commonUtil->uploadFile($request, 'thumb_image', 'front_image', 'image');
+               $gallery->thumb_image=$filename;
            }
            $gallery->save();
            $output = ['success' => true,

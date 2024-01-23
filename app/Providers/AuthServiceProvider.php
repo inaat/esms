@@ -32,8 +32,8 @@ class AuthServiceProvider extends ServiceProvider
         // initialize passport routes
         Passport::routes();
        
-        Passport::tokensExpireIn(now()->addDays(5));
-        Passport::refreshTokensExpireIn(now()->addDays(30));
+        Passport::tokensExpireIn(now()->addDays(365));
+        Passport::refreshTokensExpireIn(now()->addDays(365));
        
         Gate::before(function ($user, $ability) {
             if (in_array($ability, ['backup', 'superadmin', 

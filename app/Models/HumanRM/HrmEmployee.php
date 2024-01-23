@@ -9,7 +9,9 @@ class HrmEmployee extends Model
 {
     use HasFactory;
     
-    
+    protected $casts = [
+        'education_ids' => 'array'
+    ];
     protected $guarded = ['id'];
 
 

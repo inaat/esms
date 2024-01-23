@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-/*use App\Models\ClassSection;
+use App\Models\ClassSection;
 use App\Models\Classes;
+use App\Models\Campus;
 use App\Models\Session;
 use App\Models\Student;
 use App\Models\FeeTransaction;
@@ -12,18 +13,17 @@ use App\Models\Discount;
 use App\Models\FeeHead;
 use App\Models\FeeTransactionPayment;
 use App\Models\FeeTransactionLine;
-use Yajra\DataTables\Facades\DataTables;*/
-use App\Models\Campus;
-use Carbon;
+use Yajra\DataTables\Facades\DataTables;
 use App\Utils\StudentUtil;
 use App\Utils\EmployeeUtil;
 use App\Utils\FeeTransactionUtil;
 use App\Utils\HrmTransactionUtil;
 use App\Utils\ExpenseTransactionUtil;
-//use App\Utils\NotificationUtil;
+use App\Utils\NotificationUtil;
 //use App\Charts\CommonChart;
 use DB;
 use App\Utils\Util;
+use Carbon;
 
 //use Illuminate\Notifications\DatabaseNotification;
 
@@ -65,7 +65,14 @@ class HomeController extends Controller
 
     public function index()
     {
-        //dd( $common_settings);
+ //$opening_balance=$this->__payment(null, '2023-06-01', '2023-08-13');
+ //dd($opening_balance);
+       // $debit=$this->feeTransactionUtil->getAccountOpeningBalance('2023-07-28', null,'debit');
+       // $deposit=$this->feeTransactionUtil->getAccountOpeningBalance('2023-07-28', null,'deposit');
+       //$account_balance=($opening_balance+$deposit)-$debit;
+      // dd($account_balance);
+
+       //dd($this->commonUtil->strengthReport());
         $user = \Auth::user();
         if ($user->user_type == 'teacher') {
             return redirect('/dashboard');
@@ -76,7 +83,7 @@ class HomeController extends Controller
         } elseif ($user->user_type == 'staff') {
             return redirect('/staff/dashboard');
         } else {
-            $campuses=Campus::forDropdown();
+             $campuses=Campus::forDropdown();
             $common_settings = session()->get('system_details.common_settings');
 
             return view('home.home')->with(compact('campuses','common_settings'));
@@ -95,19 +102,11 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-   /* public function getTotals()
+  /*  public function getTotals()
     {
         if (request()->ajax()) {
             $start = request()->start;
             $end = request()->end;
-            //dd($end);
-            //$date = \Carbon::parse($end);
-            
-           // $isToday = $date->isToday();
-
-//$isYesterday = $date->isYesterday();
-
-//$isTodayOrYesterday =  $date->isToday() || $date->isYesterday();
             $campus_id = request()->campus_id;
             
             // $business_id = request()->session()->get('user.business_id');
@@ -119,8 +118,9 @@ class HomeController extends Controller
             $struck_up_students=$this->studentUtil->getStruckUpStudents($campus_id);
             $took_slc_students=$this->studentUtil->getTookSLCStudents($campus_id);
             $total_student_attendance=$this->studentUtil->getStudentTotalAttendances($campus_id, 'present', $start, $end);
-            $total_student_late=$this->studentUtil->getStudentTotalAttendances($campus_id, 'late', $start, $end);
             $total_student_absent_attendance=$this->studentUtil->getStudentTotalAttendances($campus_id, 'absent', $start, $end);
+                        $total_student_late=$this->studentUtil->getStudentTotalAttendances($campus_id, 'late', $start, $end);
+
             //Employee
             $total_employee_attendance=$this->employeeUtil->getEmployeeTotalAttendances($campus_id, 'present', $start, $end);
             $total_employee_absent_attendance=$this->employeeUtil->getEmployeeTotalAttendances($campus_id, 'absent', $start, $end);
@@ -140,15 +140,18 @@ class HomeController extends Controller
             $output['total_student_attendance'] = $total_student_attendance;
             $output['total_student_absent_attendance'] = $total_student_absent_attendance;
             $output['total_student_late'] = $total_student_late;
+
              //Khan lala 
              //dd(\Carbon::now()->lastOfMonth()->format('Y-m-d'));
             $output['total_progress_collection_during_month']=$this->feeTransactionUtil->getTotalFeePaid(\Carbon::now()->startOfMonth()->format('Y-m-d'),\Carbon::now()->lastOfMonth()->format('Y-m-d'), null, $campus_id);
-             $total=$this->feeTransactionUtil->getFeeTotals(null, $end, $campus_id);
+             $total=$this->feeTransactionUtil->getFeeTotals(null,$end, $campus_id);
              //dd($total);
              $output['total_dues_this_month']=$total['total_fee_due']+$output['total_progress_collection_during_month'];//+ $output['total_paid_amount'];
-             $total_expense=$this->expenseTransactionUtil->getTotalExpense($start, $end, $campus_id) +$this->hrmTransactionUtil->getTotalHrm($start, $end, $campus_id);
+            // $total_expense=$this->expenseTransactionUtil->getTotalExpense($start, $end, $campus_id) +$this->hrmTransactionUtil->getTotalHrm($start, $end, $campus_id);
+            $total_expense=$this->expenseTransactionUtil->getTotalExpense($start, $end, $campus_id) +$this->hrmTransactionUtil->getTotalHrmPaid($start, $end,null, $campus_id);
+
              $output['total_expense'] = $total_expense;
-             $output['total_hrm_paid_amount'] = $this->expenseTransactionUtil->getTotalExpense(\Carbon::now()->startOfMonth()->format('Y-m-d'),\Carbon::now()->lastOfMonth()->format('Y-m-d'), $campus_id)+$this->hrmTransactionUtil->getTotalHrm(\Carbon::now()->startOfMonth()->format('Y-m-d'),\Carbon::now()->lastOfMonth()->format('Y-m-d'), $campus_id);
+             $output['total_hrm_paid_amount'] = $this->expenseTransactionUtil->getTotalExpense(\Carbon::now()->startOfMonth()->format('Y-m-d'),\Carbon::now()->lastOfMonth()->format('Y-m-d'), $campus_id)+$this->hrmTransactionUtil->getTotalHrmPaid(\Carbon::now()->startOfMonth()->format('Y-m-d'),\Carbon::now()->lastOfMonth()->format('Y-m-d'),null, $campus_id);
              $total_transport=$this->feeTransactionUtil->getTransportTotals(null, $end, $campus_id);
              $total_transport_paid_amount=$this->feeTransactionUtil->getTotalTransportPaid($start, $end, null, $campus_id);
 
@@ -226,27 +229,16 @@ class HomeController extends Controller
                 $output['all_hrm_values']=$all_hrm_values;
             return $output;
         }
-    }
-
-/*
-
-
-
-
-
-
-
-
-
-
-   ///Aby//////
+    }*/
+      ///Aby//////
 
     /**
      * Retrieves purchase and sell details for a given time period.
      *
      * @return \Illuminate\Http\Response
      */
- public function getTotals()
+   
+    public function getTotals()
     {
         if (request()->ajax()) {
             $start = request()->start;
@@ -282,7 +274,7 @@ class HomeController extends Controller
                         $start_date = Carbon::parse($_date[0] . '-' . $month . '-26')->format('Y-m-d');
                     }
                 }
-        // dd($start_date,$end_date);
+       // dd($start_date,$end_date);
            
             $campus_id = request()->campus_id;
             
@@ -304,8 +296,9 @@ class HomeController extends Controller
             $resign_employees=$this->employeeUtil->getResignEmployees($campus_id);
             $total_paid_amount=$this->feeTransactionUtil->getTotalFeePaid($start, $end, null, $campus_id);
            // $total_expense=$this->expenseTransactionUtil->getTotalExpense($start, $end, $campus_id);
-         
+           $output['beginning_balance']=$this->feeTransactionUtil->getAccountBeginningBalance($start_date,$end_date, $campus_id,null);
             $output['account_balances']=$this->feeTransactionUtil->getAccountBalance($end, $campus_id);
+            $output['transport_account_balances']=$this->feeTransactionUtil->getTransportAccountBalance($end, $campus_id);
             $output['active_students'] = $active_students;
             $output['total_paid_amount'] = $total_paid_amount;
             $output['inactive_students'] = $inactive_students;
@@ -319,13 +312,15 @@ class HomeController extends Controller
              //Khan lala 
              //dd($start_date,$end_date);
             $output['total_progress_collection_during_month']=$this->feeTransactionUtil->getTotalFeePaid(\Carbon::parse($start_date)->format('Y-m-d'),\Carbon::parse($end_date)->format('Y-m-d'), null, $campus_id);
+           
+            
             $total=$this->feeTransactionUtil->getFeeTotals(null, $end_date, $campus_id);
              //$total=$this->feeTransactionUtil->getFeeTotals(null, $end, $campus_id);
              //dd($total);
              $output['total_dues_this_month']=$total['total_fee_due']+$output['total_progress_collection_during_month'];//+ $output['total_paid_amount'];
-             $total_expense=$this->expenseTransactionUtil->getTotalExpense($start, $end, $campus_id) +$this->hrmTransactionUtil->getTotalHrm($start, $end, $campus_id);
+             $total_expense=$this->expenseTransactionUtil->getTotalExpense($start, $end, $campus_id) +$this->hrmTransactionUtil->getTotalHrmPaid($start, $end,null, $campus_id);
              $output['total_expense'] = $total_expense;
-             $output['total_hrm_paid_amount'] = $this->expenseTransactionUtil->getTotalExpense(\Carbon::parse($start_date)->format('Y-m-d'),\Carbon::parse($end_date)->format('Y-m-d'), $campus_id)+$this->hrmTransactionUtil->getTotalHrm(\Carbon::parse($start_date)->format('Y-m-d'),\Carbon::parse($end_date)->format('Y-m-d'), $campus_id);
+             $output['total_hrm_paid_amount'] = $this->expenseTransactionUtil->getTotalExpense(\Carbon::parse($start_date)->format('Y-m-d'),\Carbon::parse($end_date)->format('Y-m-d'), $campus_id)+$this->hrmTransactionUtil->getTotalHrmPaid(\Carbon::parse($start_date)->format('Y-m-d'),\Carbon::parse($end_date)->format('Y-m-d'),null, $campus_id);
              $total_transport=$this->feeTransactionUtil->getTransportTotals(null, $end_date, $campus_id);
              $total_transport_paid_amount=$this->feeTransactionUtil->getTotalTransportPaid($start, $end, null, $campus_id);
 
@@ -333,7 +328,18 @@ class HomeController extends Controller
              $output['total_transport_progressive_amount']=$this->feeTransactionUtil->getTotalTransportPaid(\Carbon::parse($start_date)->format('Y-m-d'),\Carbon::parse($end_date)->format('Y-m-d'), null, $campus_id);
              $output['total_transport_dues_this_month']=$total_transport['total_fee_due']+$output['total_transport_progressive_amount'];//+$total_transport_paid_amount;
 
-
+            ////
+            $online=$this->__payment(null, $start_date, $end_date)+1900;
+            $opening_balance=$this->feeTransactionUtil->getAccountOpeningBalance($end, $campus_id,'opening_balance');
+            $debit=$this->feeTransactionUtil->getAccountOpeningBalance($end, $campus_id,'debit');
+            $deposit=$this->feeTransactionUtil->getAccountOpeningBalance($end, $campus_id,'deposit');
+           $account_opening_balance=($opening_balance+$deposit+$total_expense+$online
+           +$this->feeTransactionUtil->getTotalFeePaid(null, $end, null, $campus_id)
+           
+           )-$debit- $output['total_progress_collection_during_month']-$this->expenseTransactionUtil->getTotalExpensePaid(null, $end, null, $campus_id)-$this->hrmTransactionUtil->getTotalHrmPaid(null, $end,null, $campus_id) ;
+           
+           $output['account_opening_balance']=$account_opening_balance;
+ 
             //Employee
             $output['total_employee_attendance'] = $total_employee_attendance;
             $output['total_employee_absent_attendance'] = $total_employee_absent_attendance;
@@ -403,5 +409,30 @@ class HomeController extends Controller
                 $output['all_hrm_values']=$all_hrm_values;
             return $output;
         }
+    }
+        private function __payment($campus_id, $start_date, $end_date)
+    {
+        $query = FeeTransactionPayment::with(['campus', 'student', 'fee_transaction'])->whereNotNull('fee_transaction_id');
+        if (!empty($campus_id)) {
+            $query->where('campus_id', '=', $campus_id);
+        }
+        if (!empty($start_date) && !empty($end_date)) {
+          //  $query->whereDate('paid_on', '>=', $start_date)
+               // ->whereDate('paid_on', '<=', $end_date);
+                // $query->whereDate('paid_on', '>=', $start_date)
+                $query->whereDate('paid_on', '<=', $end_date);
+        }
+
+        $onlines= $query->orderBy('method')->get();
+        $amount=0;
+        foreach($onlines as $online){
+            if($online->fee_transaction->type=='transport_fee'){
+                 if($online->method=='bank_transfer'){
+            $amount+=$online->amount;
+                 }
+            }
+        }
+        return $amount;
+
     }
 }
