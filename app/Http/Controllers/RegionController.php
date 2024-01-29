@@ -226,7 +226,7 @@ class RegionController extends Controller
     {
         if (!empty($request->input('city_id'))) {
             $city_id = $request->input('city_id');
-            $system_settings_id = session()->get('user.system_settings_id');
+            $system_settings_id = 1;
             $regions = Region::forDropdown($system_settings_id, false, $city_id);
             $html = '<option value="">' . __('english.please_select') . '</option>';
             //$html = '';

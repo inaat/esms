@@ -255,7 +255,7 @@ class Util
      */
     public function setAndGetReferenceCount($type, $before = false, $after = false)
     {
-        $system_settings_id = session()->get('user.system_settings_id');
+        $system_settings_id = 1;
 
         $ref = ReferenceCount::where('ref_type', $type)
             ->where('system_settings_id', $system_settings_id)
@@ -291,7 +291,7 @@ class Util
      */
     public function setAndGetRollNoCount($type, $before = false, $after = false)
     {
-        $system_settings_id = session()->get('user.system_settings_id');
+        $system_settings_id = 1;
         $ref = ReferenceCount::where('ref_type', $type)
             ->where('system_settings_id', $system_settings_id)
             //  ->where('session_close','=','open')
@@ -321,7 +321,7 @@ class Util
     public function generateReferenceNumber($type, $ref_count, $system_settings_id = null, $default_prefix = null)
     {
         $prefix = '';
-        $system_settings_id = session()->get('user.system_settings_id');
+        $system_settings_id = 1;
 
         if (session()->has('system_details') && !empty(request()->session()->get('system_details.ref_no_prefixes')[$type])) {
             $prefix = request()->session()->get('system_details.ref_no_prefixes')[$type];
@@ -817,7 +817,7 @@ class Util
 
     public function getAdmins()
     {
-        $system_settings_id = request()->session()->get('user.system_settings_id');
+        $system_settings_id = 1;
         $admins = User::role('Admin#' . $system_settings_id)->get();
 
         return $admins;
@@ -834,7 +834,7 @@ class Util
         } elseif ($role_id == 4) {
             $type = 'staff';
         }
-        $system_settings_id = session()->get('user.system_settings_id');
+        $system_settings_id = 1;
 
         $check_user = User::where('hook_id', $hook_id)->whereNotIn('user_type', ['student', 'guardian'])->first();
         //dd($data);
@@ -899,7 +899,7 @@ class Util
     public function studentCreateUpdateLogin($data, $type, $hook_id)
     {
         $role_id = 3;
-        $system_settings_id = session()->get('user.system_settings_id');
+        $system_settings_id = 1;
         $check_user = User::where('hook_id', $hook_id)->where('user_type', 'student')->first();
         //dd($data);
         if (empty($check_user)) {
@@ -964,7 +964,7 @@ class Util
     public function guardianCreateUpdateLogin($data, $type, $hook_id)
     {
         $role_id = 5;
-        $system_settings_id = session()->get('user.system_settings_id');
+        $system_settings_id = 1;
         $check_user = User::where('hook_id', $hook_id)->where('user_type', 'guardian')->first();
       // dd($check_user);
         if (empty($check_user)) {

@@ -8,6 +8,7 @@ use App\Models\Frontend\FrontNews;
 use App\Models\Frontend\FrontAboutUs;
 use App\Models\Frontend\FrontGalleryContent;
 use App\Models\Frontend\FrontEvent;
+use App\Models\Frontend\OnlineApplicant;
 use Illuminate\Http\Request;
 use App\Models\Exam\ExamCreate;
 use App\Models\Exam\ExamAllocation;
@@ -17,14 +18,38 @@ use App\Models\ClassLevel;
 use App\Models\Users;
 use App\Models\Classes;
 use App\Models\Session;
+use App\Models\District;
+use App\Utils\Util;
 use App\Models\HumanRM\HrmEmployee;
 use App\Models\HumanRM\HrmEducation;
 use DB;
+use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class FrontHomeController extends Controller
 {
+    protected $studentUtil;
+    
+
+    /**
+     * Constructor
+     *
+     * @return void
+     */
+    public function __construct(Util $commonUtil)
+    {
+        $this->commonUtil = $commonUtil;
+        $this->student_status_colors = [
+            'active' => 'bg-success',
+            'inactive' => 'bg-info',
+            'struct_up' => 'bg-warning',
+            'pass_out' => 'bg-danger',
+             'took_slc' => 'bg-secondary',
+        ];
+    }
     public function index()
     {
+
         $news=FrontNews::orderBy('id', 'DESC')->get();
         $slider=FrontSlider::orderBy('id', 'DESC')->get();
         $about_us=FrontAboutUs::get();
@@ -174,6 +199,138 @@ campus_id=".$campus_id." And  class_id IN".$string_class_ids." And  session_id="
         }
         return $students;
     }
+
+
+public function onlineApply(){
+
+    $countries = $this->commonUtil->allCountries();
+    $campuses=Campus::orderBy('campus_name', 'asc')
+     ->pluck('campus_name', 'id');
+    $sessions=Session::forDropdown(false, true);
+    $districts = District::forDropdown(1, false);
+    
+  
+    return view('frontend.online-apply')->with(compact('countries','campuses','sessions','districts'));
+}
+public function saveApply(Request $request){
+        
+
+    try {
+        $validatedData = $request->validate([
+            'campus_id' => 'required',
+            'adm_session_id' => 'required',
+            'adm_class_id' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'nullable',
+            'gender' => 'required',
+            'birth_date' => 'required',
+            'domicile_id' => 'required',
+            'religion' => 'required',
+            'mobile_no' => 'required',
+            'email' => 'required|email|unique:online_applicants,email',
+            'cnic_no' => 'required',
+            'nationality' => 'required',
+            'father_name' => 'required',
+            'father_phone' => 'required',
+            'father_occupation' => 'required',
+            'father_cnic_no' => 'required',
+            'guardian_is' => 'required',
+            'guardian_name' => 'required_if:guardian_is,Other',
+            'guardian_relation' => 'required_if:guardian_is,Other',
+            'guardian_occupation' => 'required_if:guardian_is,Other',
+            'guardian_email' => 'required_if:guardian_is,Other|email',
+            'guardian_phone' => 'required_if:guardian_is,Other',
+            'guardian_address' => 'required_if:guardian_is,Other',
+            'country_id' => 'required',
+            'province_id' => 'required',
+            'district_id' => 'required',
+            'city_id' => 'required',
+            'std_current_address' => 'required',
+            'std_permanent_address' => 'required',
+            'is_kmu_cat' => 'required',
+            'previous_college_name' => 'required',
+            'board_name' => 'required',
+            'fsc_roll_no' => 'required',
+            'fsc_marks' => 'required',
+            'fsc_mark_sheet' => 'required|file|max:'.config('constants.document_size_limit'),
+            'cnic_front_side' => 'required|file|max:'.config('constants.document_size_limit'),
+            'cnic_back_side' => 'required|file|max:'.config('constants.document_size_limit')
+        ]);
+        $online_applicants_data = $request->only([
+            'campus_id',
+            'adm_session_id',
+            'adm_class_id',
+            'first_name',
+            'last_name',
+            'gender',
+            'birth_date',
+            'domicile_id',
+            'religion',
+            'mobile_no',
+            'email',
+            'cnic_no',
+            'blood_group',
+            'nationality',
+            'mother_tongue',
+            'medical_history',
+            'father_name',
+            'father_phone',
+            'father_occupation',
+            'father_cnic_no',
+            'guardian_is',
+            'guardian_name',
+            'guardian_relation',
+            'guardian_occupation',
+            'guardian_email',
+            'guardian_phone',
+            'guardian_address',
+            'country_id',
+            'province_id',
+            'district_id',
+            'city_id',
+            'std_current_address',
+            'std_permanent_address',
+            'is_kmu_cat',
+            'previous_college_name',
+            'board_name',
+            'fsc_roll_no',
+            'fsc_marks',
+        ]);
+        $student_image=$this->commonUtil->uploadFile($request, 'student_image', 'document');
+        $fsc_mark_sheet=$this->commonUtil->uploadFile($request, 'fsc_mark_sheet', 'document');
+        $cnic_front_side=$this->commonUtil->uploadFile($request, 'cnic_front_side', 'document');
+        $cnic_back_side=$this->commonUtil->uploadFile($request, 'cnic_back_side', 'document');
+        $online_applicants_data['student_image']=$student_image;
+        $online_applicants_data['fsc_mark_sheet']=$fsc_mark_sheet;
+        $online_applicants_data['cnic_front_side']=$cnic_front_side;
+        $online_applicants_data['cnic_back_side']=$cnic_back_side;
+        $online_applicants_data['applicant_submit_date']=\Carbon::now();
+        $prefix_type = 'online_applicant_no';
+
+        $ref_count = $this->commonUtil->setAndGetReferenceCount($prefix_type, false, true);
+                //Generate reference number
+        $online_applicants_data['online_applicant_no'] = $this->commonUtil->generateReferenceNumber($prefix_type, $ref_count, 1);
+
+         
+         OnlineApplicant::create($online_applicants_data);
+         return view('frontend.submit-success');
+    } catch (ValidationException $e) {
+        return redirect()->back()->withErrors($e->errors())->withInput();
+    }
+ 
+}
+
+public function emptyAdmissionForm()
+{
+    if (!auth()->user()->can('print.admission_form')) {
+        abort(403, 'Unauthorized action.');
+    }
+
+   
+    return view('MPDF.empty-admission-form');
+    
+   
+}
 public function associativeArrayToSimple($data)
 {
     $simple_array ='('; //simple array

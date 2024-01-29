@@ -59,9 +59,9 @@
         <!--end page wrapper -->
 
        
-        <footer class="sidebar-head-less-page-footer">
+        {{-- <footer class="sidebar-head-less-page-footer">
             <p class="mb-0">Copyright © 2021. All right reserved.</p>
-        </footer>
+        </footer> --}}
     </div>
     <audio id="success-audio">
         <source src="{{ asset('/audio/success.ogg?v=' . $asset_v) }}" type="audio/ogg">

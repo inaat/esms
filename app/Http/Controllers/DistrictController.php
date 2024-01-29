@@ -222,7 +222,7 @@ class DistrictController extends Controller
         if (!empty($request->input('province_id'))) {
             $province_id = $request->input('province_id');
             
-            $system_settings_id = session()->get('user.system_settings_id');
+            $system_settings_id = 1;
             $districts = District::forDropdown($system_settings_id, false, $province_id);
             $html = '<option value="">' . __('english.please_select') . '</option>';
             //$html = '';

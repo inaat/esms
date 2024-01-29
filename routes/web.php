@@ -23,18 +23,20 @@ Route::middleware(['auth'])->group(function () {
 //         return $user = \Auth::user();
 //     });
 // });
+Route::get('/get_provinces', 'ProvinceController@getProvinces');
+Route::get('/get_districts', 'DistrictController@getDistricts');
+Route::get('/get_cities', 'CityController@getCities');
+Route::get('/get_regions', 'RegionController@getRegions');
+Route::get('/classes/get_campus_classes', 'ClassController@getCampusClass');
+
 Route::middleware(['auth','language','SetSessionData','timezone','AdminSidebarMenu','FrontSessionData'])->group(function () {
     Route::resource('session', 'SessionController');
     Route::put('session/activate-session/{id}', 'SessionController@activateSession');
     Route::post('student/update-status', 'StudentController@updateStatus');
     Route::get('/sessions/get_roll_no', 'SessionController@getRollNo');
-    Route::get('/classes/get_campus_classes', 'ClassController@getCampusClass');
     Route::get('/classes/get_class_fee', 'ClassController@getClassFee');
     Route::get('/classes/get_class_section', 'ClassController@getClassSection');
-    Route::get('/get_provinces', 'ProvinceController@getProvinces');
-    Route::get('/get_districts', 'DistrictController@getDistricts');
-    Route::get('/get_cities', 'CityController@getCities');
-    Route::get('/get_regions', 'RegionController@getRegions');
+  
     Route::get('/get_regions_transport_fee', 'RegionController@getRegionTransportFee');
 
     Route::get('/add_sibling', 'StudentController@addSibling');
@@ -311,6 +313,8 @@ Route::middleware(['FrontSessionData'])->group(function () {
     Route::get('/gallery-{slug}/{id}', 'Frontend\FrontHomeController@gallery_show');
     Route::get('/event', 'Frontend\FrontHomeController@event_index');
     Route::get('event-{slug}/{id}', 'Frontend\FrontHomeController@event_show');
+    Route::get('online-apply', 'Frontend\FrontHomeController@onlineApply');
+    Route::post('save-online-apply', 'Frontend\FrontHomeController@saveApply');
     Auth::routes();
 
 });

@@ -1,776 +1,471 @@
-<!DOCTYPE html>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Students Particulars</title>
-<style>
-    @media print {
-        @page {
-            size: A4;
-            margin: 5px;
-            margin-bottom: 10px;
-            margin-top: 30px;
-            font-family: "Times New Roman", Times, serif;
-            size: A4;
-            -webkit-print-color-adjust: exact;
-
-
-
-        }
-
-        hr {
-            background-color: #000;
-        }
-
-        [contentEditable=true]:empty:not(:focus):before {
-            display: none;
-        }
-
-        .pagebreak {
-            page-break-after: always;
-
-        }
-
-        /* page-break-after works, as well */
-        .pto {
-            text-align: center;
-            color: red;
-        }
-
-        .print_data {
-            display: none;
-        }
-
-        .page {
-            background: #ffffff;
-            display: block;
-
-        }
-
-        .page[size="A4"] {
-            width: 22cm;
-        }
-
-        * {
-            font-family: "Times New Roman", Times, serif;
-
-
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-weight: inherit !important;
-            font-size: inherit !important;
-        }
-
-
-        .row {
-            margin: 8px;
-
-        }
-
-        p {
-            font-weight: inherit !important;
-            font-size: inherit !important;
-        }
-
-        .QuestHead {
-            font-size: 22px !important;
-        }
-
-        .QuestHeadLeft {
-            font-size: 19px !important;
-        }
-
-        p>span {
-            font-weight: inherit !important;
-            font-size: inherit !important;
-        }
-
-
-
-
-        * {
-            margin: 0px;
-            color: #000;
-            font-family: "Times New Roman", Times, serif;
-            -webkit-print-color-adjust: exact;
-
-
-
-        }
-
-        p {
-            display: inline;
-        }
-
-        body {
-            margin: 5px;
-            background: #fff;
-            zoom: 98%;
-        }
-
-        #tblMcqs {
-            display: none;
-        }
-
-
-        table.TextCenter {
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            text-align: center;
-            border-collapse: collapse;
-            font-size: 16px;
-
-        }
-
-        table,
-        th,
-        td {
-            border: 1.5px solid #000;
-        }
-
-        td.textleft {
-            text-align: left;
-        }
-
-        td.textright {
-            text-align: right;
-        }
-
-        td.halfdevider {
-            width: 50%;
-        }
-
-        .th1 {
-            border: none;
-        }
-
-        .tr1 {
-            border: none;
-        }
-
-        .td1 {
-            border: none;
-        }
-
-
-        #head1 {
-            width: 100%;
-
-            /* 70% of the parent*/
-            background: #000;
-
-            text-align: center;
-            padding: 3px;
-            margin-top: 20px;
-            margin: 0px auto;
-            border-radius: 5px;
-            height: 20px;
-            border-bottom: 1px solid #000;
-
-
-
-        }
-
-        #head1>h6 {
-            color: #fff;
-            font-size: 8px;
-            -webkit-print-color-adjust: exact;
-        }
-
-        .numberCircle {
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            padding: 2px;
-
-            background: #fff;
-            border: 2px solid #666;
-            color: #666;
-            text-align: center;
-
-        }
-
-        span.circle {
-            border: 2px solid #000;
-            border-radius: 0.8em;
-            -moz-border-radius: 0.8em;
-            -webkit-border-radius: 0.8em;
-
-            display: inline-block;
-            font-weight: bold;
-            line-height: 1em;
-            text-align: center;
-            width: 20px;
-            height: 20px;
-        }
-
-
-    }
-
-    * {
-        font-family: "Times New Roman", Times, serif;
-
-
-
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        font-weight: inherit !important;
-        font-size: inherit !important;
-    }
-
-
-
-    .row {
-        margin: 0px;
-
-
-    }
-
-    p {
-        font-weight: inherit !important;
-        font-size: inherit !important;
-    }
-
-    .QuestHead {
-        font-size: 22px !important;
-    }
-
-    .QuestHeadLeft {
-        font-size: 19px !important;
-    }
-
-    p>span {
-        font-weight: inherit !important;
-        font-size: inherit !important;
-    }
-
-
-
-
-    * {
-        margin: 4px;
-        color: #000;
-        font-family: "Times New Roman", Times, serif;
-        -webkit-print-color-adjust: exact;
-
-
-
-    }
-
-    p {
-        display: inline;
-    }
-
-    body {
-        margin: 5px;
-        background: #fff;
-        zoom: 98%;
-    }
-
-    #tblMcqs {
-        display: none;
-    }
-
-
-    table.TextCenter {
-        text-align: center;
-    }
-
-    table {
-        width: 100%;
-        text-align: center;
-        border-collapse: collapse;
-        font-size: 16px;
-
-    }
-
-    table,
-    th,
-    td {
-        border: 1.5px solid #000;
-    }
-
-    td.textleft {
-        text-align: left;
-    }
-
-    td.textright {
-        text-align: right;
-    }
-
-    td.halfdevider {
-        width: 50%;
-    }
-
-    .th1 {
-        border: none;
-    }
-
-    .tr1 {
-        border: none;
-    }
-
-    .td1 {
-        border: none;
-    }
-
-
-    #head1 {
-        width: 100%;
-
-        /* 70% of the parent*/
-        background: #000;
-
-        text-align: center;
-        padding: 3px;
-        margin: 0px auto;
-        border-radius: 5px;
-        height: 20px;
-        border-bottom: 1px solid #000;
-        margin-top: 20px;
-
-
-
-    }
-
-    #head1>h6 {
-        color: #fff;
-        font-size: 8px;
-        -webkit-print-color-adjust: exact;
-    }
-
-    .numberCircle {
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
-        padding: 2px;
-
-        background: #fff;
-        border: 2px solid #666;
-        color: #666;
-        text-align: center;
-
-    }
-
-    span.circle {
-        border: 2px solid #000;
-        border-radius: 0.8em;
-        -moz-border-radius: 0.8em;
-        -webkit-border-radius: 0.8em;
-
-        display: inline-block;
-        font-weight: bold;
-        line-height: 1em;
-        text-align: center;
-        width: 20px;
-        height: 20px;
-    }
-
-    .page {
-        background: #ffffff;
-        display: block;
-        margin: 10px auto 10px auto;
-
-
-    }
-
-    .page[size="A4"] {
-        width: 22cm;
-    }
-
-    button {
-        background-color: #4CAF50;
-        /* Green */
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-    }
-
-    .pagebreak {
-        page-break-after: always;
-
-    }
-
-    .pto {
-        text-align: center;
-        color: red;
-
-    }
-
-    [contentEditable=true]:empty:not(:focus):before {
-        content: attr(data-text)
-    }
-
-    hr {
-        border-top: 1px dashed #000;
-    }
-
-</style>
-<link href="{{ asset('/js/tinymce/matheditor/html/css/math.css')}}" rel="stylesheet" />
-<script src="{{ asset('assets/js/jquery.min.js?v=' . $asset_v) }}"></script>
-
-</head>
-@php
-$question_count = 1;
-$page_break_count=0;
-$already_break=0;
-@endphp
-
-
-<body>
-    <button class="print_data" onclick="printData()">Print me</button>
-
-    <div class="page" size="A4" id="page">
-        <div>
-            <div class="paper_top" style="height:100px">
-                @include('common.logo_with_height')
-                <h3 style="text-align: center;margin:0px;padding:0px;"><b>Paper <strong>{{ $class_subject->name }}</strong> for Class {{ $class_subject->classes->title }} Second Term Examination August 2022 <b></h3>
-
-                <span style="margin:0px;padding:0px;display: inline;float: left;">Time: {{ $input['paper_time'] }}</span>
-                <span style="margin:0px;padding:0px;display: inline;float: right;">Total Marks:
-                    {{ $input['paper_total_marks'] }}</span>
-            </div>
-
-            @if (!empty($input['single_page']))
-            <div style="display:flex;">
-                <span style="margin-top:5px">Roll No:</span>
-                <input type="text" style="width: 30px;border-radius: 2%;">
-                <input type="text" style="width: 30px;border-radius: 2%;">
-                <input type="text" style="width: 30px;border-radius: 2%;">
-                <input type="text" style="width: 30px;border-radius: 2%;">
-                <input type="text" style="width: 30px;border-radius: 2%;">
-                <input type="text" style="width: 30px;border-radius: 2%;">
-                <input type="text" style="width: 30px;border-radius: 2%;">
-                <input type="text" style="width: 30px;border-radius: 2%;">
-                <input type="text" style="width: 30px;border-radius: 2%;">
-                <span style="margin-top:5px; margin-left:10px">Name:___________________________________</span>
-
-            </div>
-            @endif
-            @if (!empty($mcq_questions))
-            @if (!empty($input['mcq_header']))
-            <div id="head1">
-                <h6>{{ $input['mcq_header'] }}
-                </h6>
-            </div>
-            @endif
-            <div class="row" style=" ">
-
-                <table style="border:none">
-                    <tbody>
-                        <tr class="tr1">
-                            <td colspan="4" class="td1 QuestHeadLeft" style="font-weight:bold;text-align:left;font-size:16px ">
-                                Q.{{ $question_count }}: {{ $input['mcq_top_text'] }}
-                                @php
-                                $question_count++;
-                                @endphp
-                            </td>
-
-                            <td colspan="4" class="QuestHeadLeft textright  td1" style="">
-
-                                <span style="float:right;font-size:16px" id="qmrks"><strong>({{ $input['total_mcq_marks'] }})</strong></span>
-
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-
-                @foreach ($mcq_questions as $mcq)
-                <table style="border:none; margin-left:15px; " class="mcqstable">
-                    <tbody>
-                        <tr class="tr1 mcqstable">
-                            <td colspan="8" class=" halfdevider td1 mcqstable" style="text-align:left !important;font-size:14px !important">
-
-                                <span style="font-weight:bold !important font-size:14px">
-                                    {{ numberToRoman($loop->iteration) }}: &nbsp;</span>
-                                {!! $mcq->question !!}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table style="border:none; margin-left:20px;" class="mcqstable">
-                    <tbody>
-                        <tr class="tr1 mcqstable">
-
-                            <td style="" class="td1 mcqstable">
-                                <span class="circle">a</span>
-
-                                <span style="text-align:center;font-size:14px !important">{!! $mcq->option_a !!}</span>
-
-                            </td>
-                            <td style="" class="td1 mcqstable">
-                                <span class="circle">b</span>
-
-                                <span style="text-align:center;font-size:14px !important">{!! $mcq->option_b !!}</span>
-
-                            </td>
-                            <td style="" class="td1 mcqstable">
-                                @if(!empty($mcq->option_c))
-
-                                <span class="circle">c</span>
-
-                                <span style="text-align:center;font-size:14px !important">{!! $mcq->option_c !!}</span>
-                                @endif
-
-                            </td>
-                            <td style="" class="td1 mcqstable">
-                                @if(!empty($mcq->option_d))
-                                <span class="circle">d</span>
-                                <span style="text-align:center;font-size:14px !important">{!! $mcq->option_d !!}</span>
-                                @endif
-                            </td>
-
-                        </tr>
-                    </tbody>
-                </table>
-                @endforeach
-            </div>
-            <div class="find">
-                <div contenteditable="true" class="pto" id="mcq_pto" style="text-align:center;" data-text="Page break "></div>
-                <div class="custom_break" id=""> </div>
+@extends('admin_layouts.sidebar-header-less')
+@section('wrapper')
+    <div class="page print_area" id="page">
+
+        <div class="card row col-md-12 mx-auto my-3" style="max-width: 80rem;">
+
+            <div class="card-body">
+                <div class="card-content">
+
+                    <h1 class="card-title text-uppercase text-primary text-center">Apply Online in {{ session()->get("front_details.school_name") }}
+                    </h1>
+                    <hr>
+                            {!! Form::open(['url' => action('\App\Http\Controllers\Frontend\FrontHomeController@saveApply'), 'method' => 'post','id' =>'student_add_form' ,'files' => true]) !!}
+
+<div class="card">
+           <div class="card-body">
+           @if($errors->any())
+   <div class="alert alert-danger">
+       <ul>
+           @foreach($errors->all() as $error)
+               <li>{{ $error }}</li>
+           @endforeach
+       </ul>
+   </div>
+@endif
+               <h6 class="card-title text-primary">@lang('english.student_admission_form')</h6>
+               <div class="row">
+                   <div class="col-md-10">
+                       <div class="row">
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.campuses', __('english.campuses') . ':*') !!}
+                               {!! Form::select('campus_id',$campuses,null, ['class' => 'form-select select2 campuses','required', 'style' => 'width:100%', 'required', 'placeholder' => __('english.please_select'),'id' =>'campus_id']) !!}
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.sessions', __('english.sessions') . ':*') !!}
+                               {!! Form::select('adm_session_id',$sessions,null, ['class' => 'form-select select2 ','required', 'style' => 'width:100%', 'required', 'placeholder' => __('english.please_select'),'id'=>'session_id']) !!}
+                           </div>
+                           
+                   
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.classes', __('english.classes') . ':*') !!}
+                               {!! Form::select('adm_class_id',[],null, ['class' => 'form-select select2 classes','required', 'style' => 'width:100%', 'required', 'placeholder' => __('english.please_select'),'id' =>'class_ids']) !!}
+                           </div>
+                           <div class="clearfix"></div>
+
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.first_name', __('english.first_name') . ':*') !!}
+                               {!! Form::text('first_name', null, ['class' => 'form-control','required', 'placeholder' => __('english.first_name')]) !!}
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.last_name', __('english.last_name') . ':') !!}
+                               {!! Form::text('last_name', null, ['class' => 'form-control', 'placeholder' => __('english.last_name')]) !!}
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.gender', __('english.gender') . ':*') !!}
+                               {!! Form::select('gender', ['male' => __('english.male'), 'female' => __('english.female'), 'others' => __('english.others')],null, ['class' => 'form-select select2 ','required', 'style' => 'width:100%', 'required', 'placeholder' => __('english.please_select')]) !!}
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.date_of_birth', __('english.date_of_birth') . ':*') !!}
+                               <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i class="fa fa-calendar"></i></span>
+
+                                   {!! Form::text('birth_date',@format_date('now'), ['class' => 'form-control start-date-picker', 'placeholder' => __('english.date_of_birth')]) !!}
+
+                               </div>
+                           </div>
+                           <div class="clearfix"></div>
+                        
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.domicile', __('english.domicile') . ':*') !!}
+                               {!! Form::select('domicile_id',$districts, null, ['class' => 'form-select select2 ','required','style' => 'width:100%', 'placeholder' => __('english.please_select')]) !!}
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.religion', __('english.religion') . ':*') !!}
+                               {!! Form::select('religion',['Islam'=>'Islam', 'Hinduism'=>'Hinduism', 'Christianity'=>'Christianity','Sikhism'=>'Sikhism','Buddhism'=>'Buddhism','Secular/Nonreligious/Agnostic/Atheist'=>'Secular/Nonreligious/Atheist','Other'=>'Other'],'Islam', ['class' => 'form-select select2 ','required', 'style' => 'width:100%', 'required', 'placeholder' => __('english.please_select')]) !!}
+                           </div> 
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('mobile', __('english.mobile') . ':') !!}
+                               <input type="text" name="mobile_no"  class="student_mobile form-control">
+
+                           </div>
+                           <div class="clearfix"></div>
+
+
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('email', __('english.email') . ':*') !!}
+                               {!! Form::email('email', null, ['class' => 'form-control','required','placeholder' => __('english.email'),'id' => 'student_email']) !!}
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.cnic_number', __('english.cnic_number') . ':*') !!}
+                               {!! Form::text('cnic_no', null, ['class' => 'form-control cnic','required', 'placeholder' => __('XXXXX-XXXXXXX-X')]) !!}
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.blood_group', __('english.blood_group') . ':') !!}
+                               {!! Form::select('blood_group',['O+'=>'O+', 'O-'=>'O-', 'A+'=>'A+','A-'=>'A-','B+'=>'B+','B-'=>'B-','AB+'=>'AB+','AB-'=>'AB-'],null, ['class' => 'form-select select2 ', 'style' => 'width:100%', 'placeholder' => __('english.please_select')]) !!}
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('nationality', __('english.nationality') . ':') !!}
+                               {!! Form::text('nationality', 'Pakistani', ['class' => 'form-control','placeholder' => __('english.nationality')]) !!}
+
+                           </div>
+                           <div class="clearfix"></div>
+
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('mother_tongue', __('english.mother_tongue') . ':') !!}
+                               {!! Form::text('mother_tongue', null, ['class' => 'form-control','placeholder' => __('english.mother_tongue')]) !!}
+
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('medical_history', __('english.medical_history') . ':') !!}
+                               {!! Form::textarea('medical_history', null, ['class' => 'form-control','rows' => 1,'placeholder' => __('english.medical_history')]) !!}
+
+                           </div> 
+                       
+                       </div>
+                   </div>
+                   <div class="col-md-2">
+                       <div class="row">
+                           <div class="col-md-12">
+                               <h5 class="card-title ">@lang('english.student_image')</h5>
+                               <img src="{{ url('uploads/student_image/default.png') }}" class="student_image card-img-top" width="192px" height="192px" alt="...">
+                               {!! Form::label('student_image', __('english.student_image') . ':') !!}
+                               {!! Form::file('student_image', ['accept' => 'image/*','class' => 'form-control upload_student_image']) !!}
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               {{-- Parent Guardian Detail --}}
+               <div class="row pt-4  remove">
+                   <h5 class="card-title text-primary">@lang('english.parent_detail')</h5>
+
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('english.father_name', __('english.father_name') . ':*') !!}
+                       {!! Form::text('father_name', null, ['class' => 'form-control', 'required','id'=>'father_name','placeholder' => __('english.father_name')]) !!}
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('english.father_phone', __('english.father_phone') . ':*') !!}
+                       {!! Form::text('father_phone',null, ['class' => 'form-control father_mobile','required','id'=>'father_phone', 'placeholder' => __('english.father_phone')]) !!}
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('english.father_occupation', __('english.father_occupation') . ':*') !!}
+                       {!! Form::text('father_occupation', null, ['class' => 'form-control','id'=>'father_occupation', 'placeholder' => __('english.father_occupation')]) !!}
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('english.father_cnic_no', __('english.father_cnic_no') . ':*') !!}
+                       {!! Form::text('father_cnic_no', null, ['class' => 'form-control cnic','id'=>'father_cnic_no', 'placeholder' => __('XXXXX-XXXXXXX-X')]) !!}
+                   </div>
+                   <div class="clearfix"></div>
+                  
+               </div>
+               <div class="row  remove">
+                   <div class="form-group col-md-12">
+                       <label>@lang('english.if_guardian_is')<small class="req form-check-label"> *</small>&nbsp;&nbsp;&nbsp;</label>
+                       <label class="radio-inline">
+                           <input class="form-check-input" type="radio" name="guardian_is" required value="Father" autocomplete="off"> @lang('english.father') </label>
+                       <label class="radio-inline">
+                           <input class="form-check-input" type="radio" name="guardian_is" value="Other" autocomplete="off"> @lang('english.other') </label>
+                       <span class="text-danger"></span>
+                   </div>
+               </div>
+
+               <div class="row pt-4  remove ">
+                   <div class="col-md-12">
+                       <div class="row">
+                           <h5 class="card-title text-primary">@lang('english.parent_guardian_detail')</h5>
+
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.guardian_name', __('english.guardian_name') . ':*') !!}
+                               {!! Form::text('guardian_name', null, ['class' => 'form-control', 'id'=>'guardian_name','required','placeholder' => __('english.guardian_name')]) !!}
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.guardian_relation', __('english.guardian_relation') . ':*') !!}
+                               {!! Form::text('guardian_relation', null, ['class' => 'form-control','required','id'=>'guardian_relation', 'required','placeholder' => __('english.guardian_relation')]) !!}
+                           </div>
+
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.guardian_occupation', __('english.guardian_occupation') . ':*') !!}
+                               {!! Form::text('guardian_occupation', null, ['class' => 'form-control','required','id'=>'guardian_occupation', 'placeholder' => __('english.guardian_occupation')]) !!}
+                           </div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.guardian_email', __('english.guardian_email') . ':*') !!}
+                               {!! Form::email('guardian_email', null, ['class' => 'form-control','required','id'=>'guardian_email', 'placeholder' => __('english.guardian_email')]) !!}
+                           </div>
+                           <div class="clearfix"></div>
+                           <div class="col-md-3 p-1">
+                               {!! Form::label('english.guardian_phone', __('english.guardian_phone') . ':*') !!}
+                               {!! Form::text('guardian_phone',null, ['class' => 'form-control guardian_mobile','id'=>'guardian_phone','required', 'placeholder' => __('english.guardian_phone')]) !!}
+                           </div>
+                           <div class="col-md-9 p-1">
+                               {!! Form::label('english.guardian_address', __('english.guardian_address') . ':*') !!}
+                               {!! Form::textarea('guardian_address', null, ['class' => 'form-control ','required','rows' => 1,'id'=>'guardian_address', 'placeholder' => __('english.guardian_address')]) !!}
+                           </div>
+                       </div>
+                   </div>
+
+
+               </div>
+                <div class="row pt-4  remove">
+                   <h5 class="card-title text-primary">@lang('english.student_address_details')</h5>
+
+
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('country_id', __('english.country_name') . ':*') !!}
+                       {!! Form::select('country_id',$countries,null, ['class' => 'form-select select2 ','required','id'=>'country_id', 'style' => 'width:100%', 'required', 'placeholder' => __('english.please_select')]) !!}
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('province_id', __('english.provinces') . ':*') !!}
+                       {!! Form::select('province_id',[],null, ['class' => 'form-select select2 ','required', 'style' => 'width:100%', 'required','id' => 'provinces_ids','placeholder' => __('english.please_select')]) !!}
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('district_id', __('english.district_name') . ':*') !!}
+                       {!! Form::select('district_id',[],null, ['class' => 'form-select select2 ','required', 'style' => 'width:100%', 'required','id' => 'district_ids','placeholder' => __('english.district_name')]) !!}
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('city_id', __('english.city_name') . ':*') !!}
+                       {!! Form::select('city_id',[],null, ['class' => 'form-select select2 ','required', 'style' => 'width:100%', 'required','id' => 'city_ids','placeholder' => __('english.city_name')]) !!}
+                   </div>
+
+                   <div class="clearfix"></div>
+                  
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('english.current_address', __('english.current_address') . ':*') !!}
+                       {!! Form::textarea('std_current_address', null, ['class' => 'form-control ','required','rows' => 1, 'placeholder' => __('english.current_address')]) !!}
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('english.permanent_address', __('english.permanent_address') . ':*') !!}
+                       {!! Form::textarea('std_permanent_address', null, ['class' => 'form-control ','required','rows' => 1, 'placeholder' => __('english.permanent_address')]) !!}
+                   </div>
+
+                   <div class="clearfix"></div>
+
+               </div> 
+
+               <div class="row pt-4">
+                  <h5 class="card-title text-primary">@lang('english.miscellaneous_details')</h5>
+                   <div class="row ">
+                       <div class="form-group col-md-12">
+                           <label>@lang('english.if_is_kmu_cat')<small class="req form-check-label"> *</small>&nbsp;&nbsp;&nbsp;</label>
+                           <label class="radio-inline">
+                               <input class="form-check-input" type="radio" name="is_kmu_cat" required value="1" autocomplete="off"> @lang('english.yes') </label>
+                           <label class="radio-inline">
+                               <input class="form-check-input" type="radio" name="is_kmu_cat" value="0" autocomplete="off"> @lang('english.no') </label>
+
+                           <span class="text-danger"></span>
+                       </div>
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('previous_college_name', __('english.previous_college_name') . ':*') !!}
+                       {!! Form::text('previous_college_name', null, ['class' => 'form-control','required','placeholder' => __('english.previous_college_name')]) !!}
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('board_name', __('english.board_name') . ':*') !!}
+                       {!! Form::text('board_name', null, ['class' => 'form-control','required','placeholder' => __('english.board_name')]) !!}
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('fsc_roll_no', __('english.fsc_roll_no') . ':*') !!}
+                       {!! Form::text('fsc_roll_no', null, ['class' => 'form-control','required','placeholder' => __('english.fsc_roll_no')]) !!}
+                   </div>
+                   <div class="col-md-3 p-1">
+                       {!! Form::label('fsc_marks', __('english.fsc_marks') . ':*') !!}
+                       {!! Form::text('fsc_marks', null, ['class' => 'form-control','required','placeholder' => __('english.fsc_marks')]) !!}
+                   </div>
+                  
+
+               </div>
+           </div>
+<div class="row pt-4">
+                       <h5 class="card-title text-info">@lang('english.document_details')</h5>
+
+
+                       <div class="col-md-4  p-1">
+                           {!! Form::label('resume', __('english.attach_fsc_mark_sheet') . ':') !!}
+                           {!! Form::file('fsc_mark_sheet', ['class' => 'form-control upload_document', 'accept' => implode(',', array_keys(config('constants.document_upload_mimes_types')))]) !!}
+                           @lang('english.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)])
+                           @includeIf('components.document_help_text')
+
+                       </div>
+                       <div class="col-md-4  p-1">
+                           {!! Form::label('cnic_front_side', __('english.attach_cnic_front_side') . ':') !!}
+                           {!! Form::file('cnic_front_side', ['class' => 'form-control upload_document', 'accept' => implode(',', array_keys(config('constants.document_upload_mimes_types')))]) !!}
+                           @lang('english.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)])
+                           @includeIf('components.document_help_text')
+
+                       </div>
+                       <div class="col-md-4  p-1">
+                           {!! Form::label('cnic_back_side', __('english.attach_cnic_back_side') . ':') !!}
+                           {!! Form::file('cnic_back_side', ['class' => 'form-control upload_document', 'accept' => implode(',', array_keys(config('constants.document_upload_mimes_types')))]) !!}
+                           @lang('english.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)])
+                           @includeIf('components.document_help_text')
+
+                       </div>
+
+                      
+
+
+                   </div>
+           <div class="row">
+               <div class="col-sm-12">
+
+                   <div class="d-lg-flex align-items-center mb-4 gap-3">
+                       <div class="ms-auto">
+                           <button id="yourSubmitButtonID" class="btn- btn btn-primary radius-30 mt-2 mt-lg-0">@lang('english.submit')</button>
+                       </div>
+
+                   </div>
+               </div>
+
+           </div>
+       </div>
+
+
+{!! Form::close() !!}
+                </div>
             </div>
         </div>
-        @endif
+    @endsection
+
+  @section('javascript')
+<script src="{{ asset('/js/lib/inputmask.bundle.js') }}"></script>
+    <script type="text/javascript">
+             $(document).ready(function() {
+
+$(document).on("change", ".campuses", function() {
+       var doc = $(this);
+       get_campus_class(doc);
+   });
 
 
-        @if (!empty($fill_in_the_blank_questions))
-        <div class="row" style=" ">
-            @if (!empty($input['fill_in_the_blanks_header']))
-
-            <div id="head1">
-                <h6>
-                    {{ $input['fill_in_the_blanks_header'] }}
-                </h6>
-            </div>
-            @endif
-            <table style="border:none">
-                <tbody>
-                    <tr class="tr1">
-                        <td colspan="4" class="td1 QuestHeadLeft" style="font-weight:bold;text-align:left;font-size:16px ">
-                            Q.{{ $question_count }}: {{ $input['fill_in_the_blanks_top_text'] }}
-                        </td>
-
-                        <td colspan="4" class="QuestHeadLeft textright  td1" style="">
-
-                            <span style="float:right;font-size:16px" id="qmrks"><strong>({{ $input['total_fill_marks'] }})</strong></span>
-
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-            @foreach ($fill_in_the_blank_questions as $fill)
-            <table style="border:none; margin-left:15px;" class="fillstable">
-                <tbody>
-                    <tr class="tr1 fillstable">
-                        <td colspan="8" class=" halfdevider td1 fillstable" style="text-align:left !important;font-size:14px !important">
-
-                            <span style="font-weight:bold !important font-size:14px; display: inline-block;width: 2%;text-align: center;">
-                                {{ numberToRoman($loop->iteration) }}:</span>
-
-                            <span style="margin-left:15px;">
-                                {!! $fill->question !!}</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            @endforeach
-
-
-
-        </div>
-
-        <div class="find">
-            <div contenteditable="true" class="pto" id="fill_pto" style="text-align:center;" data-text="Page break "></div>
-            <div class="custom_break" id=""> </div>
-        </div 
-        @endif 
-        {{-- ok --}} 
-        @if (!empty($short_questions))
-         <div class="row">
-
-        @if (!empty($input['short_question_header']))
-        <div id="head1">
-            <h6>{{ $input['short_question_header'] }}
-            </h6>
-        </div>
-        @endif
-        <table style="border:none">
-            <tbody>
-                <tr class="tr1">
-                    <td colspan="4" class="td1 QuestHeadLeft" style="font-weight:bold;text-align:left;font-size:16px ">
-                        Q.{{ $question_count }}: {{ $input['short_question_top_text'] }}
-                        @php
-                        $question_count++;
-
-                        @endphp
-                    </td>
-
-                    <td colspan="4" class="QuestHeadLeft textright  td1" style="">
-
-                        <span style="float:right;font-size:16px" id="qmrks"><strong>({{ $input['total_short_marks'] }})</strong></span>
-
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
-        @foreach ($short_questions as $short)
-        <table style="border:none ; margin-left:15px;" class="shortstable">
-            <tbody>
-                <tr class="tr1 shortstable">
-                    <td colspan="8" class=" halfdevider td1 shortstable" style="text-align:left!important; font-size:14px !important">
-                        <span style="font-weight:bold !important font-size:14px; display: inline-block;width: 2%;text-align: center;">
-                            {{ numberToRoman($loop->iteration) }}:</span>
-
-                        <span style="margin-left:15px;">
-                            {!! $short->question !!}</span>
-                    </td>
-
-                </tr>
-            </tbody>
-        </table>
-        {{-- Ans.<hr><br><br><hr> --}}
-        @endforeach
-    
-    <div class="find">
-
-        <div contenteditable="true" class="pto" id="short_pto" style="text-align:center;" data-text="Page break "></div>
-        <div class="custom_break" id=""> </div>
-    </div>
-    @endif
+     var validator=$("form#student_add_form").validate({
+    rules: {
+         
+           first_name: {
+               required: true,
+           },
+          
+          student_image: {
+               required: true,
+               extension: "jpg|jpeg|png",
+                // 5 MB in bytes
+           },
+           cnic_front_sid: {
+               required: true,
+               extension: "jpg|jpeg|png",
+               
+           },
+           cnic_back_side: {
+               required: true,
+               extension: "jpg|jpeg|png",
+               
+           },
+           fsc_mark_sheet: {
+               required: true,
+               extension: "jpg|jpeg|png|pdf",
+               
+           },
+           // Add rules for other fields as needed
+       },
+       messages: {
+           // Existing messages...
+              // Existing messages...
+           first_name: {
+               required: "Please enter first name",
+           },
+           student_image: {
+               required: "Please upload a student image.",
+               extension: "Please upload a valid image file (jpg, jpeg, or png).",
+              
+           },
+           cnic_front_side: {
+               required: "Please upload the NIC front side image.",
+               extension: "Please upload a valid image file (jpg, jpeg, or png).",
+              
+           },
+           cnic_back_side: {
+               required: "Please upload the NIC back side image.",
+               extension: "Please upload a valid image file (jpg, jpeg, or png).",
+              
+           },
+           fsc_mark_sheet: {
+               required: "Please upload the FSC mark sheet.",
+               extension: "Please upload a valid image file or PDF.",
+              
+           },
+          
+           // Add messages for other fields as needed
+       },
 
 
-    {{-- ok --}}
-    @if (!empty($long_questions))
+   
+   }); 
 
-    <div class="row">
-        @if (!empty($input['long_question_header']))
+   // Now, handle the form submission using a click event
+   $("#yourSubmitButtonID").on("click", function (event) {
+       event.preventDefault(); // Prevent the default form submission
 
-        <div id="head1">
-            <h6>{{ $input['long_question_header'] }}
-            </h6>
-        </div>
-        @endif
-        @if($input['long_question_choice'] >0)
+       // Manually trigger the validation
+       if (validator.form()) {
+           // If the form is valid, submit it
+           $("form#student_add_form").submit();
+       }
+   });
 
+         ///students
+   $(".student_mobile").intlTelInput({
+       initialCountry: "pk",
+       separateDialCode: true,
+       hiddenInput: "mobile_no",
 
-        <table style="border:none">
-            <tbody>
-                <tr class="tr1">
-                    <td colspan="4" class="td1 QuestHeadLeft" style="font-weight:bold;text-align:left;font-size:16px; ">
-                        Q.{{ $question_count }}: {{ $input['long_top_text'] }}
-                        @php
-                        $question_count++;
-                        @endphp
-                    </td>
+       utilsScript: base_path + "/js/intl-tel-input/utils.js",
+   });
 
-                    <td colspan="4" class="QuestHeadLeft textright  td1" style="">
+   $(".mother_mobile").intlTelInput({
+       initialCountry: "pk",
+       separateDialCode: true,
+       hiddenInput: "mother_phone",
 
-                        <span style="float:right;font-size:16px" id="qmrks"><strong>({{ $input['total_long_marks'] }})</strong></span>
+       utilsScript: base_path + "/js/intl-tel-input/utils.js",
+   });
 
-                    </td>
-                </tr>
+   $(".father_mobile").intlTelInput({
+       initialCountry: "pk",
+       separateDialCode: true,
+       hiddenInput: "father_phone",
 
-            </tbody>
-        </table>
-        @foreach ($long_questions as $long)
+       utilsScript: base_path + "/js/intl-tel-input/utils.js",
+   });
 
-        <table style="border:none">
-            <tbody>
+   $(".guardian_mobile").intlTelInput({
+       initialCountry: "pk",
+       separateDialCode: true,
+       hiddenInput: "guardian[guardian_phone]",
 
-                <tr class="tr1 shortstable">
-                    <td colspan="8" class=" halfdevider td1 shortstable" style="text-align:left !important;font-size:14px !important">
-                        <span style="font-weight:bold !important font-size:14px; display: inline-block;width: 2%;text-align: center;">
-                            {{ numberToRoman($loop->iteration) }}:</span>
+       utilsScript: base_path + "/js/intl-tel-input/utils.js",
+   });
+       $('input:radio[name="guardian_is"]').change(function() {
+       if ($(this).is(":checked")) {
+           var value = $(this).val();
+           if (value == "Father") {
+               $("#guardian_name").val($("#father_name").val());
+               $("#guardian_phone").val($("#father_phone").val());
+               $("#guardian_occupation").val($("#father_occupation").val());
+               $("#guardian_relation").val("Father");
+           
+           } else {
+               $("#guardian_name").val("");
+               $("#guardian_phone").val("");
+               $("#guardian_occupation").val("");
+               $("#guardian_relation").val("");
+           }
+       }
+   });
+   });
+ function get_campus_class(doc) {
+       //Add dropdown for sub units if sub unit field is visible
+       var campus_id = doc.closest(".row").find(".campuses").val();
+       $.ajax({
+           method: "GET",
+           url: "/classes/get_campus_classes",
+           dataType: "html",
+           data: {
+               campus_id: campus_id,
+           },
+           success: function(result) {
+               if (result) {
+                   doc.closest(".row").find(".classes").html(result);
+               }
+           },
+       });
+   }
 
-                        <span style="margin-left:15px;">
-                            {!! $long->question !!}</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        @endforeach
-        @else
-
-        @foreach ($long_questions as $long)
-
-        <table style="border:none">
-            <tbody>
-                <tr class="tr1">
-                    <td colspan="4" class="td1 QuestHeadLeft" style="text-align:left;font-size:12px ">
-                        Q.{{ $question_count }}: {!! $long->question !!}</p>
-                        @php
-                        $question_count++;
-                        @endphp
-                    </td>
-
-                    <td colspan="4" class="QuestHeadLeft textright  td1" style="">
-
-                        <span style="float:right;font-size:16px" id="qmrks"><strong>({{ $input['long_question_question_marks'] }})</strong></span>
-
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
-        @endforeach
-
-        @endif
-
-    </div>
-    <div class="find">
-        <div contenteditable="true" class="pto" id="long_pto" style="text-align:center;" data-text="Page break "></div>
-        <div class="custom_break" id=""> </div>
-    </div>
-    @endif
-    {{-- ok --}}
-
-    </div>
-
-
-
-    <script>
-        function printData() {
-            checkPto('mcq_pto');
-            checkPto('fill_pto');
-            checkPto('short_pto');
-            checkPto('long_pto');
-
-
-            window.print();
-        }
-
-        function checkPto(idpto) {
-            var checkpto = $('#' + idpto);
-            if (checkpto.text().length > 1 && checkpto) {
-                checkpto.closest(".find").find(".custom_break").addClass("pagebreak");;
-            }
-
-        }
-
-    </script>
-</body>
-
-</html>
-
+</script>
+    @endsection

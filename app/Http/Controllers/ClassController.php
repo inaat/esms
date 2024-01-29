@@ -257,7 +257,7 @@ if (auth()->user()->can('class.update')) {
         if (!empty($request->input('campus_id'))) {
             $campus_id = $request->input('campus_id');
             
-            $system_settings_id = session()->get('user.system_settings_id');
+            $system_settings_id = 1;
             $classes = Classes::forDropdown($system_settings_id,false,$campus_id);
             $html = '<option value="">' . __('english.please_select') . '</option>';
             //$html = '';

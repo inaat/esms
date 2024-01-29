@@ -221,8 +221,8 @@ class ProvinceController extends Controller
         if (!empty($request->input('country_id'))) {
             $country_id = $request->input('country_id');
             
-            $system_settings_id = session()->get('user.system_settings_id');
-            $provinces = Province::forDropdown($system_settings_id,false,$country_id);
+            // $system_settings_id = session()->get('user.system_settings_id');
+            $provinces = Province::forDropdown(1,false,$country_id);
             $html = '<option value="">' . __('english.please_select') . '</option>';
             //$html = '';
             if (!empty($provinces)) {

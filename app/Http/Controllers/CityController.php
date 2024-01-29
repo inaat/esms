@@ -199,7 +199,7 @@ class CityController extends Controller
     {
         if (!empty($request->input('district_id'))) {
             $district_id = $request->input('district_id');
-            $system_settings_id = session()->get('user.system_settings_id');
+            $system_settings_id = 1;
             $cities = City::forDropdown($system_settings_id, false, $district_id);
             $html = '<option value="">' . __('english.please_select') . '</option>';
             //$html = '';

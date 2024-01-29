@@ -93,7 +93,7 @@
                                 </div>
                             </div>
                             <div class="button float-left">
-                                <a href="https://admissions.imdcollege.edu.pk/" target="_blank" class="main-btn">Apply
+                                <a href="{{ url('online-apply') }}" target="_blank" class="main-btn">Apply
                                     Now</a>
                             </div>
                         </div>

@@ -150,6 +150,9 @@
     <!--====== PRELOADER PART START ======-->
 
     @include('frontend.layouts.partials.header')
+         @if (session('status'))
+        <input type="hidden" id="status_span" data-status="{{ session('status.success') }}" data-msg="{{ session('status.msg') }}">
+        @endif
     @yield("wrapper")
      
 <!-- ======= Contact Section ======= -->
@@ -246,6 +249,14 @@
         <script src="{{ url('frontold/front_assets/js/script.js')}}"></script>
   <script type="text/javascript">
         base_path = "{{url('/')}}";
+         if ($('#status_span').length) {
+        var status = $('#status_span').attr('data-status');
+        if (status === '1') {
+            toastr.success($('#status_span').attr('data-msg'));
+        } else if (status == '' || status === '0') {
+            toastr.error($('#status_span').attr('data-msg'));
+        }
+    }
         //used for push notification
         $.ajaxSetup({
             beforeSend: function(jqXHR, settings) {
