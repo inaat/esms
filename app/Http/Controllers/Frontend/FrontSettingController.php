@@ -48,10 +48,12 @@ class FrontSettingController extends Controller
         ]);
         
         $system_details = $request->only(['school_name','address','reg_no','email','phone_no',
-        'logo_image','page_banner','main_color','hover_color','linear_gradient','facebook', 'youTube','instagram','linkedin','twitter','skype','facebook_embed','map_url']);
+        'logo_image','page_banner','main_color','hover_color','linear_gradient','facebook', 'youTube','instagram','linkedin','twitter','skype',
+        'map_url']);
 
 
-        //upload logo
+        //upload logo 
+        //'facebook_embed'
      
         $logo_image = $this->commonUtil->uploadFile($request, 'logo_image', 'front_image', 'image');
         if (!empty($logo_image)) {

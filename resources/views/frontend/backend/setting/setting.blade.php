@@ -52,10 +52,10 @@
                  </div>
                                   <div class="clearfix"></div>
 
-                 <div class="col-md-6 p-3">
+                 {{-- <div class="col-md-6 p-3">
                      {!! Form::label('facebook_page', __('english.facebook_page') . ':*', ['classs' => 'form-lable']) !!}
                      {!! Form::textarea('facebook_embed', $front_settings->facebook_embed, ['class' => 'form-control','placeholder' => __('english.facebook_page')]) !!}
-                 </div>
+                 </div> --}}
                  <div class="col-md-6 p-3">
                      {!! Form::label('map_url', __('english.map_url') . ':*', ['classs' => 'form-lable']) !!}
                      {!! Form::textarea('map_url', $front_settings->map_url, ['class' => 'form-control','placeholder' => __('english.map_url')]) !!}
