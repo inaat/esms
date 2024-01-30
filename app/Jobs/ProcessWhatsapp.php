@@ -9,11 +9,13 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\User;
+use App\Models\WhatsappDevice;
 use App\Models\WhatsappLog;
 use Exception;
-use Illuminate\Support\Facades\Http;
-use App\Models\HumanRM\HrmEmployee;
+
+
+use App\Services\WhatsappApiService;
+
 
 class ProcessWhatsapp implements ShouldQueue
 {
@@ -23,6 +25,7 @@ class ProcessWhatsapp implements ShouldQueue
     protected $number;
     protected $logId;
     protected $postData;
+    private $whatsappApiService;
 
 
     /**
@@ -30,12 +33,14 @@ class ProcessWhatsapp implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($message, $number, $logId, $postData)
+    public function __construct($message, $number, $logId, $postData,$whatsappApiService)
     {
         $this->message = $message;
         $this->number = $number;
         $this->logId = $logId;
         $this->postData = $postData;
+        $this->whatsappApiService = $whatsappApiService;
+
     }
 
     /**
@@ -46,110 +51,42 @@ class ProcessWhatsapp implements ShouldQueue
     public function handle()
     {
         $whatsappLog = WhatsappLog::with('whatsappGateway')->find(trim($this->logId));
+     
         if(!$whatsappLog){
             return false;
         }
-        if($this->message != null){
-            $body = ['text'=>$this->message];
-        }
-        if(array_key_exists('type', $this->postData)){
-            if($this->postData['type'] == "Image" ){
-                $body = [
-                    'image'=>[
-                        'url'=>url($this->postData['url_file'])
-                    ],
-                    'caption'=>$this->message,
-                ];
-
-            }
-            else if($this->postData['type'] == "Audio" ){
-                $body = [
-                    'audio'=>[
-                        'url'=>url($this->postData['url_file'])
-                    ],
-                    'caption'=>$this->message,
-                ];
-            }
-            else if($this->postData['type'] == "Video" ){
-                $body = [
-                    'video'=>[
-                        'url'=>url($this->postData['url_file'])
-                    ],
-                    'caption'=>$this->message,
-                ];
-            }
-            else if($this->postData['type'] == "pdf" ){
-                $body = [
-                    'document'=>[
-                        'url'=>url($this->postData['url_file'])
-                    ],
-                    'mimetype' => 'application/pdf',
-                    'fileName' => $this->postData['name'],
-                    'caption'  => $this->message,
-                ];
-            }
-        }
+      
+     
 
         //send api
         $response = null;
         try{
-            
-            $apiURL = 'http://whatsapp.sfsc.edu.pk/message/send?id='.$whatsappLog->whatsappGateway->name;
-            $postInput = [
-                'receiver' => trim('923428927305'),
-                'message' => $body
-            ];
-            $headers = [
-                'Content-Type' => 'application/json',
-            ];
-            $response = Http::withoutVerifying()->withHeaders($headers)->post($apiURL, $postInput);
-           //dd(json_decode($response->getBody(), true));
+            $whatsapp = WhatsappDevice::first();
+            //$response=$this->whatsappApiService->sendTestMsg($whatsapp->name,'923428927305','dfghj');
+            $response=$this->whatsappApiService->sendTestMsg($whatsapp->name, str_replace('+', '',$this->number),$this->message);
+            \Log::emergency($response);
+        \Log::emergency("response");
+           
             if ($response) {
-                $res = json_decode($response->getBody(), true);
-                if($res['success']){
+                $res = $response;
+
+                if($res['error'] ==false){
                     $whatsappLog->status = WhatsappLog::SUCCESS;
                     $whatsappLog->save();
                 }else{
                     $whatsappLog->status = WhatsappLog::FAILED;
                     $whatsappLog->response_gateway = $res['message'];
                     $whatsappLog->save();
-                    $user = User::find($whatsappLog->user_id);
-                    if($user){
-                        // $messages = str_split($whatsappLog->message,260);
-                        // $totalcredit = count($messages);
-                        // $user->whatsapp_credit += $totalcredit;
-                        // $user->save();
-                        // $creditInfo = new WhatsappCreditLog();
-                        // $creditInfo->user_id = $whatsappLog->user_id;
-                        // $creditInfo->type = "+";
-                        // $creditInfo->credit = $totalcredit;
-                        // $creditInfo->trx_number = trxNumber();
-                        // $creditInfo->post_credit =  $user->whatsapp_credit;
-                        // $creditInfo->details = $totalcredit." Credit Return ".$whatsappLog->to." is Falied";
-                        // $creditInfo->save();
-                    }
+
                 }
             }else{
                 $whatsappLog->status = WhatsappLog::FAILED;
                 $whatsappLog->response_gateway = 'Error::2 Failed to send the message.';
                 $whatsappLog->save();
-                $user = User::find($whatsappLog->user_id);
-                if($user){
-                    // $messages = str_split($whatsappLog->message,260);
-                    // $totalcredit = count($messages);
-                    // $user->whatsapp_credit += $totalcredit;
-                    // $user->save();
-                    // $creditInfo = new WhatsappCreditLog();
-                    // $creditInfo->user_id = $whatsappLog->user_id;
-                    // $creditInfo->type = "+";
-                    // $creditInfo->credit = $totalcredit;
-                    // $creditInfo->trx_number = trxNumber();
-                    // $creditInfo->post_credit =  $user->whatsapp_credit;
-                    // $creditInfo->details = $totalcredit." Credit Return ".$whatsappLog->to." is Falied";
-                    // $creditInfo->save();
-                }
+                
             }
-        } catch(Exception $exception){
+        } catch(Exception $e){
+            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
         }
     }

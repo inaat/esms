@@ -8,8 +8,16 @@ use App\Rules\WhatsappDeviceRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
+use App\Services\WhatsappApiService;
+
 class WhatsappDeviceController extends Controller
 {
+    private $whatsappApiService;
+
+    public function __construct(WhatsappApiService $whatsappApiService)
+    {
+        $this->whatsappApiService = $whatsappApiService;
+    }
     /**
      * create form show
      */
@@ -252,84 +260,143 @@ class WhatsappDeviceController extends Controller
      *
      * @param Request $request
      */
-    public function getWaqr(Request $request)
-    {
-        $whatsapp = WhatsappDevice::where('id', $request->id)->first();
+    // public function getWaqr(Request $request)
+    // {
+    //     $whatsapp = WhatsappDevice::first();
       
-        if($whatsapp->multidevice == "YES"){
-            $islegacy = "false";
-        }else{
-            $islegacy = "true";
-        }
-        $findWhatsappsession = "";
-        try {
-            $findWhatsappsession = Http::withoutVerifying()->get('http://whatsapp.sfsc.edu.pk/session/find/'.$whatsapp->name);
-            $findWhatsappsession = json_decode($findWhatsappsession);
+    //     if($whatsapp->multidevice == "YES"){
+    //         $islegacy = "false";
+    //     }else{
+    //         $islegacy = "true";
+    //     }
+    //     $findWhatsappsession = "";
+    //     try {
+    //         $findWhatsappsession = Http::withoutVerifying()->get('http://whatsapp.sfsc.edu.pk/session/find/'.$whatsapp->name);
+    //         $findWhatsappsession = json_decode($findWhatsappsession);
           
-        } catch (Exception $e) {
-            $data = 'error';
-            session()->put('error','Error in connecting whatsapp server');
-        }
-        $qr = "";
-        $data = null;
-        if ($findWhatsappsession) {
-            if($findWhatsappsession->message == "Session found."){
-                $whatsapp->status = 'connected';
-                $data = 'connected';
-                $qr = asset('assets/images/done.gif');
+    //     } catch (Exception $e) {
+    //         $data = 'error';
+    //         session()->put('error','Error in connecting whatsapp server');
+    //     }
+    //     $qr = "";
+    //     $data = null;
+    //     if ($findWhatsappsession) {
+    //         if($findWhatsappsession->message == "Session found."){
+    //             $whatsapp->status = 'connected';
+    //             $data = 'connected';
+    //             $qr = asset('assets/images/done.gif');
                 
-                session()->put('message','Successfully connected');
-            }else{
+    //             session()->put('message','Successfully connected');
+    //         }else{
                 
-                if ($whatsapp->status=='initiate' || $whatsapp->status=='disconnected') {
-                    $whatsapp->status = 'disconnected';
+    //             if ($whatsapp->status=='initiate' || $whatsapp->status=='disconnected') {
+    //                 $whatsapp->status = 'disconnected';
 
-                    try {
+    //                 try {
 
-                        $apiURL = 'http://whatsapp.sfsc.edu.pk/session/add';
+    //                     $apiURL = 'http://whatsapp.sfsc.edu.pk/session/add';
 
-                        $postInput = [
-                            'id' => $whatsapp->name,
-                            'isLegacy' => $islegacy,
-                            'domain' => 'https://xsender.igensolutionsltd.com'
-                        ];
+    //                     $postInput = [
+    //                         'id' => $whatsapp->name,
+    //                         'isLegacy' => $islegacy,
+    //                         'domain' => 'https://xsender.igensolutionsltd.com'
+    //                     ];
 
-                        $headers = [
-                            'Content-Type' => 'application/json',
-                            'Cache-Control' => 'no-cache'
-                        ];
+    //                     $headers = [
+    //                         'Content-Type' => 'application/json',
+    //                         'Cache-Control' => 'no-cache'
+    //                     ];
 
-                        $response = Http::withoutVerifying()->withHeaders($headers)
-                                                            ->post($apiURL, $postInput);
-                        $statusCode = $response->status();
-                        $responseBody = json_decode($response->getBody(), true);
-                       // dd($responseBody);
-                        if (array_key_exists('data',$responseBody)) {
-                            if (array_key_exists('qr',$responseBody['data'])) {
-                                $qr = $responseBody['data']['qr'];
-                            }
-                        }
+    //                     $response = Http::withoutVerifying()->withHeaders($headers)
+    //                                                         ->post($apiURL, $postInput);
+    //                     $statusCode = $response->status();
+    //                     $responseBody = json_decode($response->getBody(), true);
+    //                    // dd($responseBody);
+    //                     if (array_key_exists('data',$responseBody)) {
+    //                         if (array_key_exists('qr',$responseBody['data'])) {
+    //                             $qr = $responseBody['data']['qr'];
+    //                         }
+    //                     }
 
-                    } catch (Exception $e) {
-                        $data = 'error';
-                        session()->put('error','Error in connecting whatsapp server');
-                    }
+    //                 } catch (Exception $e) {
+    //                     $data = 'error';
+    //                     session()->put('error','Error in connecting whatsapp server');
+    //                 }
 
-                }
-                else{
-                    $data = null;
-                }
-            }
-            $whatsapp->save();
-        }else{
-            $data = 'error';
-            session()->put('error','Error in connecting whatsapp server');
-        }
-        return json_encode([
-            'response' => $whatsapp,
+    //             }
+    //             else{
+    //                 $data = null;
+    //             }
+    //         }
+    //         $whatsapp->save();
+    //     }else{
+    //         $data = 'error';
+    //         session()->put('error','Error in connecting whatsapp server');
+    //     }
+    //     return json_encode([
+    //         'response' => $whatsapp,
+    //         'data' => $data,
+    //         'qr' => $qr
+    //     ]);
+    // }
+
+
+
+public function getWaqr()
+{
+    $output = [];
+    $whatsapp = WhatsappDevice::first();
+
+    try {
+        $this->whatsappApiService->instanceInit($whatsapp->name);
+    } catch (\Exception $e) {
+        $data = 'error';
+        $output = [
+            'success' => false,
             'data' => $data,
-            'qr' => $qr
-        ]);
+            'msg' => 'Error in connecting WhatsApp server'
+        ];
     }
 
+    $qr = "";
+    $data = null;
+    sleep(3);
+    $findWhatsappSession = $this->whatsappApiService->getQrCodebase64($whatsapp->name);
+    
+    if ($findWhatsappSession) {
+        if ($findWhatsappSession['message'] == 'Phone already connected') {
+            $whatsapp->status = 'connected';
+            $data = 'connected';
+            $qr = url('assets/images/done.gif');
+            session()->put('message', 'Successfully connected');
+        } else {
+            try {
+                if (!empty($findWhatsappSession['qrcode'])) {
+                    $qr = $findWhatsappSession['qrcode'];
+                }
+            } catch (\Exception $e) {
+                $data = 'error';
+                $output = [
+                    'success' => true,
+                    'data' => $data,
+                    'msg' => 'Error in connecting WhatsApp server'
+                ];
+            }
+        }
+        $whatsapp->save();
+    } else {
+        $data = 'error';
+        $output = [
+            'success' => true,
+            'data' => $data,
+            'msg' => 'Error in connecting WhatsApp server'
+        ];
+    }
+
+    return json_encode([
+        'data' => $data,
+        'qr' => $qr,
+        'output' => $output
+    ]);
+}
 }

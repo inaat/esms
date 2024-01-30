@@ -192,40 +192,9 @@
           </div>
 
         </div>
+ @include('frontend.layouts.contact_us')
 
-        <div class="row" data-aos="fade-up" data-aos-delay="100">
-
-          <div class="col-lg-6 ">
-              {{-- <iframe src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Khwaza%20khela%20Swat+(Swat%20Collegiate%20School%20&amp;%20college)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" style="border:0; width: 100%; height: 384px;" allowfullscreen="" loading="lazy"></iframe> --}}
-              <iframe src="{{ session()->get("front_details.map_url") }}" style="border:0; width: 100%; height: 384px;" allowfullscreen="" loading="lazy"></iframe>
-          </div>
-
-          <div class="col-lg-6">
-            <form action="https://npskedu.in/Contact/sendenquiry" method="post" role="form" class="php-email-form">
-              <div class="row">
-                <div class="col form-group">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required="">
-                </div>
-                <div class="col form-group">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required="">
-                </div>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Mobile" required="">
-              </div>
-              <div class="form-group">
-                <textarea class="form-control" name="message" rows="5" placeholder="Message" required=""></textarea>
-              </div>
-              <div class="my-3">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Your message has been sent. Thank you!</div>
-              </div>
-              <div class="text-center"><button type="submit">Send Message</button></div>
-            </form>
-          </div>
-
-        </div>
+        
 
       </div>
     </section>
@@ -383,6 +352,70 @@
         });
 
     </script>
+    <script>
+$(document).ready(function() {
+    $('#contact_add_form').submit(function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        // Get the form data
+        var formData = new FormData($(this)[0]);
+
+        // Hide submit button
+        $('button[type="submit"]').hide();
+
+        // Display loading message
+        $('.loading').show();
+        $('.error-message').empty();
+        $('.sent-message').empty();
+
+        // Reference to the form for resetting after success
+        var form = $(this);
+
+        // Make the AJAX request
+        $.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                // Hide loading message
+                $('.loading').hide();
+
+                // Check the JSON response
+                if (response && response.message) {
+                    // Display success message from the server
+                    $('.sent-message').text(response.message).show();
+                    
+                    // Clear form fields
+                    form[0].reset();
+                } else {
+                    // Display a generic success message if the response is unexpected
+                    $('.sent-message').text('Your message has been sent. Thank you!').show();
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                // Hide loading message
+                $('.loading').hide();
+
+                // Check if the server returned a JSON error response
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    // Display the error message from the server
+                    $('.error-message').text('Error: ' + xhr.responseJSON.error).show();
+                } else {
+                    // Display a generic error message if the response is unexpected
+                    $('.error-message').text('Error: ' + errorThrown).show();
+                }
+            },
+            complete: function() {
+                // Show submit button after AJAX request is complete
+                $('button[type="submit"]').show();
+            }
+        });
+    });
+});
+</script>
+
 </body>
 
 </html>

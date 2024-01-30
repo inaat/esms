@@ -23,6 +23,20 @@ class WhatsappController extends Controller
     }
     public function index()
     {
+       /*  $smslogs = WhatsappLog::where('status','4')->get();
+         foreach($smslogs as $sms){
+             $t=explode(':',$sms->message);
+             $roll=explode('@',$t[1]);
+             if(!empty($roll)){
+             $student=Student::where('roll_no',$roll[0])->first();
+             $student->is_whatsapp='yes';
+             $student->save();
+             }else{
+            dd($student);
+             }
+            
+         }*/
+         
         if (request()->ajax()) {
             $smslogs = WhatsappLog::orderBy('id', 'DESC')
             ->leftJoin('users AS u', 'whatsapp_logs.user_id', '=', 'u.id')
@@ -35,8 +49,18 @@ class WhatsappController extends Controller
                 'whatsapp_logs.response_gateway',
                 DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by")
             ]);            
-         
-           
+          if (!empty(request()->start_date) && !empty(request()->end_date)) {
+                $start = request()->start_date;
+                $end =  request()->end_date;
+                $smslogs->whereDate('whatsapp_logs.initiated_time', '>=', $start)
+                        ->whereDate('whatsapp_logs.initiated_time', '<=', $end);
+            }
+              if (request()->has('status')) {
+                $status = request()->get('status');
+                if (!empty($status)) {
+                    $smslogs->where('whatsapp_logs.status', $status);
+                }
+            }
             $datatable = Datatables::of($smslogs)
         ->addColumn(
             'action',
@@ -85,7 +109,7 @@ class WhatsappController extends Controller
               ->make(true);
         }
         $title = "All Whatsapp Message History";
-        $device= WhatsappDevice::find(8);
+        $device= WhatsappDevice::first();
 
        // dd($rows);
 
@@ -97,7 +121,7 @@ class WhatsappController extends Controller
         
         try {
             if (request()->ajax()) {
-                $device= WhatsappDevice::find(8);
+                $device= WhatsappDevice::first();
                 $device->sms_status=request()->get('sms_status');
                 $device->save();
                
@@ -126,7 +150,7 @@ class WhatsappController extends Controller
 
       
                 
-        $device= WhatsappDevice::find(8);
+        $device= WhatsappDevice::first();
 
         $date=Carbon::now()->format('Y-m-d');
         $attendances = Attendance::where('type','absent')->whereDate('clock_in_time',$date)->get();
@@ -169,11 +193,22 @@ class WhatsappController extends Controller
 
     try {
 
-      
-                
+      /* $smslogs = WhatsappLog::whereDate('whatsapp_logs.initiated_time', '2023-07-29')->where('status',3)->get();
+           $addSecond = 0;
+        foreach($smslogs as $log){
+            if(strlen(trim($log->to)) > 10){
+             // $string has at least one non-space character
+
+                 $addSecond =  $addSecond +30;
+
+            $this->notificationUtil->sendSmsOnWhatsappResend($log->id,$addSecond);
+            }
+           
+        }*/
                
 
-        DB::table('jobs')->delete();        
+      DB::table('jobs')->delete();   
+    // dd($smslogs);
      
         $output = ['success' => true,
                         'msg' => __("english.student_mapping_success")

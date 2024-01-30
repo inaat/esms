@@ -71,6 +71,7 @@ Route::middleware(['auth','language','SetSessionData','timezone','AdminSidebarMe
 
     Route::get('/payment/student/get_student_detail/{student_id}/{campus_id}', 'FeeTransactionPaymentController@getStudentPaymentDetails');
     Route::resource('setting', 'SystemSettingController');
+    Route::post('/test-email', 'SystemSettingController@testEmailConfiguration');
     Route::post('/test-sms', 'SystemSettingController@testSmsConfiguration');
     Route::resource('designation', 'DesignationController');
     Route::resource('campuses', 'CampusController');
@@ -315,6 +316,8 @@ Route::middleware(['FrontSessionData'])->group(function () {
     Route::get('event-{slug}/{id}', 'Frontend\FrontHomeController@event_show');
     Route::get('online-apply', 'Frontend\FrontHomeController@onlineApply');
     Route::post('save-online-apply', 'Frontend\FrontHomeController@saveApply');
+    Route::post('/contact-submit', 'Frontend\FrontHomeController@submitForm')->name('contact.submit');
+
     Auth::routes();
 
 });

@@ -8,6 +8,8 @@ use App\Utils\Util;
 use App\Utils\OrganizationUtil;
 use App\Models\Session;
 use App\Models\Currency;
+use App\Notifications\TestEmailNotification;
+use Illuminate\Support\Facades\Mail;
 
 class SystemSettingController extends Controller
 {
@@ -236,4 +238,37 @@ class SystemSettingController extends Controller
 
         return $output;
     }
+
+
+       /**
+     * Handles the testing of email configuration
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function testEmailConfiguration(Request $request)
+    {
+  //  return 'Test email sent successfully!';
+        try {
+            $email_settings = $request->input();
+     
+            $data['email_settings'] = $email_settings;
+           // dd($data['email_settings']);
+            \Notification::route('mail', $email_settings['mail_from_address'])
+            ->notify(new TestEmailNotification($data));
+
+            $output = [
+                'success' => 1,
+                'msg' => __('lang_v1.email_tested_successfully')
+            ];
+        } catch (\Exception $e) {
+            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            $output = [
+                'success' => 0,
+                'msg' => $e->getMessage()
+            ];
+        }
+
+        return $output;
+    }
+
 }

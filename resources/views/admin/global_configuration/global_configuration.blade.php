@@ -205,7 +205,37 @@
             },
         });
     });
-
+$('#test_email_btn').click( function() {
+        var data = {
+            mail_driver: $('#mail_driver').val(),
+            mail_host: $('#mail_host').val(),
+            mail_port: $('#mail_port').val(),
+            mail_username: $('#mail_username').val(),
+            mail_password: $('#mail_password').val(),
+            mail_encryption: $('#mail_encryption').val(),
+            mail_from_address: $('#mail_from_address').val(),
+            mail_from_name: $('#mail_from_name').val(),
+        };
+        $.ajax({
+            method: 'post',
+            data: data,
+            url: "{{ action('SystemSettingController@testEmailConfiguration') }}",
+            dataType: 'json',
+            success: function(result) {
+                if (result.success == true) {
+                    swal({
+                        text: result.msg,
+                        icon: 'success'
+                    });
+                } else {
+                    swal({
+                        text: result.msg,
+                        icon: 'error'
+                    });
+                }
+            },
+        });
+        });
           });
       </script>
 

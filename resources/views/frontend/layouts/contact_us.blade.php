@@ -37,11 +37,11 @@
         <div class="row" data-aos="fade-up" data-aos-delay="100">
 
           <div class="col-lg-6 ">
-              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.794113172912!2d77.26328741508136!3d28.575944582440215!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce3993aaaaaa9%3A0x6586833e65c1d4f2!2sNational%20Public%20School!5e0!3m2!1sen!2sin!4v1627455414618!5m2!1sen!2sin" style="border:0; width: 100%; height: 384px;" allowfullscreen="" loading="lazy"></iframe>
+              <iframe src="{{ session()->get("front_details.map_url") }}" style="border:0; width: 100%; height: 384px;" allowfullscreen="" loading="lazy"></iframe>
           </div>
 
           <div class="col-lg-6">
-            <form action="https://npskedu.in/Contact/sendenquiry" method="post" role="form" class="php-email-form">
+            {!! Form::open(['url' => action('\App\Http\Controllers\Frontend\FrontHomeController@submitForm'), 'method' => 'post','class'=>'php-email-form','id' =>'contact_add_form' ,'files' => true]) !!}
               <div class="row">
                 <div class="col form-group">
                   <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
@@ -50,8 +50,14 @@
                   <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
                 </div>
               </div>
-              <div class="form-group">
+                            <div class="row">
+
+              <div class="col form-group">
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+              </div>
+              <div class="col form-group">
                 <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Mobile" required>
+              </div>
               </div>
               <div class="form-group">
                 <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
@@ -62,7 +68,7 @@
                 <div class="sent-message">Your message has been sent. Thank you!</div>
               </div>
               <div class="text-center"><button type="submit">Send Message</button></div>
-            </form>
+ {!! Form::close() !!}
           </div>
 
         </div>

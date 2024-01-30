@@ -428,4 +428,33 @@ class NotificationUtil extends Util
 
         return $whatsapp_link;
     }
+
+
+    public function configureEmail($notificationInfo)
+    {
+        $email_settings = $notificationInfo['email_settings'];
+
+
+        //Check if prefered email setting is superadmin email settings
+            $email_settings['mail_driver'] = config('mail.driver');
+            $email_settings['mail_host'] = config('mail.host');
+            $email_settings['mail_port'] = config('mail.port');
+            $email_settings['mail_username'] = config('mail.username');
+            $email_settings['mail_password'] = config('mail.password');
+            $email_settings['mail_encryption'] = config('mail.encryption');
+            $email_settings['mail_from_address'] = config('mail.from.address');
+        
+
+        $mail_driver = !empty($email_settings['mail_driver']) ? $email_settings['mail_driver'] : 'smtp';
+        Config::set('mail.driver', $mail_driver);
+        Config::set('mail.host', $email_settings['mail_host']);
+        Config::set('mail.port', $email_settings['mail_port']);
+        Config::set('mail.username', $email_settings['mail_username']);
+        Config::set('mail.password', $email_settings['mail_password']);
+        Config::set('mail.encryption', $email_settings['mail_encryption']);
+
+        Config::set('mail.from.address', $email_settings['mail_from_address']);
+        Config::set('mail.from.name', $email_settings['mail_from_name']);
+        dd(55);
+    }
    }

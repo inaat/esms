@@ -21,9 +21,16 @@ use DB;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use App\Services\WhatsappApiService;
 
 class Util
 {
+    private $whatsappApiService;
+
+    public function __construct(WhatsappApiService $whatsappApiService)
+    {
+        $this->whatsappApiService = $whatsappApiService;
+    }
     public function getDays()
     {
         return [
@@ -593,15 +600,7 @@ class Util
     }
     public function sendSmsOnWhatsapp($data)
     {
-        // WhatsAppJob::dispatch($data);
-        //ProcessWhatsapp::dispatch('555', '923428927305', 30, []);
-        //dd(ProcessWhatsapp::dispatch('555', '923428927305', 30, []));
-        //$whatsappGateway = WhatsappDevice::where('status', 'connected')->pluck('delay_time','id')->first();
-        //if(count($whatsappGateway) < 1){
-        //$notify[] = ['error', 'Not available WhatsApp Gateway'];
-        //return back()->withNotify($notify);
-        //  return true;
-        //}
+       
         if(strlen(trim($data['mobile_number'])) > 10){
         $addSeconds = 30;
         $schedule = 1;
@@ -616,9 +615,8 @@ class Util
         if (!empty($data['add_second'])) {
             $addSeconds = $data['add_second'];
         }
-        //dispatch_now(new ProcessWhatsapp($data['sms_body'],$data['mobile_number'],$log->id, []));
         $setTimeInDelay = \Carbon::now();
-        dispatch(new ProcessWhatsapp($data['sms_body'], $data['mobile_number'], $log->id, []))->delay(Carbon::parse($setTimeInDelay)->addSeconds($addSeconds));
+        dispatch(new ProcessWhatsapp($data['sms_body'], $data['mobile_number'], $log->id, [],$this->whatsappApiService))->delay(Carbon::parse($setTimeInDelay)->addSeconds($addSeconds));
     }
 
 
@@ -634,9 +632,8 @@ class Util
         if (!empty($add_second)) {
             $addSeconds = $add_second;
         }
-        //dispatch_now(new ProcessWhatsapp($data['sms_body'],$data['mobile_number'],$log->id, []));
         $setTimeInDelay = \Carbon::now();
-        dispatch(new ProcessWhatsapp($log->message, $log->to, $log->id, []))->delay(Carbon::parse($setTimeInDelay)->addSeconds($addSeconds));
+        dispatch(new ProcessWhatsapp($log->message, $log->to, $log->id, [],$this->whatsappApiService))->delay(Carbon::parse($setTimeInDelay)->addSeconds($addSeconds));
 
 
 

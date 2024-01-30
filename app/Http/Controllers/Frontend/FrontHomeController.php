@@ -25,6 +25,11 @@ use App\Models\HumanRM\HrmEducation;
 use DB;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\ContactFormMail;
+use App\Notifications\SendMessageToEndUser;
+use App\Mail\TestEmail;
+use Illuminate\Http\JsonResponse;
 
 class FrontHomeController extends Controller
 {
@@ -344,4 +349,34 @@ public function associativeArrayToSimple($data)
 
     return $simple_array;
 }
+
+
+public function submitForm(Request $request): JsonResponse
+{
+    try {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'subject' => 'required',
+            'mobile' => 'required',
+            'message' => 'required',
+        ]);
+
+        $data = [
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'subject' => $request->input('subject'),
+            'mobile' => $request->input('mobile'),
+            'message' => $request->input('message'),
+        ];
+
+        Mail::to('info@sirms.edu.pk')->send(new ContactFormMail($data));
+        Mail::to($request->input('email'))->send(new SendMessageToEndUser($request->input('name')));
+
+        return response()->json(['message' => 'Your message has been sent. Thank you!']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error sending the message. Please try again later.'], 500);
+    }
+}
+
 }

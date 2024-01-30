@@ -347,7 +347,6 @@ background: #157d4c;
           <button type="button" class="btn-close" aria-label="Close" onclick="return deviceStatusUpdate('','','','','')"></button>
         </div>
         <div class="modal-body">
-            <input type="hidden" name="scan_id" id="scan_id" value="">
             <div>
                 <h4 class="py-3">{{ __('To use WhatsApp')}}</h4>
                 <ul>

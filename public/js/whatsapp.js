@@ -36,7 +36,7 @@
                 },
                 success: function(res){
                     console.log(res)
-                    $("#scan_id").val(res.response.id);
+                   
 
                     if (res.qr!='') {
                         $('#qrcode').attr('src',res.qr);
@@ -65,7 +65,6 @@
             dataType: 'json',
             method: 'post',
             success: function(res){
-                $("#scan_id").val(res.response.id);
                 if (res.qr!='')
                 {
 

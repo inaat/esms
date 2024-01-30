@@ -23,8 +23,8 @@
                                      
                           
                                      <div class="col-md-4 p-1">
-                                         {!! Form::label('status', __('english.payment_status') . ':*') !!}
-                                         {!! Form::select('payment_status', ['paid' => __('english.paid'), 'due' => __('english.due'), 'partial' => __('english.partial'), 'overdue' => __('english.overdue')], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id'=>'payment_status','placeholder' => __('english.all')]) !!}
+                                         {!! Form::label('status', __('english.status') . ':*') !!}
+                                         {!! Form::select('status', [1 => 'Pending', 2 => 'Schedule', 3 =>'Fail', 4 => 'Delivered',5=>'Processing'], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id'=>'status','placeholder' => __('english.all')]) !!}
                                      </div>
                                       <div class="col-md-4">
                                          {!! Form::label('transaction_date_range', __('english.date_range') . ':') !!}
@@ -100,7 +100,7 @@
                                         <th>@lang('english.initiated')</th>
                                         <th>@lang('english.status')</th>
                                         <th>@lang('english.to')</th>
-                                        <th>@lang('english.message')</th>
+                                        <th style="width:10%;">@lang('english.message')</th>
                                         <th>@lang('english.response_gateway')</th>
 
                                  </tr>
@@ -129,8 +129,8 @@ $(document).ready(function() {
             "data": function(d) {
 
              
-                if ($('#payment_status').length) {
-                    d.payment_status = $('#payment_status').val();
+                if ($('#status').length) {
+                    d.status = $('#status').val();
                 }
              
                 var start = "";
@@ -198,7 +198,7 @@ $(document).ready(function() {
         ],
       
             });
-    $(document).on('change', '#campus_id,#payment_status,#list_filter_date_range,#transaction_type', function() {
+    $(document).on('change', '#campus_id,#status,#list_filter_date_range,#transaction_type', function() {
         fee_transaction_table.ajax.reload();
     });
 

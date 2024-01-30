@@ -60,7 +60,7 @@ class GeneralSmsController extends Controller
         //     $response=$this->notificationUtil->sendSmsOnWhatsapp($data);
         // }
         //         dd('send');
-        try {
+      try {
             $input = $request->only(['description','class_section','employee_include']);
         
 
@@ -96,7 +96,7 @@ class GeneralSmsController extends Controller
     {
       
               
-        $add_second=0;
+        $addSecond=0;
             foreach ($input['class_section'] as $key => $section_id) {
                 # code...
                 $students=Student::where('current_class_section_id', $section_id)->where('status', 'active')->get();
@@ -106,7 +106,7 @@ class GeneralSmsController extends Controller
                     $addSecond =  $addSecond +30;
                     $student= Student::where('id', $epe->id)->first();
  
-                    $response=$this->notificationUtil->SendNotification(null, $student, null, $input['description'],$add_second);
+                    $response=$this->notificationUtil->SendNotification(null, $student, null, $input['description'],$addSecond);
                 }
             }
         
@@ -116,12 +116,12 @@ class GeneralSmsController extends Controller
        
             $employees=HrmEmployee::where('status', 'active')->get();
             //dd($employee);
-            $add_second=0;
+            $addSecond=0;
 
             foreach ($employees as $std) {
                 $addSecond =  $addSecond +30;
                 $employee= HrmEmployee::where('id', $std->id)->first();
-                $response=$this->notificationUtil->SendNotification(null, $employee, null, $input['description'],$add_second);
+                $response=$this->notificationUtil->SendNotification(null, $employee, null, $input['description'],$addSecond);
             }
         
     }
