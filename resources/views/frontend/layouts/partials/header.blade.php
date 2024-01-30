@@ -4,7 +4,7 @@
      <div class="top-header">
      <div class="topscrollBox">
          <marquee onmouseover="stop();" onmouseout="start();" scrollamount="3">
-             <a href="#"><span><strong>Notice :</strong> Admission for class XI 2022-23</span> </a>
+             <a href="{{ url('/online-apply') }}"><span><strong>Notice :</strong> Admission Open  Fall 2024</span> </a>
          </marquee>
      </div>
  </div>
