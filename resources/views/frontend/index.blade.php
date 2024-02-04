@@ -24,6 +24,7 @@
         transform: translateX(-50%);
         padding: 20px;
         text-align: center;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
         width: 80%; /* Adjust the width as needed */
         border-radius: 8px;">
                      <h1 style="color: var(--primaryColor);">{{ $slide->title }}</h1>
