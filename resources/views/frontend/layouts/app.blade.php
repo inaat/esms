@@ -161,7 +161,6 @@
         <input type="hidden" id="status_span" data-status="{{ session('status.success') }}"
             data-msg="{{ session('status.msg') }}">
     @endif
-    <div class="container">
 
     @yield('wrapper')
 
@@ -183,7 +182,6 @@
 
 
 
-</div>
     @include('frontend.layouts.partials.footer')
 
     <script src="{{ url('frontold/front_assets/js/popper.min.js') }}"></script>
