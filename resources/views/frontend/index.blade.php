@@ -23,12 +23,11 @@
         left: 50%;
         transform: translateX(-50%);
         padding: 20px;
-        background-color: rgba(255, 255, 255, 0.8);
         text-align: center;
         width: 80%; /* Adjust the width as needed */
         border-radius: 8px;">
-                     <h1>{{ $slide->title }}</h1>
-                      <h3>{{ $slide->description }}</h3>
+                     <h1 style="color: var(--primaryColor);">{{ $slide->title }}</h1>
+                      <p class="text-white">{{ $slide->description }}</p>
                      @if(!empty($slide->btn_name))
                      <div class="btn-box"><a href="{{$slide->btn_url  }}" target="_blank" class="theme-btn">{{ $slide->btn_name }}</a></div>
                      @endif 
