@@ -636,7 +636,9 @@ return [
 'note_books_status' =>'Note Books Status',
 'add'=>'Add',
 'empty_form'=>'Empty Form',
-'profile'=>'Profile'
+'profile'=>'Profile',
+
+
 ];
 
 

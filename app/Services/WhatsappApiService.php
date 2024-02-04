@@ -45,7 +45,7 @@ class WhatsappApiService
             "typeId" => "user",
             "message" => $text,
             "options" => [
-                "delay" => 0,
+                "delay" => 60,
                 "replyFrom" => ""
             ],
             "groupOptions" => [

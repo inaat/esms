@@ -13,10 +13,10 @@
                         
 
                         <div class="col-md-6 p-2">
-                            {!! Form::label('title *', __('english.title') . ':*') !!}
+                            {!! Form::label('title *', __('english.class_title') . ':*') !!}
                             {!! Form::text('title', null, [
                                 'class' => 'form-control',
-                                'placeholder' => __('english.title'),
+                                'placeholder' => __('english.class_title'),
                             ]) !!}
                         </div>
                         <div class="col-md-6 p-2">

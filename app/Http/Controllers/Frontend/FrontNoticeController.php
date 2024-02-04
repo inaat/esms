@@ -39,7 +39,7 @@ class FrontNoticeController extends Controller
            }
    
            if (request()->ajax()) {
-               $notice = FrontNotice::select(['title', 'id','description','status']);
+               $notice = FrontNotice::select(['title', 'id','description','status','link']);
    
                return DataTables::of($notice)
                                ->addColumn(
@@ -84,7 +84,7 @@ class FrontNoticeController extends Controller
    public function store(Request $request)
    {
        try {
-           $input = $request->only(['title','description','status']);
+           $input = $request->only(['title','description','status','link']);
            if (!empty($request->input('status'))) {
                $input['status']='publish';
            }
@@ -111,7 +111,7 @@ class FrontNoticeController extends Controller
    public function update(Request $request, $id)
    {
        try {
-         $input = $request->only(['title','description','status']);
+         $input = $request->only(['title','description','status','link']);
          if (!empty($request->input('status'))) {
                $input['status']='publish';
            } else {
@@ -122,6 +122,7 @@ class FrontNoticeController extends Controller
            $notice->title= $input['title'];
            $notice->slug=  Str::slug($input['title']);
            $notice->status= $input['status'];
+           $notice->link= $input['link'];
            $notice->description= $input['description'];
            $notice->save();
            $output = ['success' => true,

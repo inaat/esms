@@ -43,7 +43,7 @@
                                 <th>@lang('english.action')</th>
                                 <th>@lang('english.campus_name')</th>
                                 <th>@lang('class_level.class_level')</th>
-                                <th>@lang('english.title')</th>
+                                <th>@lang('english.class_title')</th>
                                 <th>@lang('english.tuition_fee')</th>
                                 <th>@lang('english.admission_fee')</th>
                                 <th>@lang('english.transport_fee')</th>

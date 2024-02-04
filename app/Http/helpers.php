@@ -1,6 +1,7 @@
 <?php
 use App\Models\Frontend\FrontAboutUs;
 use App\Models\Frontend\FrontEvent;
+use App\Models\Frontend\FrontNews;
 use App\Models\Session;
 
 if (! function_exists('getActiveSession')) {
@@ -193,5 +194,10 @@ if (! function_exists('numberToRoman')) {
     {
         $event_nav=FrontEvent::select('title', 'id', 'slug')->get();
         return $event_nav;
+    }
+    function frontNewsMenu()
+    {
+        $news_nav=FrontNews::select('title', 'id', 'slug')->get();
+        return $news_nav;
     }
 }

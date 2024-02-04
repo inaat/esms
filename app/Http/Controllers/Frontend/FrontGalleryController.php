@@ -35,41 +35,7 @@ class FrontGalleryController extends Controller
      */
     public function index()
     {
-       // $sims=Sim::get();
-    //     $sims=Sim::whereNotNull('current_class')->get();
-    //    // dd($sims);
-
-    //     $ff=[];
-    //     foreach ($sims as $sim) {
-    //         $sms=Sms::where('ID_No', $sim->Reg_no)->first();
-    //         if (!empty($sms)) {
-               
-    //             $up=Sim::where('Reg_no', $sim->Reg_no)->first();
-    //             $up->current_class=$sms->Class;
-    //             $up->Fee_before_discount=$sms->Fee_before_discount;
-    //             $up->Dis_=$sms->Dis_;
-    //             $up->Fee_After_Discount=$sms->Fee_After_Discount;
-    //             $up->Arears=$sms->Arears;
-    //             $up->others_balance=$sms->others_balance;
-    //             $up->save();
-    //             $ff[]=$sim->Reg_no;
-    //         }
-    //     }
-// //         $ff=[];
-//         foreach ($sims as $sim) {
-//             $sms=Sms::where('Reg_no', $sim->Reg_no)->first();
-//             if (!empty($sms)) {
-               
-//                 $up=Sim::where('Reg_no', $sim->Reg_no)->first();
-//                 $up->SLC_Certificate=$sms->SLC_Certificate;
-// if (!empty($sms->FORM_B)) {
-//     $up->FORM_B=$sms->FORM_B;
-// }
-//                 $up->save();
-//                 $ff[]=$sim->Reg_no;
-//             }
-//         }
-        //dd($ff);
+       
         if (!auth()->user()->can('grade.view')) {
             abort(403, 'Unauthorized action.');
         }
@@ -80,17 +46,7 @@ class FrontGalleryController extends Controller
 
             return DataTables::of($galleries)
                             ->addColumn(
-                                // 'action',
-                                // '
-                                // <div class="d-flex order-actions">
-                                // <a href="{{action(\'Frontend\FrontGalleryController@addImage\', [$id])}}" class=""><i class="bx bxs-edit f-16 mr-15 text-white"></i> @lang("english.add_photos")</a>
-                                //     &nbsp;
-                                // <button data-href="{{action(\'Frontend\FrontGalleryController@edit\', [$id])}}" class="btn btn-sm btn-primary edit_gallery_button"><i class="bx bxs-edit f-16 mr-15 text-white"></i> @lang("english.edit")</button>
-                                //     &nbsp;
-
-                                // </div>
-                                // '
-                                //)
+                          
                                 'action',
                                 function ($row) {
                                     $html= '<div class="dropdown">

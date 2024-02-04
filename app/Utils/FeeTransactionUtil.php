@@ -421,14 +421,14 @@ class FeeTransactionUtil extends Util
     }
 
 
-
     public function getFeeTransaction($student_id, $session_id, $month)
     {
         $fee_transaction =FeeTransaction::with(['fee_lines','fee_lines.feeHead'])->where('student_id', $student_id)
                ->where('session_id', $session_id)->where('month', $month)->latest('id')->first();
         if (empty($fee_transaction)) {
+            
             $fee_transaction =FeeTransaction::with(['fee_lines','fee_lines.feeHead'])->where('student_id', $student_id)
-            ->latest()->first();
+            ->latest('transaction_date', 'Y-m-d')->first();
         }
         return $fee_transaction;
     }

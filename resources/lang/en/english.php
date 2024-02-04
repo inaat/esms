@@ -514,7 +514,8 @@ all the campuses of this organization.',
 "edit_class" => 'Edit Class',
 "add_new_class" => 'Add New Class',
 "class_list" => 'Class List',
-"title" => 'Class Title',
+"class_title" => 'Class Title',
+"title" => 'Title',
 "tuition_fee" => 'Tuition Fee',
 "admission_fee" => 'Admission Fee',
 'manage_your_classes' => 'Manage your Classes',
@@ -1613,7 +1614,64 @@ During The Admission',
 'response_gateway'=>'Response Gateway',
 'routine_report'=>'Routine Report',
 'default_allowance'=>'Default Allowance',
-'default_deduction'=>'Default Deduction'
+'default_deduction'=>'Default Deduction',
+
+
+'if_is_kmu_cat'=>'If is KMU CAT Test',
+'previous_college_name'=>'Previous College Name',
+'board_name'=>'Board Name',
+'fsc_roll_no'=>'FSC Roll no',
+ 'fsc_marks'=>'Fsc Marks',
+ 'attach_fsc_mark_sheet'=>'Attach Fsc Mark Sheet',
+ 'attach_cnic_front_side'=>'Attach Cnic Front Side',
+ 'attach_cnic_back_side'=>'Attach Cnic Back Side',
+ 'online_applicant_no'=>"Online Applicant No",
+ 'online_applicant_list'=>"Online Applicant List",
+ 'applicant_submit_date'=>"Applicant Submit Date",
+ 'online_status'=>[
+    'online_admission'=>'Online Admission','confirm'=>'Confirm','reject'=>'Reject','hold'=>'Hold'
+
+],
+ 'page_types'=>[
+    'download_and_blink'=>'Download And Blink',
+    'page'=>'Page',
+    'page_with_download'=>'Page With Download'
+
+],
+'page_type'=>'Page Type',
+'download_and_blink'=>'Download And Blink','page'=>'Page','page_with_download'=>'Page With Download',
+'online_admission'=>'Online Admission','confirm'=>'Confirm','reject'=>'Reject','hold'=>'Hold',
+'online_applicant_status'=>'Online Applicant Status',
+'link'=>'Link',
+'custom_pages'=>'Custom Pages',
+'custom_navigation'=>'Custom Navigation',
+'counters'=>'Counters',
+'counter'=>'Counter',
+'counter_title'=>'Counter Title',
+'counter_number'=>'Counter Number',
+'add_new_counter'=>'Add New Counter',
+'manage_your_counter'=>'Manage your Counter',
+'counter_create'=>'Counter Create',
+'counter_update'=>'Counter Update',
+'counter_list'=>'Counter List',
+'manage_your_custom_navbar'=>"Manage Your Custom Navbar",
+'custom_navbar'=>'Custom Navbar',
+'add_new_custom_navbar'=>'Add New Custom Navbar',
+'custom_navbar_list'=>'Custom Navbar List',
+'custom_navbar_create'=>'Custom Navbar Create',
+'manage_your_custom_page'=>'Manage Your Custom page',
+'custom_page'=>'Custom Page',
+'custom_page_list'=>'Custom Page List',
+'add_new_custom_page'=>'Add New Custom Page',
+'navbar_title'=>'Navbar Title',
+'custom_page_create'=>'Custom Page Create',
+'front_page_navbar'=>'Front Page Navbar',
+'admission_banner'=>'Admission Banner',
+'admission_open'=>'Admission Open'
+
+
+
+
 
 
 ];

@@ -60,7 +60,7 @@
                             <tr>
                                 <th>@lang('english.action')</th>
                                 <th>@lang('english.campus_name')</th>
-                                <th>@lang('english.title')</th>
+                                <th>@lang('english.class_title')</th>
                                 <th>@lang('english.fee_head')</th>
                                 <th>@lang('english.fee_amount')</th>
                             </tr>

@@ -2,10 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Frontend\FrontNews;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Frontend\FrontSetting;
+use App\Models\Frontend\FrontCustomPageNavbar;
 use App\Models\Frontend\FrontCounter;
+use App\Models\Frontend\FrontNotice;
 use App\Models\SystemSetting;
 use App\Models\Session;
 
@@ -28,11 +31,17 @@ class FrontSessionData
             $front_details= FrontSetting::first();
          
             $request->session()->put('front_details', $front_details);
-            $front_counters= FrontCounter::get();
+            $front_counters= FrontCounter::where('status','publish')->get();
+            $front_notices=FrontNotice::where('status','publish')->get();
          
+            $request->session()->put('front_notices', $front_notices);
+            $front_news=FrontNews::where('status','publish')->get();
+         
+            $request->session()->put('front_news', $front_news);
             $request->session()->put('front_counters', $front_counters);
+            $front_navbars=FrontCustomPageNavbar::where('status','publish')->with('custom_pages')->get();
+            $request->session()->put('front_navbars', $front_navbars);
 
-     
             $system_details= SystemSetting::first();
             
             $currency = $system_details->currency;

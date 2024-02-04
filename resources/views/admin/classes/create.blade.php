@@ -11,8 +11,8 @@
         <div class="modal-body">
             <div class="row">
                 <div class="col-md-6 p-3">
-                    {!! Form::label('title', __('english.title') . ':*', ['classs' => 'form-lable']) !!}
-                    {!! Form::text('title', null, ['class' => 'form-control', 'required', 'placeholder' => __('english.title')]) !!}
+                    {!! Form::label('title', __('english.class_title') . ':*', ['classs' => 'form-lable']) !!}
+                    {!! Form::text('title', null, ['class' => 'form-control', 'required', 'placeholder' => __('english.class_title')]) !!}
 
                 </div>
                 <div class="col-md-6 p-3">

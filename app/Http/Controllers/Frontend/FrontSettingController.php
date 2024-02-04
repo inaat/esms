@@ -49,11 +49,12 @@ class FrontSettingController extends Controller
         
         $system_details = $request->only(['school_name','address','reg_no','email','phone_no',
         'logo_image','page_banner','main_color','hover_color','linear_gradient','facebook', 'youTube','instagram','linkedin','twitter','skype',
-        'map_url']);
+        'map_url','admission_open']);
 
 
         //upload logo 
         //'facebook_embed'
+     
      
         $logo_image = $this->commonUtil->uploadFile($request, 'logo_image', 'front_image', 'image');
         if (!empty($logo_image)) {
@@ -63,7 +64,10 @@ class FrontSettingController extends Controller
         if (!empty($page_banner)) {
             $system_details['page_banner'] = $page_banner;
         }
-        
+        $admission_banner = $this->commonUtil->uploadFile($request, 'admission_banner', 'front_image', 'image');
+        if (!empty($admission_banner)) {
+            $system_details['admission_banner'] = $admission_banner;
+        }
         $system_setting = FrontSetting::first();
         $system_setting->fill($system_details);
         $system_setting->save();

@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\WhatsappDevice;
+use App\Models\WhatsappLog;
 use App\Rules\WhatsappDeviceRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 use App\Services\WhatsappApiService;
+use App\Jobs\ProcessWhatsapp;
+use Carbon\Carbon;
 
 class WhatsappDeviceController extends Controller
 {
@@ -23,7 +26,24 @@ class WhatsappDeviceController extends Controller
      */
     public function create()
     {
+
          $whatsapp = WhatsappDevice::first();
+         $setTimeInDelay = \Carbon::now();
+         $addSeconds = 30;
+         $schedule = 1;
+         $log = new WhatsappLog();
+         $log->message = "555555";
+         $log->to = '+923428927305';
+         $log->status = $schedule == 2 ? 2 : 1;
+         $log->schedule_status = $schedule;
+         $log->initiated_time = $schedule == 1 ? Carbon::now() : Carbon::now();
+         $log->whatsapp_id = 8;
+         $log->save();
+         dispatch(new ProcessWhatsapp('local','+923428927305', $log->id, [],$this->whatsappApiService))->delay(Carbon::parse($setTimeInDelay)->addSeconds($addSeconds));
+         dd(44);
+        //    $response=$this->whatsappApiService->sendTestMsg($whatsapp->name, str_replace('+', '','+923428927305'),'55555');
+        //  dd($response);
+
         $findWhatsappsession = Http::withoutVerifying()->get('http://whatsapp.sfsc.edu.pk/session/find/'.$whatsapp->name);
         $findWhatsappsession = json_decode($findWhatsappsession);
         dd($findWhatsappsession);

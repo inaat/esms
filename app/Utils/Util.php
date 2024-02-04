@@ -27,7 +27,7 @@ class Util
 {
     private $whatsappApiService;
 
-    public function __construct(WhatsappApiService $whatsappApiService)
+    public function __construct(?WhatsappApiService $whatsappApiService = null)
     {
         $this->whatsappApiService = $whatsappApiService;
     }

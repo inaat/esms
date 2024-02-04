@@ -7,13 +7,20 @@
 <head>
 
 
-<style type="text/css">
+    <style type="text/css">
         :root {
-            --primaryColor:@php echo session()->get("front_details.main_color")@endphp;
-            --hoverColor:@php echo session()->get("front_details.hover_color")@endphp;
-            --greengredient:@php echo session()->get("front_details.linear_gradient")@endphp;
-            }
-                    .table {
+            --primaryColor: @php echo session()->get("front_details.main_color")
+        @endphp
+        ;
+        --hoverColor:@php echo session()->get("front_details.hover_color")
+        @endphp
+        ;
+        --greengredient:@php echo session()->get("front_details.linear_gradient")
+        @endphp
+        ;
+        }
+
+        .table {
             width: 100%;
             border-collapse: collapse;
         }
@@ -60,11 +67,10 @@
                 text-align: left;
             }
         }
-
     </style>
-    <link href="{{ url('frontold/front_assets/css/style.css')}} " rel="stylesheet">
-    <link href="{{ url('frontold/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
-    <link href='{{ url('frontold/front_assets/css/boxicons.min.css')}}' rel='stylesheet'>
+    <link href="{{ url('frontold/front_assets/css/style.css') }} " rel="stylesheet">
+    <link href="{{ url('frontold/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+    <link href='{{ url('frontold/front_assets/css/boxicons.min.css') }}' rel='stylesheet'>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
@@ -75,10 +81,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!--====== Title ======-->
-    <title>{{ session()->get("front_details.school_name") }}</title>
+    <title>{{ session()->get('front_details.school_name') }}</title>
 
     <!--====== Favicon Icon ======-->
-    <link rel="shortcut icon" href="{{url('uploads/front_image/'.session()->get("front_details.logo_image"))}}" type="image/png">
+    <link rel="shortcut icon" href="{{ url('uploads/front_image/' . session()->get('front_details.logo_image')) }}"
+        type="image/png">
 
     <!--====== Slick css ======-->
     <link rel="stylesheet" href="{{ url('front/css/slick.css') }}">
@@ -150,59 +157,63 @@
     <!--====== PRELOADER PART START ======-->
 
     @include('frontend.layouts.partials.header')
-         @if (session('status'))
-        <input type="hidden" id="status_span" data-status="{{ session('status.success') }}" data-msg="{{ session('status.msg') }}">
-        @endif
-    @yield("wrapper")
-     
-<!-- ======= Contact Section ======= -->
+    @if (session('status'))
+        <input type="hidden" id="status_span" data-status="{{ session('status.success') }}"
+            data-msg="{{ session('status.msg') }}">
+    @endif
+    <div class="container">
 
-<section id="contact" class="contact">
-      <div class="container" data-aos="fade-up">
+    @yield('wrapper')
 
-      
- @include('frontend.layouts.contact_us')
+    <!-- ======= Contact Section ======= -->
 
-        
+    <section id="contact" class="contact">
+        <div class="container" data-aos="fade-up">
 
-      </div>
+
+            @include('frontend.layouts.contact_us')
+
+
+
+        </div>
     </section>
 
 
-<!-- End Contact Section -->
+    <!-- End Contact Section -->
 
 
- 
+
+</div>
     @include('frontend.layouts.partials.footer')
 
-    <script src="{{ url('frontold/front_assets/js/popper.min.js')}}"></script>
-    <script src="{{ url('frontold/front_assets/js/owl.js')}}"></script>
-     <script src="{{ url('frontold/front_assets/js/wow.js')}}"></script>
-    <script src="{{ url('frontold/front_assets/js/validation.js')}}"></script>
-    <script src="{{ url('frontold/swiper/swiper-bundle.min.js')}}"></script>
-    <script src="{{ url('frontold/front_assets/js/jquery.fancybox.js')}}"></script>
-    <script src="{{ url('frontold/front_assets/js/appear.js')}}"></script>
-    <script src="{{ url('frontold/front_assets/js/parallax.min.js')}}"></script>
-    <script src="{{ url('frontold/front_assets/js/isotope.js')}}"></script>
-        <script src="{{ url('frontold/front_assets/js/script.js')}}"></script>
-  <script type="text/javascript">
-        base_path = "{{url('/')}}";
-         if ($('#status_span').length) {
-        var status = $('#status_span').attr('data-status');
-        if (status === '1') {
-            toastr.success($('#status_span').attr('data-msg'));
-        } else if (status == '' || status === '0') {
-            toastr.error($('#status_span').attr('data-msg'));
+    <script src="{{ url('frontold/front_assets/js/popper.min.js') }}"></script>
+    <script src="{{ url('frontold/front_assets/js/owl.js') }}"></script>
+    <script src="{{ url('frontold/front_assets/js/wow.js') }}"></script>
+    <script src="{{ url('frontold/front_assets/js/validation.js') }}"></script>
+    <script src="{{ url('frontold/swiper/swiper-bundle.min.js') }}"></script>
+    <script src="{{ url('frontold/front_assets/js/jquery.fancybox.js') }}"></script>
+    <script src="{{ url('frontold/front_assets/js/appear.js') }}"></script>
+    <script src="{{ url('frontold/front_assets/js/parallax.min.js') }}"></script>
+    <script src="{{ url('frontold/front_assets/js/isotope.js') }}"></script>
+    <script src="{{ url('frontold/front_assets/js/script.js') }}"></script>
+    <script type="text/javascript">
+        base_path = "{{ url('/') }}";
+        if ($('#status_span').length) {
+            var status = $('#status_span').attr('data-status');
+            if (status === '1') {
+                toastr.success($('#status_span').attr('data-msg'));
+            } else if (status == '' || status === '0') {
+                toastr.error($('#status_span').attr('data-msg'));
+            }
         }
-    }
         //used for push notification
         $.ajaxSetup({
             beforeSend: function(jqXHR, settings) {
                 if (settings.url.indexOf('http') === -1) {
                     settings.url = base_path + settings.url;
                 }
-            }
-        , });
+            },
+        });
         $(document).ready(function() {
             $.ajaxSetup({
                 headers: {
@@ -210,8 +221,8 @@
                 }
             });
 
-            @if(config('app.debug') == false)
-            $.fn.dataTable.ext.errMode = 'throw';
+            @if (config('app.debug') == false)
+                $.fn.dataTable.ext.errMode = 'throw';
             @endif
         });
 
@@ -221,8 +232,8 @@
                 $(this).find(".img-overlay").animate({
                     opacity: 1
                 }, 600);
-            }
-            , function() {
+            },
+            function() {
                 $(this).find(".img-overlay").animate({
                     opacity: 0
                 }, 600);
@@ -234,8 +245,8 @@
                 $(this).find(".video-overlay").animate({
                     opacity: 1
                 }, 600);
-            }
-            , function() {
+            },
+            function() {
                 $(this).find(".video-overlay").animate({
                     opacity: 0
                 }, 600);
@@ -319,71 +330,71 @@
             // Fade out the overlay
             $("#overlay").fadeOut("slow");
         });
-
     </script>
     <script>
-$(document).ready(function() {
-    $('#contact_add_form').submit(function(e) {
-        e.preventDefault(); // Prevent the default form submission
+        $(document).ready(function() {
+            $('#contact_add_form').submit(function(e) {
+                e.preventDefault(); // Prevent the default form submission
 
-        // Get the form data
-        var formData = new FormData($(this)[0]);
+                // Get the form data
+                var formData = new FormData($(this)[0]);
 
-        // Hide submit button
-        $('button[type="submit"]').hide();
+                // Hide submit button
+                $('button[type="submit"]').hide();
 
-        // Display loading message
-        $('.loading').show();
-        $('.error-message').empty();
-        $('.sent-message').empty();
+                // Display loading message
+                $('.loading').show();
+                $('.error-message').empty();
+                $('.sent-message').empty();
 
-        // Reference to the form for resetting after success
-        var form = $(this);
+                // Reference to the form for resetting after success
+                var form = $(this);
 
-        // Make the AJAX request
-        $.ajax({
-            url: form.attr('action'),
-            type: form.attr('method'),
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                // Hide loading message
-                $('.loading').hide();
+                // Make the AJAX request
+                $.ajax({
+                    url: form.attr('action'),
+                    type: form.attr('method'),
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // Hide loading message
+                        $('.loading').hide();
 
-                // Check the JSON response
-                if (response && response.message) {
-                    // Display success message from the server
-                    $('.sent-message').text(response.message).show();
-                    
-                    // Clear form fields
-                    form[0].reset();
-                } else {
-                    // Display a generic success message if the response is unexpected
-                    $('.sent-message').text('Your message has been sent. Thank you!').show();
-                }
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                // Hide loading message
-                $('.loading').hide();
+                        // Check the JSON response
+                        if (response && response.message) {
+                            // Display success message from the server
+                            $('.sent-message').text(response.message).show();
 
-                // Check if the server returned a JSON error response
-                if (xhr.responseJSON && xhr.responseJSON.error) {
-                    // Display the error message from the server
-                    $('.error-message').text('Error: ' + xhr.responseJSON.error).show();
-                } else {
-                    // Display a generic error message if the response is unexpected
-                    $('.error-message').text('Error: ' + errorThrown).show();
-                }
-            },
-            complete: function() {
-                // Show submit button after AJAX request is complete
-                $('button[type="submit"]').show();
-            }
+                            // Clear form fields
+                            form[0].reset();
+                        } else {
+                            // Display a generic success message if the response is unexpected
+                            $('.sent-message').text('Your message has been sent. Thank you!')
+                                .show();
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        // Hide loading message
+                        $('.loading').hide();
+
+                        // Check if the server returned a JSON error response
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            // Display the error message from the server
+                            $('.error-message').text('Error: ' + xhr.responseJSON.error).show();
+                        } else {
+                            // Display a generic error message if the response is unexpected
+                            $('.error-message').text('Error: ' + errorThrown).show();
+                        }
+                    },
+                    complete: function() {
+                        // Show submit button after AJAX request is complete
+                        $('button[type="submit"]').show();
+                    }
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 
 </body>
 

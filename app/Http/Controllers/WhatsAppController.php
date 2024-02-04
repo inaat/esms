@@ -160,9 +160,8 @@ class WhatsappController extends Controller
 
         
                     
-                    if($device->sms_status==='sms_on'){
-                     $this->notificationUtil->autoSendStudentNotification('student_attendance_absent_sms', $student, $att);
-                    }
+             $this->notificationUtil->autoSendStudentNotification('student_attendance_absent_sms', $student, $att);
+                    
 
                 
         }

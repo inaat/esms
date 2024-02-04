@@ -46,6 +46,10 @@
                         {!! Form::label('description', __('english.description' ) . ':') !!}
                         {!! Form::textarea('description',null, ['class' => 'form-control', 'id'=>'description','placeholder' => __('english.description' )]); !!}
                     </div>
+                         <div class="col-md-12 p-3">
+                        {!! Form::label('link', __('english.link' ) . ':') !!}
+                        {!! Form::text('link',null, ['class' => 'form-control', 'required', 'placeholder' => __('english.link' )]); !!}
+                    </div>
                 </div>
                 <div class="d-lg-flex align-items-center mt-4 gap-3">
                     <div class="ms-auto"><button class="btn btn-primary radius-30 mt-2 mt-lg-0" type="submit">

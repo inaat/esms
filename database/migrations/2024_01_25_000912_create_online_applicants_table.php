@@ -57,6 +57,7 @@ class CreateOnlineApplicantsTable extends Migration
             $table->string('nationality')->nullable();
             $table->enum('status', ['online_admission', 'confirm', 'reject','hold'])->default('online_admission');
             $table->enum('religion', ['Islam', 'Hinduism', 'Christianity', 'Sikhism', 'Buddhism', 'Secular/Nonreligious/Agnostic/Atheist', 'Other']);
+            $table->string('student_image')->nullable();
             $table->string('guardian_name')->nullable();
             $table->string('guardian_relation')->nullable();
             $table->string('guardian_occupation')->nullable();

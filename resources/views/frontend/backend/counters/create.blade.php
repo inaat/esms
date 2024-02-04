@@ -1,7 +1,6 @@
 
 @extends("admin_layouts.app")
-@section('title', __('english.event'))
-@section('title', __('english.event'))
+@section('title', __('english.counter_create'))
 
 @section("wrapper")
 <div class="page-wrapper">

@@ -89,6 +89,7 @@ Route::middleware(['auth','language','SetSessionData','timezone','AdminSidebarMe
 
     Route::resource('regions', 'RegionController');
     Route::resource('students', 'StudentController');
+    Route::resource('online-applicants', 'OnlineApplicantController');
     Route::resource('fee-allocation', 'FeeAllocationController');
     Route::post('fees-assign-search', 'FeeAllocationController@feesAssignSearch')->name('fees-assign-search');
     Route::get('bulk-fee-allocation-create', 'FeeAllocationController@bulkAllocationCreate');
@@ -284,6 +285,12 @@ Route::get('/exam/single-date-sheet', 'Examination\ExamDateSheetController@singl
     Route::resource('front-notices', 'Frontend\FrontNoticeController');
     Route::resource('front-events', 'Frontend\FrontEventController');
     Route::resource('front-counters', 'Frontend\FrontCounterController');
+    Route::resource('front-page-navbar', 'Frontend\FrontCustomPageNavbarController');
+    Route::resource('front-custom-page', 'Frontend\FrontCustomPageController');
+    Route::get('/front-custom-page-add-image-video/{id}', 'Frontend\FrontCustomPageController@addImage');
+    Route::get('/front-custom-page-element/{id}', 'Frontend\FrontCustomPageController@element');
+    Route::put('/front-custom-page-elements/{id}', 'Frontend\FrontCustomPageController@storeElement');
+    Route::get('/front-custom-page-elements/{id}/{elem_id}', 'Frontend\FrontCustomPageController@upload_delete');
 
     Route::resource('sms-logs', 'WhatsAppController');
     Route::get('sms-status', 'WhatsAppController@smsStatus');
@@ -317,6 +324,11 @@ Route::middleware(['FrontSessionData'])->group(function () {
     Route::get('online-apply', 'Frontend\FrontHomeController@onlineApply');
     Route::post('save-online-apply', 'Frontend\FrontHomeController@saveApply');
     Route::post('/contact-submit', 'Frontend\FrontHomeController@submitForm')->name('contact.submit');
+    Route::get('/news', 'Frontend\FrontHomeController@news_index');
+    Route::get('pages-{slug}/{id}', 'Frontend\FrontHomeController@show_page_index');
+    Route::get('show-page-{slug}/{id}', 'Frontend\FrontHomeController@show_page');
+
+
 
     Auth::routes();
 

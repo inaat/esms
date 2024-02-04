@@ -985,6 +985,22 @@ class AdminSidebarMenu
                             ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'front-news']
                         );
                         $sub->url(
+                            action('Frontend\FrontCounterController@index'),
+                            __('english.counters'),
+                            ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'front-counters']
+                        );
+                        $sub->url(
+                            action('Frontend\FrontCustomPageNavbarController@index'),
+                            __('english.custom_navigation'),
+                            ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'front-page-navbar']
+                        );
+                     
+                        $sub->url(
+                            action('Frontend\FrontCustomPageController@index'),
+                            __('english.custom_pages'),
+                            ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'front-custom-page'||request()->segment(1) == 'front-custom-page-element']
+                        );
+                        $sub->url(
                             action('Frontend\FrontSettingController@index'),
                             __('english.settings'),
                             ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'front-settings']

@@ -12,6 +12,9 @@ use App\Models\Frontend\OnlineApplicant;
 use Illuminate\Http\Request;
 use App\Models\Exam\ExamCreate;
 use App\Models\Exam\ExamAllocation;
+use App\Models\Frontend\FrontCustomPageNavbar;
+use App\Models\Frontend\FrontCustomPage;
+
 use App\Models\ClassSection;
 use App\Models\Campus;
 use App\Models\ClassLevel;
@@ -86,6 +89,12 @@ class FrontHomeController extends Controller
         $nav = frontEventMenu();
         return view('frontend.event.show')->with(compact('data', 'nav'));
     }
+    public function news_index()
+    {
+        $data = FrontNews::first();
+        $nav = frontNewsMenu();
+        return view('frontend.news.show')->with(compact('data', 'nav'));
+    }
     public function event_show($slug, $id)
     {
         $data = FrontEvent::where('id', $id)
@@ -102,6 +111,20 @@ class FrontHomeController extends Controller
         $nav=FrontNews::select('title', 'id', 'slug')->get();
         //dd();
         return view('frontend.news.show')->with(compact('data', 'nav'));
+    }
+    public function show_page_index($slug, $id)
+    {
+        $data = FrontCustomPage::first();
+        $nav=FrontCustomPageNavbar::where('id',$id)->select('title', 'id', 'slug')->with('custom_pages')->first();
+        //dd();
+        return view('frontend.custom_page.show')->with(compact('data', 'nav'));
+    }
+    public function show_page($slug, $id)
+    {
+        $data = FrontCustomPage::where('id',$id)->first();
+        $nav=FrontCustomPageNavbar::where('id',$data->front_page_navbar_id)->select('title', 'id', 'slug')->with('custom_pages')->first();
+        //dd();
+        return view('frontend.custom_page.show')->with(compact('data', 'nav'));
     }
 
     public function gallery()
@@ -311,6 +334,8 @@ public function saveApply(Request $request){
         $online_applicants_data['cnic_back_side']=$cnic_back_side;
         $online_applicants_data['applicant_submit_date']=\Carbon::now();
         $prefix_type = 'online_applicant_no';
+        $online_applicants_data['birth_date'] = $this->commonUtil->uf_date($online_applicants_data['birth_date']);
+
 
         $ref_count = $this->commonUtil->setAndGetReferenceCount($prefix_type, false, true);
                 //Generate reference number
@@ -318,6 +343,7 @@ public function saveApply(Request $request){
 
          
          OnlineApplicant::create($online_applicants_data);
+         dd($online_applicants_data);
          return view('frontend.submit-success');
     } catch (ValidationException $e) {
         return redirect()->back()->withErrors($e->errors())->withInput();

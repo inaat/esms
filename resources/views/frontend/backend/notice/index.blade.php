@@ -39,6 +39,7 @@
                                 <th>@lang( 'english.action' )</th>
                                 <th>@lang( 'english.notice_title' )</th>
                                 <th>@lang( 'english.description' )</th>
+                                <th>@lang( 'english.link' )</th>
                                 <th>@lang( 'english.show_website' )</th>
                             </tr>
                         </thead>
@@ -80,6 +81,12 @@
                 , }
               
                 , {
+                    data: "link"
+                    , name: "link"
+                    , orderable: false
+                    , searchable: false
+                , },
+                {
                     data: "status"
                     , name: "status"
                     , orderable: false

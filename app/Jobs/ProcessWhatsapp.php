@@ -62,31 +62,34 @@ class ProcessWhatsapp implements ShouldQueue
         $response = null;
         try{
             $whatsapp = WhatsappDevice::first();
-            //$response=$this->whatsappApiService->sendTestMsg($whatsapp->name,'923428927305','dfghj');
+           // $response=$this->whatsappApiService->sendTestMsg($whatsapp->name,'923428927305','ok');
             $response=$this->whatsappApiService->sendTestMsg($whatsapp->name, str_replace('+', '',$this->number),$this->message);
             \Log::emergency($response);
-        \Log::emergency("response");
+       
            
-            if ($response) {
-                $res = $response;
-
-                if($res['error'] ==false){
+            if (!empty($response)) {
+           
+                if($response['error'] ==false){
+                    \Log::emergency($response);
+                    \Log::emergency("error");
                     $whatsappLog->status = WhatsappLog::SUCCESS;
                     $whatsappLog->save();
                 }else{
                     $whatsappLog->status = WhatsappLog::FAILED;
-                    $whatsappLog->response_gateway = $res['message'];
+                    $whatsappLog->response_gateway = $response['message'];
                     $whatsappLog->save();
 
                 }
             }else{
-                $whatsappLog->status = WhatsappLog::FAILED;
-                $whatsappLog->response_gateway = 'Error::2 Failed to send the message.';
+                $whatsappLog->status = WhatsappLog::SUCCESS;
                 $whatsappLog->save();
                 
             }
         } catch(Exception $e){
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            $whatsappLog->status = WhatsappLog::FAILED;
+            $whatsappLog->response_gateway = 'Error::2 Failed to send the message.';
+            $whatsappLog->save();
 
         }
     }
