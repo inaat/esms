@@ -34,6 +34,7 @@
         "spatie/flysystem-dropbox": "1.0",
         "spatie/laravel-backup": "^6.16",
         "spatie/laravel-permission": "^5.1",
+        "stancl/tenancy": "*",
         "stevenmaguire/oauth2-dropbox": "*",
         "wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3",
         "yajra/laravel-datatables-oracle": "~9.0"
